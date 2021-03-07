@@ -1,4 +1,4 @@
-package DB;
+package db;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.Connection;
@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 public class DbConnect {
 
@@ -19,11 +18,11 @@ public class DbConnect {
     private static final String dbname = "cinema";
     private static PreparedStatement st;
     private static ResultSet rs;
-	private static Connection cnx;
+    private static Connection cnx;
     
     public DbConnect(){
-		cnx = null;
-		getConnection();
+	cnx = null;
+	getConnection();
     }
     
     //Metodo para conectarse a la base de datos pasando los parametros anteriores.
@@ -40,7 +39,7 @@ public class DbConnect {
             cnx = datasource.getConnection();
         } catch (SQLException ex) {
             System.out.println("Problema en db");
-            Logger.getLogger(" Get Connection -> " + DBConnect.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(" Get Connection -> " + DbConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
         return cnx;
     }

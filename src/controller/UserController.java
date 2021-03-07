@@ -1,7 +1,7 @@
 package Controller;
 
 import Classes.User;
-import DB.DBConnect;
+import db.DbConnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +29,7 @@ public class UserController {
                 + "`passwordUser` = ? AND `statusUser` = 1";
         
         try {
-            st = DBConnect.getConnection().prepareStatement(query);
+            st = DbConnect.getConnection().prepareStatement(query);
             st.setString(1, username);
             st.setString(2, password);
             rs = st.executeQuery();
