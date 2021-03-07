@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-public class DBConnect {
+
+public class DbConnect {
 
     private static final String servername = "localhost";
     private static final Integer portnumber = 3306;
@@ -17,14 +18,16 @@ public class DBConnect {
     private static final String PASSWORD = "";
     private static final String dbname = "cinema";
     private static PreparedStatement st;
-    private static ResultSet rs;    
+    private static ResultSet rs;
+	private static Connection cnx;
     
-    public DBConnect(){
+    public DbConnect(){
+		cnx = null;
+		getConnection();
     }
     
-    //Method to connect to DB.
+    //Metodo para conectarse a la base de datos pasando los parametros anteriores.
     public static Connection getConnection(){
-        Connection cnx = null;
         MysqlDataSource datasource = new MysqlDataSource();
         
         datasource.setServerName(servername);
