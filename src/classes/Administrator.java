@@ -17,7 +17,6 @@ public class Administrator extends User{
     }
     
     public Administrator(){}
-    
     //Movie Section
     public void createMovie(){}
     
