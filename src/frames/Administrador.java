@@ -5,8 +5,8 @@
  */
 package frames;
 
-import controladores.UsuariosJpaController;
-import entidades.Usuarios;
+import controladores.UsuarioJpaController;
+import entidades.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -32,15 +32,15 @@ public class Administrador extends javax.swing.JFrame {
         dtm.addColumn("Contraseña");
         dtm.addColumn("Estatus");
         dtm.addColumn("Tipo");
-        List <Usuarios> lista = new ArrayList<>();
-        UsuariosJpaController ujc = new UsuariosJpaController();
+        List <Usuario> lista = new ArrayList<>();
+        UsuarioJpaController ujc = new UsuarioJpaController();
         lista = ujc.findUsuariosEntities();
         Object[] fila = new Object[5];
-        for(Usuarios u : lista){
-            fila[0] = u.getId();
-            fila[1] = u.getNombre();
-            fila[2] = u.getContrasena();
-            fila[3] = u.getEstatus();
+        for(Usuario u : lista){
+            fila[0] = u.getIdUsuario();
+            fila[1] = u.getNombreUsuario();
+            fila[2] = u.getContrasenaUsuario();
+            fila[3] = u.getEstatusUsuario();
             fila[4] = u.getTipoUsuario();
             dtm.addRow(fila);
         }

@@ -5,8 +5,9 @@
  */
 package controladores;
 
-import classes.exceptions.NonexistentEntityException;
-import entidades.Usuarios;
+import controladores.exceptions.NonexistentEntityException;
+import controladores.exceptions.PreexistingEntityException;
+import entidades.Pelicula;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -21,13 +22,13 @@ import javax.persistence.criteria.Root;
  *
  * @author Armando Del Rio
  */
-public class UsuariosJpaController implements Serializable {
+public class PeliculaJpaController implements Serializable {
 
-    public UsuariosJpaController(EntityManagerFactory emf) {
+    public PeliculaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     
-    public UsuariosJpaController(){
+    public PeliculaJpaController() {
         this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
     }
     
@@ -37,13 +38,18 @@ public class UsuariosJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Usuarios usuarios) {
+    public void create(Pelicula pelicula) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(usuarios);
+            em.persist(pelicula);
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findPelicula(pelicula.getPeliculaId()) != null) {
+                throw new PreexistingEntityException("Pelicula " + pelicula + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -51,19 +57,19 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
-    public void edit(Usuarios usuarios) throws NonexistentEntityException, Exception {
+    public void edit(Pelicula pelicula) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            usuarios = em.merge(usuarios);
+            pelicula = em.merge(pelicula);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = usuarios.getId();
-                if (findUsuarios(id) == null) {
-                    throw new NonexistentEntityException("The usuarios with id " + id + " no longer exists.");
+                Integer id = pelicula.getPeliculaId();
+                if (findPelicula(id) == null) {
+                    throw new NonexistentEntityException("The pelicula with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -79,14 +85,14 @@ public class UsuariosJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Usuarios usuarios;
+            Pelicula pelicula;
             try {
-                usuarios = em.getReference(Usuarios.class, id);
-                usuarios.getId();
+                pelicula = em.getReference(Pelicula.class, id);
+                pelicula.getPeliculaId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The usuarios with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The pelicula with id " + id + " no longer exists.", enfe);
             }
-            em.remove(usuarios);
+            em.remove(pelicula);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -95,19 +101,19 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
-    public List<Usuarios> findUsuariosEntities() {
-        return findUsuariosEntities(true, -1, -1);
+    public List<Pelicula> findPeliculaEntities() {
+        return findPeliculaEntities(true, -1, -1);
     }
 
-    public List<Usuarios> findUsuariosEntities(int maxResults, int firstResult) {
-        return findUsuariosEntities(false, maxResults, firstResult);
+    public List<Pelicula> findPeliculaEntities(int maxResults, int firstResult) {
+        return findPeliculaEntities(false, maxResults, firstResult);
     }
 
-    private List<Usuarios> findUsuariosEntities(boolean all, int maxResults, int firstResult) {
+    private List<Pelicula> findPeliculaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Usuarios.class));
+            cq.select(cq.from(Pelicula.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -119,20 +125,20 @@ public class UsuariosJpaController implements Serializable {
         }
     }
 
-    public Usuarios findUsuarios(Integer id) {
+    public Pelicula findPelicula(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Usuarios.class, id);
+            return em.find(Pelicula.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getUsuariosCount() {
+    public int getPeliculaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Usuarios> rt = cq.from(Usuarios.class);
+            Root<Pelicula> rt = cq.from(Pelicula.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
