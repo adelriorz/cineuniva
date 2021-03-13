@@ -34,7 +34,7 @@ public class Administrador extends javax.swing.JFrame {
         dtm.addColumn("Tipo");
         List <Usuario> lista = new ArrayList<>();
         UsuarioJpaController ujc = new UsuarioJpaController();
-        lista = ujc.findUsuariosEntities();
+        lista = ujc.findUsuarioEntities();
         Object[] fila = new Object[5];
         for(Usuario u : lista){
             fila[0] = u.getIdUsuario();

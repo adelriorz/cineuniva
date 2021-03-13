@@ -28,7 +28,7 @@ public class PeliculaJpaController implements Serializable {
         this.emf = emf;
     }
     
-    public PeliculaJpaController() {
+    public PeliculaJpaController(){
         this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
     }
     

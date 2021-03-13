@@ -22,15 +22,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Armando Del Rio
  */
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuario")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usuarios.findAll", query = "SELECT u FROM Usuarios u")
-    , @NamedQuery(name = "Usuarios.findByIdUsuario", query = "SELECT u FROM Usuarios u WHERE u.idUsuario = :idUsuario")
-    , @NamedQuery(name = "Usuarios.findByNombreUsuario", query = "SELECT u FROM Usuarios u WHERE u.nombreUsuario = :nombreUsuario")
-    , @NamedQuery(name = "Usuarios.findByContrasenaUsuario", query = "SELECT u FROM Usuarios u WHERE u.contrasenaUsuario = :contrasenaUsuario")
-    , @NamedQuery(name = "Usuarios.findByEstatusUsuario", query = "SELECT u FROM Usuarios u WHERE u.estatusUsuario = :estatusUsuario")
-    , @NamedQuery(name = "Usuarios.findByTipoUsuario", query = "SELECT u FROM Usuarios u WHERE u.tipoUsuario = :tipoUsuario")})
+    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")
+    , @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario")
+    , @NamedQuery(name = "Usuario.findByNombreUsuario", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario")
+    , @NamedQuery(name = "Usuario.findByContrasenaUsuario", query = "SELECT u FROM Usuario u WHERE u.contrasenaUsuario = :contrasenaUsuario")
+    , @NamedQuery(name = "Usuario.findByEstatusUsuario", query = "SELECT u FROM Usuario u WHERE u.estatusUsuario = :estatusUsuario")
+    , @NamedQuery(name = "Usuario.findByTipoUsuario", query = "SELECT u FROM Usuario u WHERE u.tipoUsuario = :tipoUsuario")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -129,7 +129,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "entidades.Usuarios[ idUsuario=" + idUsuario + " ]";
+        return "entidades.Usuario[ idUsuario=" + idUsuario + " ]";
     }
     
 }
