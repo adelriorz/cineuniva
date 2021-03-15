@@ -1,5 +1,6 @@
 package frames;
 
+import entities.User;
 import com.placeholder.PlaceHolder;
 import controllers.UserJpaController;
 import javax.swing.JOptionPane;
@@ -42,11 +43,21 @@ public class Welcome extends javax.swing.JFrame {
         holder = new PlaceHolder(txtPassword, "Password");
     }
 
+//  Missing to validate the login
     private short login(){
         short ans = 0;
-        do{
-            JOptionPane.showMessageDialog(this, "Wrong user, try again.");
-        }while(ans == 1);
+        int userId = 0;
+//      Temporary name and password
+        String tN = "", tP = "";
+        
+        u = ujc.findUser(userId);
+        
+        if(tN.equals(u.getUserName()) && tP.equals(u.getUserPassword())){
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid user, try again.");
+        }
+        
         clearUser();
         return ans;
     }
