@@ -1,4 +1,4 @@
-package Tools;
+package data_structures;
 
 import java.util.Scanner;
 import java.util.Arrays;

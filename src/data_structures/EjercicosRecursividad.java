@@ -1,3 +1,5 @@
+package data_structures;
+
 /**
  * Ejercicio (2, 3 y 4)
  * Integra los ejercicios en un solo programa con un menú

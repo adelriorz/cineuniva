@@ -1,4 +1,4 @@
-package Tools;
+package data_structures;
 
 import java.time.Duration;
 import java.time.Instant;
