@@ -5,8 +5,8 @@
  */
 package frames;
 
-import controladores.UsuarioJpaController;
-import entidades.Usuario;
+import controllers.UserJpaController;
+import entities.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -15,28 +15,28 @@ public class Administrador extends javax.swing.JFrame {
 
     public Administrador() {
         initComponents();
-        cargaTabla();
-        tblAdministrador.setShowGrid(true);
+        loadTable();
+        tblAdministrator.setShowGrid(true);
     }
     
     /*
-    Metodo cargaTabla(): 
+    Metodo loadTable(): 
     Obtiene los valores de la base de datos de la tabla segun la opcion
     seleccionada.
     */    
-    public void cargaTabla(){
+    public void loadTable(){
         
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("Id");
-        dtm.addColumn("Nombre");
+        dtm.addColumn("Name");
         dtm.addColumn("Contraseña");
         dtm.addColumn("Estatus");
         dtm.addColumn("Tipo");
-        List <Usuario> lista = new ArrayList<>();
-        UsuarioJpaController ujc = new UsuarioJpaController();
+        List <User> lista = new ArrayList<>();
+        UserJpaController ujc = new UsuarioJpaController();
         lista = ujc.findUsuarioEntities();
         Object[] fila = new Object[5];
-        for(Usuario u : lista){
+        for(User u : lista){
             fila[0] = u.getIdUsuario();
             fila[1] = u.getNombreUsuario();
             fila[2] = u.getContrasenaUsuario();
@@ -44,7 +44,7 @@ public class Administrador extends javax.swing.JFrame {
             fila[4] = u.getTipoUsuario();
             dtm.addRow(fila);
         }
-        tblAdministrador.setModel(dtm);
+        tblAdministrator.setModel(dtm);
     }
 
     @SuppressWarnings("unchecked")
@@ -53,18 +53,24 @@ public class Administrador extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        cmbListaAdmin = new javax.swing.JComboBox<>();
+        cmbListAdmin = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
-        btnRegresar = new javax.swing.JButton();
-        btnSalir = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblAdministrador = new javax.swing.JTable();
+        tblAdministrator = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("CINE UNIVA");
 
-        cmbListaAdmin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbListAdmin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbListAdminActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -72,32 +78,32 @@ public class Administrador extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addComponent(cmbListaAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbListAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cmbListaAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbListAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        btnRegresar.setText("< Regresar");
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+        btnBack.setText("< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
+                btnBackActionPerformed(evt);
             }
         });
 
-        btnSalir.setText("Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnExit.setText("Exit");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
+                btnExitActionPerformed(evt);
             }
         });
 
-        tblAdministrador.setModel(new javax.swing.table.DefaultTableModel(
+        tblAdministrator.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -108,12 +114,12 @@ public class Administrador extends javax.swing.JFrame {
 
             }
         ));
-        tblAdministrador.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblAdministrator.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblAdministradorMouseClicked(evt);
+                tblAdministratorMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tblAdministrador);
+        jScrollPane1.setViewportView(tblAdministrator);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -121,23 +127,32 @@ public class Administrador extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
+                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
+                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSalir)))
+                    .addComponent(btnBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnExit)))
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 159, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -150,6 +165,7 @@ public class Administrador extends javax.swing.JFrame {
                 .addGap(266, 266, 266))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,9 +174,11 @@ public class Administrador extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(159, 159, 159)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
@@ -169,22 +187,22 @@ public class Administrador extends javax.swing.JFrame {
     /*
     Este metodo quita la visibilidad de la pestaña actual e instancia una de inicio.
     */
-    public void esconderActual(){
-        Inicio inicio = new Inicio();
-        inicio.setVisible(true);
+    public void hideCurrent(){
+        Welcome welcome = new Welcome();
+        welcome.setVisible(true);
         this.setVisible(false);
         this.dispose();
     }
     
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        esconderActual();
-    }//GEN-LAST:event_btnRegresarActionPerformed
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        hideCurrent();
+    }//GEN-LAST:event_btnBackActionPerformed
 
-    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         System.exit(1);
-    }//GEN-LAST:event_btnSalirActionPerformed
+    }//GEN-LAST:event_btnExitActionPerformed
 
-    private void tblAdministradorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAdministradorMouseClicked
+    private void tblAdministratorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAdministratorMouseClicked
         
 //        int renglon = tblAdministrador.getSelectedRow();
 //        txtId.setText(tblAdministrador.getValueAt(renglon, 0).toString());
@@ -194,7 +212,11 @@ public class Administrador extends javax.swing.JFrame {
 //        txtEdad.setText(tblAdministrador.getValueAt(renglon, 4).toString());
 //        btnModificar.setEnabled(true);
 //        btnEliminar.setEnabled(true);
-    }//GEN-LAST:event_tblAdministradorMouseClicked
+    }//GEN-LAST:event_tblAdministratorMouseClicked
+
+    private void cmbListAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbListAdminActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbListAdminActionPerformed
             
     /**
      * @param args the command line arguments
@@ -232,13 +254,14 @@ public class Administrador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRegresar;
-    private javax.swing.JButton btnSalir;
-    private javax.swing.JComboBox<String> cmbListaAdmin;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnExit;
+    private javax.swing.JComboBox<String> cmbListAdmin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblAdministrador;
+    private javax.swing.JTable tblAdministrator;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,10 +5,10 @@
  */
 package frames;
 
-import controladores.PeliculaJpaController;
-import controladores.UsuarioJpaController;
-import entidades.Pelicula;
-import entidades.Usuario;
+import entities.Movie;
+import entities.User;
+import controllers.MovieJpaController;
+import controllers.UserJpaController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sun.rmi.runtime.Log;
@@ -19,24 +19,22 @@ import sun.rmi.runtime.Log;
  */
 public class Pruebas {
     public static void main(String[] args) {
-        Usuario u = new Usuario();
-        //u.setId(2);
-//        u.setNombreUsuario("Joel Flores");
-//        u.setContrasenaUsuario("Maria");
-//        u.setTipoUsuario(true);
-//        UsuarioJpaController ujc = new UsuarioJpaController();
-          Pelicula p = new Pelicula();
-          p.setPeliculaId(1);
-          p.setPeliculaNombre("MonsterInc");
-          p.setPeliculaDirector("Leonardo di caprio");
-          p.setPeliculaDuracion(125);
-          p.setPeliculaProductor("Warner");
-          p.setPeliculaClasificacion("C");
-          p.setPeliculaGenero("Terror");
-        PeliculaJpaController pjc = new PeliculaJpaController();
+//        Movie m = new Movie();
+//        User u = new User();
+//        m.setMovieName("Lilo & Stitch");
+//        m.setMovieProducer("Leonardo Di Caprio");
+//        m.setMovieDirector("Leo Di Caprio");
+//        m.setMovieClassification("B15");
+//        m.setMovieDuration(125);
+//        u.setUserName("Paola");
+//        u.setUserPassword("3");
+//        u.setUserType(false);
+  
+//        MovieJpaController pjc = new MovieJpaController();
+//        UserJpaController ujc = new UserJpaController();
         try {
-//            ujc.create(u);
-              pjc.create(p);
+//            pjc.create(m);
+//          ujc.create(u);
         } catch (Exception ex) {
             Logger.getLogger(Pruebas.class.getName()).log(Level.SEVERE, null, ex);
         }
