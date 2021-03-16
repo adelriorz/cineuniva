@@ -4,6 +4,9 @@ import entities.User;
 import com.placeholder.PlaceHolder;
 import controllers.UserJpaController;
 import javax.swing.JOptionPane;
+import javax.swing.InputVerifier; //IMPLEMENT CLASS
+
+
 
 public class Login extends javax.swing.JFrame {
     
@@ -46,16 +49,14 @@ public class Login extends javax.swing.JFrame {
     //Searches user by name and returns id value
     private int searchUserName(String name){
         int i = 1;
-
-        while(i < ujc.getUserCount()){
+        while(i <= ujc.getUserCount()){
             u = ujc.findUser(i);
             if(txtUser.getText().equals(u.getUserName()))
                 return i;
-            else {
-                i = -1;
-            }
-            i++;
+            else
+                i++;
         }
+        i = -1;
         return i;
     }
 
@@ -67,8 +68,13 @@ public class Login extends javax.swing.JFrame {
         tP = txtPassword.getText();
         ujc.findUser(searchUserName(tN));
 
-        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP))
+        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true){
             JOptionPane.showMessageDialog(this, "Hurray!");
+            Administrator admin = new Administrator();
+            this.setVisible(false);
+            admin.setVisible(true);
+        } else JOptionPane.showMessageDialog(this, "Nope!");
+        
     }
     
     @SuppressWarnings("unchecked")
