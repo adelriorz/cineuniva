@@ -63,14 +63,16 @@ public class Login extends javax.swing.JFrame {
 //  Missing to validate the login
     private void login(){
         boolean ans = false;
-        String tN, tP; // Temporary name and password
+        String tN, tP, tS, tM; // Temporary name, password, state, municipality
         tN = txtUser.getText();
         tP = txtPassword.getText();
+        tS = txtState.getText();
+        tM = txtMunicipality.getText();
         ujc.findUser(searchUserName(tN));
 
         if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true){
             JOptionPane.showMessageDialog(this, "Hurray!");
-            Administrator admin = new Administrator();
+            Administrator admin = new Administrator(tS, tM);
             this.setVisible(false);
             admin.setVisible(true);
         } else JOptionPane.showMessageDialog(this, "Nope!");

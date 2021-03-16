@@ -8,33 +8,36 @@ package frames;
 import controllers.MovieJpaController;
 import controllers.RoomJpaController;
 import controllers.ScheduleJpaController;
-import controllers.UserJpaController;
-import entities.User;
 import entities.Schedule;
 import entities.Room;
 import entities.Movie;
+import entities.MovieLocation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class Administrator extends javax.swing.JFrame {
 
+    private static String state;
+    private static String mun;
     private final Movie movie;
     private final Schedule schedule;
     private final Room room;
+    private final MovieLocation movieLocation = new MovieLocation();
     
-    public Administrator() {
+    public Administrator(String st, String mun) {
+        initComponents();
+        this.state = state;
+        this.mun = mun;
         movie = new Movie();
         schedule = new Schedule();
         room = new Room();
-        initComponents();
         loadTable();
         tblAdministrator.setShowGrid(true);
     }
     
     /*
-    Metodo loadTable(): 
-    
+    Method loadTable(): Loads table with billboard
     */    
     public void loadTable(){
         
@@ -56,7 +59,6 @@ public class Administrator extends javax.swing.JFrame {
         MovieJpaController mjc = new MovieJpaController();
         RoomJpaController rjc = new RoomJpaController();
         ScheduleJpaController sjc = new ScheduleJpaController();
-        
         movieList = mjc.findMovieEntities();
         roomList = rjc.findRoomEntities();
         scheduleList = sjc.findScheduleEntities();
@@ -70,8 +72,8 @@ public class Administrator extends javax.swing.JFrame {
             row[4] = movie.getMovieClassification();
             row[5] = movie.getMovieDuration();
             row[6] = movie.getMovieStatus();
-//            row[7] = room.getRoomNumber();
-//            row[8] = schedule.getScheduleStart();
+            row[7] = room.getRoomNumber();
+            row[8] = schedule.getScheduleStart();
             dtm.addRow(row);
         }
         tblAdministrator.setModel(dtm);
@@ -91,23 +93,23 @@ public class Administrator extends javax.swing.JFrame {
         tblAdministrator = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
+        txtMovieName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtDirector = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        txtProducer = new javax.swing.JTextField();
+        txtClassification = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtDuration = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        txtGenre = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField9 = new javax.swing.JTextField();
+        txtRoomNumber = new javax.swing.JTextField();
+        txtScheduleStart = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -200,21 +202,44 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
 
     jLabel2.setText("Id");
 
+    txtId.setEnabled(false);
+
+    txtMovieName.setEnabled(false);
+
     jLabel3.setText("Movie Name");
 
     jLabel4.setText("Director");
 
+    txtDirector.setEnabled(false);
+
     jLabel5.setText("Producer");
+
+    txtProducer.setEnabled(false);
+
+    txtClassification.setEnabled(false);
 
     jLabel6.setText("Classification");
 
     jLabel7.setText("Duration");
 
+    txtDuration.setEnabled(false);
+
     jLabel8.setText("Genre");
+
+    txtGenre.setEnabled(false);
 
     jLabel9.setText("Room Number");
 
     jLabel10.setText("Schedule Start");
+
+    txtRoomNumber.setEnabled(false);
+    txtRoomNumber.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            txtRoomNumberActionPerformed(evt);
+        }
+    });
+
+    txtScheduleStart.setEnabled(false);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -226,11 +251,11 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addComponent(jLabel3)
                     .addGap(41, 41, 41)
-                    .addComponent(jTextField2))
+                    .addComponent(txtMovieName))
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(53, 53, 53)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -241,10 +266,10 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
                             .addComponent(jLabel4)))
                     .addGap(37, 37, 37)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField3)
-                        .addComponent(jTextField5)
+                        .addComponent(txtDirector)
+                        .addComponent(txtClassification)
                         .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtProducer, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(0, 0, Short.MAX_VALUE)))))
             .addGap(36, 36, 36)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,10 +279,10 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
                 .addComponent(jLabel10))
             .addGap(40, 40, 40)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addComponent(jTextField6)
-                .addComponent(jTextField7)
-                .addComponent(jTextField8)
-                .addComponent(jTextField9, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
+                .addComponent(txtDuration)
+                .addComponent(txtGenre)
+                .addComponent(txtRoomNumber)
+                .addComponent(txtScheduleStart, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
             .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
@@ -265,30 +290,30 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
         .addGroup(jPanel3Layout.createSequentialGroup()
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel2)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel7)
-                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtMovieName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel3)
                 .addComponent(jLabel8)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel4)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtDirector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel9)
-                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel5)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtProducer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel10)
-                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtScheduleStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel6))
             .addGap(0, 33, Short.MAX_VALUE))
     );
@@ -355,6 +380,10 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
     private void cmbListAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbListAdminActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbListAdminActionPerformed
+
+    private void txtRoomNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRoomNumberActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRoomNumberActionPerformed
             
     /**
      * @param args the command line arguments
@@ -387,7 +416,7 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Administrator().setVisible(true);
+                new Administrator(state, mun).setVisible(true);
             }
         });
     }
@@ -410,15 +439,15 @@ cmbListAdmin.addActionListener(new java.awt.event.ActionListener() {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
     private javax.swing.JTable tblAdministrator;
+    private javax.swing.JTextField txtClassification;
+    private javax.swing.JTextField txtDirector;
+    private javax.swing.JTextField txtDuration;
+    private javax.swing.JTextField txtGenre;
+    private javax.swing.JTextField txtId;
+    private javax.swing.JTextField txtMovieName;
+    private javax.swing.JTextField txtProducer;
+    private javax.swing.JTextField txtRoomNumber;
+    private javax.swing.JTextField txtScheduleStart;
     // End of variables declaration//GEN-END:variables
 }
