@@ -5,14 +5,14 @@ import com.placeholder.PlaceHolder;
 import controllers.UserJpaController;
 import javax.swing.JOptionPane;
 
-public class Welcome extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame {
     
     private PlaceHolder holder;
     private User u;
     private UserJpaController ujc;
     
     
-    public Welcome() {
+    public Login() {
         u = new User();
         ujc = new UserJpaController();
         initComponents();
@@ -42,24 +42,33 @@ public class Welcome extends javax.swing.JFrame {
         holder = new PlaceHolder(txtUser, "User");
         holder = new PlaceHolder(txtPassword, "Password");
     }
+    
+    //Searches user by name and returns id value
+    private int searchUserName(String name){
+        int i = 1;
+
+        while(i < ujc.getUserCount()){
+            u = ujc.findUser(i);
+            if(txtUser.getText().equals(u.getUserName()))
+                return i;
+            else {
+                i = -1;
+            }
+            i++;
+        }
+        return i;
+    }
 
 //  Missing to validate the login
-    private short login(){
-        short ans = 0;
-        int userId = 0;
-//      Temporary name and password
-        String tN = "", tP = "";
-        
-        u = ujc.findUser(userId);
-        
-        if(tN.equals(u.getUserName()) && tP.equals(u.getUserPassword())){
-            
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid user, try again.");
-        }
-        
-        clearUser();
-        return ans;
+    private void login(){
+        boolean ans = false;
+        String tN, tP; // Temporary name and password
+        tN = txtUser.getText();
+        tP = txtPassword.getText();
+        ujc.findUser(searchUserName(tN));
+
+        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP))
+            JOptionPane.showMessageDialog(this, "Hurray!");
     }
     
     @SuppressWarnings("unchecked")
@@ -136,6 +145,11 @@ public class Welcome extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(112, 112, 112)
+                .addComponent(btnResetData)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGap(55, 55, 55)
@@ -155,11 +169,6 @@ public class Welcome extends javax.swing.JFrame {
                     .addComponent(btnShowBillboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(49, 49, 49))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(112, 112, 112)
-                .addComponent(btnResetData)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -223,6 +232,7 @@ public class Welcome extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         login();
+         
     }//GEN-LAST:event_btnLoginActionPerformed
 
     public static void main(String args[]) {
@@ -239,14 +249,18 @@ public class Welcome extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Welcome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Welcome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Welcome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Welcome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -255,7 +269,7 @@ public class Welcome extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Welcome().setVisible(true);
+                new Login().setVisible(true);
             }
         });
     }

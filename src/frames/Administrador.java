@@ -25,26 +25,26 @@ public class Administrador extends javax.swing.JFrame {
     seleccionada.
     */    
     public void loadTable(){
-        
-        DefaultTableModel dtm = new DefaultTableModel();
-        dtm.addColumn("Id");
-        dtm.addColumn("Name");
-        dtm.addColumn("Contraseña");
-        dtm.addColumn("Estatus");
-        dtm.addColumn("Tipo");
-        List <User> lista = new ArrayList<>();
-        UserJpaController ujc = new UsuarioJpaController();
-        lista = ujc.findUsuarioEntities();
-        Object[] fila = new Object[5];
-        for(User u : lista){
-            fila[0] = u.getIdUsuario();
-            fila[1] = u.getNombreUsuario();
-            fila[2] = u.getContrasenaUsuario();
-            fila[3] = u.getEstatusUsuario();
-            fila[4] = u.getTipoUsuario();
-            dtm.addRow(fila);
-        }
-        tblAdministrator.setModel(dtm);
+//        
+//        DefaultTableModel dtm = new DefaultTableModel();
+//        dtm.addColumn("Id");
+//        dtm.addColumn("Name");
+//        dtm.addColumn("Contraseña");
+//        dtm.addColumn("Estatus");
+//        dtm.addColumn("Tipo");
+//        List <User> lista = new ArrayList<>();
+//        UserJpaController ujc = new UsuarioJpaController();
+//        lista = ujc.findUsuarioEntities();
+//        Object[] fila = new Object[5];
+//        for(User u : lista){
+//            fila[0] = u.getIdUsuario();
+//            fila[1] = u.getNombreUsuario();
+//            fila[2] = u.getContrasenaUsuario();
+//            fila[3] = u.getEstatusUsuario();
+//            fila[4] = u.getTipoUsuario();
+//            dtm.addRow(fila);
+//        }
+//        tblAdministrator.setModel(dtm);
     }
 
     @SuppressWarnings("unchecked")
@@ -188,7 +188,7 @@ public class Administrador extends javax.swing.JFrame {
     Este metodo quita la visibilidad de la pestaña actual e instancia una de inicio.
     */
     public void hideCurrent(){
-        Welcome welcome = new Welcome();
+        Login welcome = new Login();
         welcome.setVisible(true);
         this.setVisible(false);
         this.dispose();

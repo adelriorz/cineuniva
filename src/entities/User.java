@@ -58,7 +58,7 @@ public class User implements Serializable {
     private boolean userType;
     @Basic(optional = false)
     @Column(name = "userStatus")
-    private short userStatus;
+    private boolean userStatus;
     @Basic(optional = false)
     @Column(name = "userCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -77,7 +77,7 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(Integer userId, String userName, String userPassword, boolean userType, short userStatus, Date userCreatedAt, Date userUpdatedAt) {
+    public User(Integer userId, String userName, String userPassword, boolean userType, boolean userStatus, Date userCreatedAt, Date userUpdatedAt) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
@@ -119,11 +119,11 @@ public class User implements Serializable {
         this.userType = userType;
     }
 
-    public short getUserStatus() {
+    public boolean getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(short userStatus) {
+    public void setUserStatus(boolean userStatus) {
         this.userStatus = userStatus;
     }
 
