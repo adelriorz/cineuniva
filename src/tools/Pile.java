@@ -12,6 +12,10 @@ public class Pile{
         this.content = new int[max];
     }
     
+    public Pile(){
+    
+    }
+    
     public void setEnd(int end) {
         this.end = end;
     }
