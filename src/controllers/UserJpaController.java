@@ -34,7 +34,6 @@ public class UserJpaController implements Serializable {
         this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
     }
     
-    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {

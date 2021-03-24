@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -28,6 +29,11 @@ public class StateJpaController implements Serializable {
     public StateJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+    
+    public StateJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
+    }
+    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {

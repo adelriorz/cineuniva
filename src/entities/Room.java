@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -18,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -48,13 +51,15 @@ public class Room implements Serializable {
     private int roomNumber;
     @Basic(optional = false)
     @Column(name = "roomStatus")
-    private short roomStatus;
+    private boolean roomStatus;
     @Basic(optional = false)
     @Column(name = "roomCreatedAt")
-    private String roomCreatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date roomCreatedAt;
     @Basic(optional = false)
     @Column(name = "roomUpdatedAt")
-    private String roomUpdatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date roomUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
     private List<Assistance> assistanceList;
 
@@ -65,7 +70,7 @@ public class Room implements Serializable {
         this.roomId = roomId;
     }
 
-    public Room(Integer roomId, int roomNumber, short roomStatus, String roomCreatedAt, String roomUpdatedAt) {
+    public Room(Integer roomId, int roomNumber, boolean roomStatus, Date roomCreatedAt, Date roomUpdatedAt) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.roomStatus = roomStatus;
@@ -89,27 +94,27 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
     }
 
-    public short getRoomStatus() {
+    public boolean getRoomStatus() {
         return roomStatus;
     }
 
-    public void setRoomStatus(short roomStatus) {
+    public void setRoomStatus(boolean roomStatus) {
         this.roomStatus = roomStatus;
     }
 
-    public String getRoomCreatedAt() {
+    public Date getRoomCreatedAt() {
         return roomCreatedAt;
     }
 
-    public void setRoomCreatedAt(String roomCreatedAt) {
+    public void setRoomCreatedAt(Date roomCreatedAt) {
         this.roomCreatedAt = roomCreatedAt;
     }
 
-    public String getRoomUpdatedAt() {
+    public Date getRoomUpdatedAt() {
         return roomUpdatedAt;
     }
 
-    public void setRoomUpdatedAt(String roomUpdatedAt) {
+    public void setRoomUpdatedAt(Date roomUpdatedAt) {
         this.roomUpdatedAt = roomUpdatedAt;
     }
 

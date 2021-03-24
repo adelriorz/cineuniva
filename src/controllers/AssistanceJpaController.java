@@ -22,6 +22,7 @@ import entities.User;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -32,6 +33,11 @@ public class AssistanceJpaController implements Serializable {
     public AssistanceJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+    
+    public AssistanceJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
+    }
+    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -42,13 +48,13 @@ public class AssistanceJpaController implements Serializable {
         if (assistance.getAssistancePK() == null) {
             assistance.setAssistancePK(new AssistancePK());
         }
+        assistance.getAssistancePK().setSchedulescheduleId(assistance.getSchedule().getSchedulePK().getScheduleId());
         assistance.getAssistancePK().setMoviemovieId(assistance.getMovie().getMovieId());
         assistance.getAssistancePK().setScheduleroomId(assistance.getSchedule().getSchedulePK().getRoomId());
-        assistance.getAssistancePK().setSchedulescheduleId(assistance.getSchedule().getSchedulePK().getScheduleId());
-        assistance.getAssistancePK().setMunicipalitystateId(assistance.getMunicipality().getMunicipalityPK().getStateId());
-        assistance.getAssistancePK().setMunicipalitymunicipalityId(assistance.getMunicipality().getMunicipalityPK().getMunicipalityId());
         assistance.getAssistancePK().setRoomroomId(assistance.getRoom().getRoomId());
+        assistance.getAssistancePK().setMunicipalitymunicipalityId(assistance.getMunicipality().getMunicipalityPK().getMunicipalityId());
         assistance.getAssistancePK().setUseruserId(assistance.getUser().getUserId());
+        assistance.getAssistancePK().setMunicipalitystateId(assistance.getMunicipality().getMunicipalityPK().getStateId());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -113,13 +119,13 @@ public class AssistanceJpaController implements Serializable {
     }
 
     public void edit(Assistance assistance) throws NonexistentEntityException, Exception {
+        assistance.getAssistancePK().setSchedulescheduleId(assistance.getSchedule().getSchedulePK().getScheduleId());
         assistance.getAssistancePK().setMoviemovieId(assistance.getMovie().getMovieId());
         assistance.getAssistancePK().setScheduleroomId(assistance.getSchedule().getSchedulePK().getRoomId());
-        assistance.getAssistancePK().setSchedulescheduleId(assistance.getSchedule().getSchedulePK().getScheduleId());
-        assistance.getAssistancePK().setMunicipalitystateId(assistance.getMunicipality().getMunicipalityPK().getStateId());
-        assistance.getAssistancePK().setMunicipalitymunicipalityId(assistance.getMunicipality().getMunicipalityPK().getMunicipalityId());
         assistance.getAssistancePK().setRoomroomId(assistance.getRoom().getRoomId());
+        assistance.getAssistancePK().setMunicipalitymunicipalityId(assistance.getMunicipality().getMunicipalityPK().getMunicipalityId());
         assistance.getAssistancePK().setUseruserId(assistance.getUser().getUserId());
+        assistance.getAssistancePK().setMunicipalitystateId(assistance.getMunicipality().getMunicipalityPK().getStateId());
         EntityManager em = null;
         try {
             em = getEntityManager();

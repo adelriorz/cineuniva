@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -18,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -53,16 +56,18 @@ public class User implements Serializable {
     private String userPassword;
     @Basic(optional = false)
     @Column(name = "userType")
-    private short userType;
+    private boolean userType;
     @Basic(optional = false)
     @Column(name = "userStatus")
-    private short userStatus;
+    private boolean userStatus;
     @Basic(optional = false)
     @Column(name = "userCreatedAt")
-    private String userCreatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date userCreatedAt;
     @Basic(optional = false)
     @Column(name = "userUpdatedAt")
-    private String userUpdatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date userUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Assistance> assistanceList;
 
@@ -73,7 +78,7 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(Integer userId, String userName, String userPassword, short userType, short userStatus, String userCreatedAt, String userUpdatedAt) {
+    public User(Integer userId, String userName, String userPassword, boolean userType, boolean userStatus, Date userCreatedAt, Date userUpdatedAt) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
@@ -107,35 +112,35 @@ public class User implements Serializable {
         this.userPassword = userPassword;
     }
 
-    public short getUserType() {
+    public boolean getUserType() {
         return userType;
     }
 
-    public void setUserType(short userType) {
+    public void setUserType(boolean userType) {
         this.userType = userType;
     }
 
-    public short getUserStatus() {
+    public boolean getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(short userStatus) {
+    public void setUserStatus(boolean userStatus) {
         this.userStatus = userStatus;
     }
 
-    public String getUserCreatedAt() {
+    public Date getUserCreatedAt() {
         return userCreatedAt;
     }
 
-    public void setUserCreatedAt(String userCreatedAt) {
+    public void setUserCreatedAt(Date userCreatedAt) {
         this.userCreatedAt = userCreatedAt;
     }
 
-    public String getUserUpdatedAt() {
+    public Date getUserUpdatedAt() {
         return userUpdatedAt;
     }
 
-    public void setUserUpdatedAt(String userUpdatedAt) {
+    public void setUserUpdatedAt(Date userUpdatedAt) {
         this.userUpdatedAt = userUpdatedAt;
     }
 

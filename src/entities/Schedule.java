@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -16,6 +17,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -48,13 +51,15 @@ public class Schedule implements Serializable {
     private String scheduleEnd;
     @Basic(optional = false)
     @Column(name = "scheduleStatus")
-    private short scheduleStatus;
+    private boolean scheduleStatus;
     @Basic(optional = false)
     @Column(name = "scheduleCreatedAt")
-    private String scheduleCreatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date scheduleCreatedAt;
     @Basic(optional = false)
     @Column(name = "scheduleUpdatedAt")
-    private String scheduleUpdatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date scheduleUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "schedule")
     private List<Assistance> assistanceList;
 
@@ -65,7 +70,7 @@ public class Schedule implements Serializable {
         this.schedulePK = schedulePK;
     }
 
-    public Schedule(SchedulePK schedulePK, String scheduleStart, String scheduleEnd, short scheduleStatus, String scheduleCreatedAt, String scheduleUpdatedAt) {
+    public Schedule(SchedulePK schedulePK, String scheduleStart, String scheduleEnd, boolean scheduleStatus, Date scheduleCreatedAt, Date scheduleUpdatedAt) {
         this.schedulePK = schedulePK;
         this.scheduleStart = scheduleStart;
         this.scheduleEnd = scheduleEnd;
@@ -102,27 +107,27 @@ public class Schedule implements Serializable {
         this.scheduleEnd = scheduleEnd;
     }
 
-    public short getScheduleStatus() {
+    public boolean getScheduleStatus() {
         return scheduleStatus;
     }
 
-    public void setScheduleStatus(short scheduleStatus) {
+    public void setScheduleStatus(boolean scheduleStatus) {
         this.scheduleStatus = scheduleStatus;
     }
 
-    public String getScheduleCreatedAt() {
+    public Date getScheduleCreatedAt() {
         return scheduleCreatedAt;
     }
 
-    public void setScheduleCreatedAt(String scheduleCreatedAt) {
+    public void setScheduleCreatedAt(Date scheduleCreatedAt) {
         this.scheduleCreatedAt = scheduleCreatedAt;
     }
 
-    public String getScheduleUpdatedAt() {
+    public Date getScheduleUpdatedAt() {
         return scheduleUpdatedAt;
     }
 
-    public void setScheduleUpdatedAt(String scheduleUpdatedAt) {
+    public void setScheduleUpdatedAt(Date scheduleUpdatedAt) {
         this.scheduleUpdatedAt = scheduleUpdatedAt;
     }
 

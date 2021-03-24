@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,9 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Assistance.findAll", query = "SELECT a FROM Assistance a")
     , @NamedQuery(name = "Assistance.findByAssistanceId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.assistanceId = :assistanceId")
-    , @NamedQuery(name = "Assistance.findByAssistanceMunicipalityfk", query = "SELECT a FROM Assistance a WHERE a.assistanceMunicipalityfk = :assistanceMunicipalityfk")
-    , @NamedQuery(name = "Assistance.findByAssistancUserfk", query = "SELECT a FROM Assistance a WHERE a.assistancUserfk = :assistancUserfk")
-    , @NamedQuery(name = "Assistance.findByAssistanceSchedulefk", query = "SELECT a FROM Assistance a WHERE a.assistanceSchedulefk = :assistanceSchedulefk")
     , @NamedQuery(name = "Assistance.findByAssistanceStatus", query = "SELECT a FROM Assistance a WHERE a.assistanceStatus = :assistanceStatus")
     , @NamedQuery(name = "Assistance.findByAssistanceCreatedAt", query = "SELECT a FROM Assistance a WHERE a.assistanceCreatedAt = :assistanceCreatedAt")
     , @NamedQuery(name = "Assistance.findByAssistanceUpdatedAt", query = "SELECT a FROM Assistance a WHERE a.assistanceUpdatedAt = :assistanceUpdatedAt")
@@ -47,23 +47,16 @@ public class Assistance implements Serializable {
     @EmbeddedId
     protected AssistancePK assistancePK;
     @Basic(optional = false)
-    @Column(name = "assistanceMunicipality_fk")
-    private int assistanceMunicipalityfk;
-    @Basic(optional = false)
-    @Column(name = "assistancUser_fk")
-    private int assistancUserfk;
-    @Basic(optional = false)
-    @Column(name = "assistanceSchedule_fk")
-    private int assistanceSchedulefk;
-    @Basic(optional = false)
     @Column(name = "assistanceStatus")
-    private short assistanceStatus;
+    private boolean assistanceStatus;
     @Basic(optional = false)
     @Column(name = "assistanceCreatedAt")
-    private String assistanceCreatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date assistanceCreatedAt;
     @Basic(optional = false)
     @Column(name = "assistanceUpdatedAt")
-    private String assistanceUpdatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date assistanceUpdatedAt;
     @JoinColumn(name = "movie_movieId", referencedColumnName = "movieId", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Movie movie;
@@ -91,11 +84,8 @@ public class Assistance implements Serializable {
         this.assistancePK = assistancePK;
     }
 
-    public Assistance(AssistancePK assistancePK, int assistanceMunicipalityfk, int assistancUserfk, int assistanceSchedulefk, short assistanceStatus, String assistanceCreatedAt, String assistanceUpdatedAt) {
+    public Assistance(AssistancePK assistancePK, boolean assistanceStatus, Date assistanceCreatedAt, Date assistanceUpdatedAt) {
         this.assistancePK = assistancePK;
-        this.assistanceMunicipalityfk = assistanceMunicipalityfk;
-        this.assistancUserfk = assistancUserfk;
-        this.assistanceSchedulefk = assistanceSchedulefk;
         this.assistanceStatus = assistanceStatus;
         this.assistanceCreatedAt = assistanceCreatedAt;
         this.assistanceUpdatedAt = assistanceUpdatedAt;
@@ -113,51 +103,27 @@ public class Assistance implements Serializable {
         this.assistancePK = assistancePK;
     }
 
-    public int getAssistanceMunicipalityfk() {
-        return assistanceMunicipalityfk;
-    }
-
-    public void setAssistanceMunicipalityfk(int assistanceMunicipalityfk) {
-        this.assistanceMunicipalityfk = assistanceMunicipalityfk;
-    }
-
-    public int getAssistancUserfk() {
-        return assistancUserfk;
-    }
-
-    public void setAssistancUserfk(int assistancUserfk) {
-        this.assistancUserfk = assistancUserfk;
-    }
-
-    public int getAssistanceSchedulefk() {
-        return assistanceSchedulefk;
-    }
-
-    public void setAssistanceSchedulefk(int assistanceSchedulefk) {
-        this.assistanceSchedulefk = assistanceSchedulefk;
-    }
-
-    public short getAssistanceStatus() {
+    public boolean getAssistanceStatus() {
         return assistanceStatus;
     }
 
-    public void setAssistanceStatus(short assistanceStatus) {
+    public void setAssistanceStatus(boolean assistanceStatus) {
         this.assistanceStatus = assistanceStatus;
     }
 
-    public String getAssistanceCreatedAt() {
+    public Date getAssistanceCreatedAt() {
         return assistanceCreatedAt;
     }
 
-    public void setAssistanceCreatedAt(String assistanceCreatedAt) {
+    public void setAssistanceCreatedAt(Date assistanceCreatedAt) {
         this.assistanceCreatedAt = assistanceCreatedAt;
     }
 
-    public String getAssistanceUpdatedAt() {
+    public Date getAssistanceUpdatedAt() {
         return assistanceUpdatedAt;
     }
 
-    public void setAssistanceUpdatedAt(String assistanceUpdatedAt) {
+    public void setAssistanceUpdatedAt(Date assistanceUpdatedAt) {
         this.assistanceUpdatedAt = assistanceUpdatedAt;
     }
 

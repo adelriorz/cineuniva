@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -18,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -46,13 +49,15 @@ public class Municipality implements Serializable {
     private String municipalityName;
     @Basic(optional = false)
     @Column(name = "municipalityStatus")
-    private short municipalityStatus;
+    private boolean municipalityStatus;
     @Basic(optional = false)
     @Column(name = "municipalityCreatedAt")
-    private String municipalityCreatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date municipalityCreatedAt;
     @Basic(optional = false)
     @Column(name = "municipalityUpdatedAt")
-    private String municipalityUpdatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date municipalityUpdatedAt;
     @JoinColumn(name = "stateId", referencedColumnName = "stateId", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private State state;
@@ -66,7 +71,7 @@ public class Municipality implements Serializable {
         this.municipalityPK = municipalityPK;
     }
 
-    public Municipality(MunicipalityPK municipalityPK, String municipalityName, short municipalityStatus, String municipalityCreatedAt, String municipalityUpdatedAt) {
+    public Municipality(MunicipalityPK municipalityPK, String municipalityName, boolean municipalityStatus, Date municipalityCreatedAt, Date municipalityUpdatedAt) {
         this.municipalityPK = municipalityPK;
         this.municipalityName = municipalityName;
         this.municipalityStatus = municipalityStatus;
@@ -94,27 +99,27 @@ public class Municipality implements Serializable {
         this.municipalityName = municipalityName;
     }
 
-    public short getMunicipalityStatus() {
+    public boolean getMunicipalityStatus() {
         return municipalityStatus;
     }
 
-    public void setMunicipalityStatus(short municipalityStatus) {
+    public void setMunicipalityStatus(boolean municipalityStatus) {
         this.municipalityStatus = municipalityStatus;
     }
 
-    public String getMunicipalityCreatedAt() {
+    public Date getMunicipalityCreatedAt() {
         return municipalityCreatedAt;
     }
 
-    public void setMunicipalityCreatedAt(String municipalityCreatedAt) {
+    public void setMunicipalityCreatedAt(Date municipalityCreatedAt) {
         this.municipalityCreatedAt = municipalityCreatedAt;
     }
 
-    public String getMunicipalityUpdatedAt() {
+    public Date getMunicipalityUpdatedAt() {
         return municipalityUpdatedAt;
     }
 
-    public void setMunicipalityUpdatedAt(String municipalityUpdatedAt) {
+    public void setMunicipalityUpdatedAt(Date municipalityUpdatedAt) {
         this.municipalityUpdatedAt = municipalityUpdatedAt;
     }
 

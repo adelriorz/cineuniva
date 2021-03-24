@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -30,6 +31,11 @@ public class ScheduleJpaController implements Serializable {
     public ScheduleJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+    
+    public ScheduleJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
+    }
+    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {

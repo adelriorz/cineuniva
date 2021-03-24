@@ -67,14 +67,15 @@ public class Movie implements Serializable {
     private int movieDuration;
     @Basic(optional = false)
     @Column(name = "movieStatus")
-    private short movieStatus;
+    private boolean movieStatus;
     @Basic(optional = false)
     @Column(name = "movieCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date movieCreatedAt;
     @Basic(optional = false)
     @Column(name = "movieUpdatedAt")
-    private String movieUpdatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date movieUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "movie")
     private List<Assistance> assistanceList;
 
@@ -85,7 +86,7 @@ public class Movie implements Serializable {
         this.movieId = movieId;
     }
 
-    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, short movieStatus, Date movieCreatedAt, String movieUpdatedAt) {
+    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, boolean movieStatus, Date movieCreatedAt, Date movieUpdatedAt) {
         this.movieId = movieId;
         this.movieName = movieName;
         this.movieDirector = movieDirector;
@@ -145,11 +146,11 @@ public class Movie implements Serializable {
         this.movieDuration = movieDuration;
     }
 
-    public short getMovieStatus() {
+    public boolean getMovieStatus() {
         return movieStatus;
     }
 
-    public void setMovieStatus(short movieStatus) {
+    public void setMovieStatus(boolean movieStatus) {
         this.movieStatus = movieStatus;
     }
 
@@ -161,11 +162,11 @@ public class Movie implements Serializable {
         this.movieCreatedAt = movieCreatedAt;
     }
 
-    public String getMovieUpdatedAt() {
+    public Date getMovieUpdatedAt() {
         return movieUpdatedAt;
     }
 
-    public void setMovieUpdatedAt(String movieUpdatedAt) {
+    public void setMovieUpdatedAt(Date movieUpdatedAt) {
         this.movieUpdatedAt = movieUpdatedAt;
     }
 
