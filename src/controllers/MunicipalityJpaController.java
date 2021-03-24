@@ -14,14 +14,13 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import entities.State;
-import entities.MovieLocation;
+import entities.Assistance;
 import entities.Municipality;
 import entities.MunicipalityPK;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
@@ -32,11 +31,6 @@ public class MunicipalityJpaController implements Serializable {
     public MunicipalityJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    
-    public MunicipalityJpaController() {
-        this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
-    }
-    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -47,8 +41,8 @@ public class MunicipalityJpaController implements Serializable {
         if (municipality.getMunicipalityPK() == null) {
             municipality.setMunicipalityPK(new MunicipalityPK());
         }
-        if (municipality.getMovieLocationList() == null) {
-            municipality.setMovieLocationList(new ArrayList<MovieLocation>());
+        if (municipality.getAssistanceList() == null) {
+            municipality.setAssistanceList(new ArrayList<Assistance>());
         }
         municipality.getMunicipalityPK().setStateId(municipality.getState().getStateId());
         EntityManager em = null;
@@ -60,24 +54,24 @@ public class MunicipalityJpaController implements Serializable {
                 state = em.getReference(state.getClass(), state.getStateId());
                 municipality.setState(state);
             }
-            List<MovieLocation> attachedMovieLocationList = new ArrayList<MovieLocation>();
-            for (MovieLocation movieLocationListMovieLocationToAttach : municipality.getMovieLocationList()) {
-                movieLocationListMovieLocationToAttach = em.getReference(movieLocationListMovieLocationToAttach.getClass(), movieLocationListMovieLocationToAttach.getMovieLocationPK());
-                attachedMovieLocationList.add(movieLocationListMovieLocationToAttach);
+            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
+            for (Assistance assistanceListAssistanceToAttach : municipality.getAssistanceList()) {
+                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
+                attachedAssistanceList.add(assistanceListAssistanceToAttach);
             }
-            municipality.setMovieLocationList(attachedMovieLocationList);
+            municipality.setAssistanceList(attachedAssistanceList);
             em.persist(municipality);
             if (state != null) {
                 state.getMunicipalityList().add(municipality);
                 state = em.merge(state);
             }
-            for (MovieLocation movieLocationListMovieLocation : municipality.getMovieLocationList()) {
-                Municipality oldMunicipalityOfMovieLocationListMovieLocation = movieLocationListMovieLocation.getMunicipality();
-                movieLocationListMovieLocation.setMunicipality(municipality);
-                movieLocationListMovieLocation = em.merge(movieLocationListMovieLocation);
-                if (oldMunicipalityOfMovieLocationListMovieLocation != null) {
-                    oldMunicipalityOfMovieLocationListMovieLocation.getMovieLocationList().remove(movieLocationListMovieLocation);
-                    oldMunicipalityOfMovieLocationListMovieLocation = em.merge(oldMunicipalityOfMovieLocationListMovieLocation);
+            for (Assistance assistanceListAssistance : municipality.getAssistanceList()) {
+                Municipality oldMunicipalityOfAssistanceListAssistance = assistanceListAssistance.getMunicipality();
+                assistanceListAssistance.setMunicipality(municipality);
+                assistanceListAssistance = em.merge(assistanceListAssistance);
+                if (oldMunicipalityOfAssistanceListAssistance != null) {
+                    oldMunicipalityOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
+                    oldMunicipalityOfAssistanceListAssistance = em.merge(oldMunicipalityOfAssistanceListAssistance);
                 }
             }
             em.getTransaction().commit();
@@ -102,15 +96,15 @@ public class MunicipalityJpaController implements Serializable {
             Municipality persistentMunicipality = em.find(Municipality.class, municipality.getMunicipalityPK());
             State stateOld = persistentMunicipality.getState();
             State stateNew = municipality.getState();
-            List<MovieLocation> movieLocationListOld = persistentMunicipality.getMovieLocationList();
-            List<MovieLocation> movieLocationListNew = municipality.getMovieLocationList();
+            List<Assistance> assistanceListOld = persistentMunicipality.getAssistanceList();
+            List<Assistance> assistanceListNew = municipality.getAssistanceList();
             List<String> illegalOrphanMessages = null;
-            for (MovieLocation movieLocationListOldMovieLocation : movieLocationListOld) {
-                if (!movieLocationListNew.contains(movieLocationListOldMovieLocation)) {
+            for (Assistance assistanceListOldAssistance : assistanceListOld) {
+                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain MovieLocation " + movieLocationListOldMovieLocation + " since its municipality field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its municipality field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -120,13 +114,13 @@ public class MunicipalityJpaController implements Serializable {
                 stateNew = em.getReference(stateNew.getClass(), stateNew.getStateId());
                 municipality.setState(stateNew);
             }
-            List<MovieLocation> attachedMovieLocationListNew = new ArrayList<MovieLocation>();
-            for (MovieLocation movieLocationListNewMovieLocationToAttach : movieLocationListNew) {
-                movieLocationListNewMovieLocationToAttach = em.getReference(movieLocationListNewMovieLocationToAttach.getClass(), movieLocationListNewMovieLocationToAttach.getMovieLocationPK());
-                attachedMovieLocationListNew.add(movieLocationListNewMovieLocationToAttach);
+            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
+            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
+                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
+                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
             }
-            movieLocationListNew = attachedMovieLocationListNew;
-            municipality.setMovieLocationList(movieLocationListNew);
+            assistanceListNew = attachedAssistanceListNew;
+            municipality.setAssistanceList(assistanceListNew);
             municipality = em.merge(municipality);
             if (stateOld != null && !stateOld.equals(stateNew)) {
                 stateOld.getMunicipalityList().remove(municipality);
@@ -136,14 +130,14 @@ public class MunicipalityJpaController implements Serializable {
                 stateNew.getMunicipalityList().add(municipality);
                 stateNew = em.merge(stateNew);
             }
-            for (MovieLocation movieLocationListNewMovieLocation : movieLocationListNew) {
-                if (!movieLocationListOld.contains(movieLocationListNewMovieLocation)) {
-                    Municipality oldMunicipalityOfMovieLocationListNewMovieLocation = movieLocationListNewMovieLocation.getMunicipality();
-                    movieLocationListNewMovieLocation.setMunicipality(municipality);
-                    movieLocationListNewMovieLocation = em.merge(movieLocationListNewMovieLocation);
-                    if (oldMunicipalityOfMovieLocationListNewMovieLocation != null && !oldMunicipalityOfMovieLocationListNewMovieLocation.equals(municipality)) {
-                        oldMunicipalityOfMovieLocationListNewMovieLocation.getMovieLocationList().remove(movieLocationListNewMovieLocation);
-                        oldMunicipalityOfMovieLocationListNewMovieLocation = em.merge(oldMunicipalityOfMovieLocationListNewMovieLocation);
+            for (Assistance assistanceListNewAssistance : assistanceListNew) {
+                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
+                    Municipality oldMunicipalityOfAssistanceListNewAssistance = assistanceListNewAssistance.getMunicipality();
+                    assistanceListNewAssistance.setMunicipality(municipality);
+                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
+                    if (oldMunicipalityOfAssistanceListNewAssistance != null && !oldMunicipalityOfAssistanceListNewAssistance.equals(municipality)) {
+                        oldMunicipalityOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
+                        oldMunicipalityOfAssistanceListNewAssistance = em.merge(oldMunicipalityOfAssistanceListNewAssistance);
                     }
                 }
             }
@@ -177,12 +171,12 @@ public class MunicipalityJpaController implements Serializable {
                 throw new NonexistentEntityException("The municipality with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<MovieLocation> movieLocationListOrphanCheck = municipality.getMovieLocationList();
-            for (MovieLocation movieLocationListOrphanCheckMovieLocation : movieLocationListOrphanCheck) {
+            List<Assistance> assistanceListOrphanCheck = municipality.getAssistanceList();
+            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Municipality (" + municipality + ") cannot be destroyed since the MovieLocation " + movieLocationListOrphanCheckMovieLocation + " in its movieLocationList field has a non-nullable municipality field.");
+                illegalOrphanMessages.add("This Municipality (" + municipality + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable municipality field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

@@ -6,21 +6,16 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -56,17 +51,12 @@ public class Schedule implements Serializable {
     private short scheduleStatus;
     @Basic(optional = false)
     @Column(name = "scheduleCreatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date scheduleCreatedAt;
+    private String scheduleCreatedAt;
     @Basic(optional = false)
     @Column(name = "scheduleUpdatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date scheduleUpdatedAt;
-    @JoinColumn(name = "roomId", referencedColumnName = "roomId", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Room room;
+    private String scheduleUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "schedule")
-    private List<MovieSchedule> movieScheduleList;
+    private List<Assistance> assistanceList;
 
     public Schedule() {
     }
@@ -75,7 +65,7 @@ public class Schedule implements Serializable {
         this.schedulePK = schedulePK;
     }
 
-    public Schedule(SchedulePK schedulePK, String scheduleStart, String scheduleEnd, short scheduleStatus, Date scheduleCreatedAt, Date scheduleUpdatedAt) {
+    public Schedule(SchedulePK schedulePK, String scheduleStart, String scheduleEnd, short scheduleStatus, String scheduleCreatedAt, String scheduleUpdatedAt) {
         this.schedulePK = schedulePK;
         this.scheduleStart = scheduleStart;
         this.scheduleEnd = scheduleEnd;
@@ -120,37 +110,29 @@ public class Schedule implements Serializable {
         this.scheduleStatus = scheduleStatus;
     }
 
-    public Date getScheduleCreatedAt() {
+    public String getScheduleCreatedAt() {
         return scheduleCreatedAt;
     }
 
-    public void setScheduleCreatedAt(Date scheduleCreatedAt) {
+    public void setScheduleCreatedAt(String scheduleCreatedAt) {
         this.scheduleCreatedAt = scheduleCreatedAt;
     }
 
-    public Date getScheduleUpdatedAt() {
+    public String getScheduleUpdatedAt() {
         return scheduleUpdatedAt;
     }
 
-    public void setScheduleUpdatedAt(Date scheduleUpdatedAt) {
+    public void setScheduleUpdatedAt(String scheduleUpdatedAt) {
         this.scheduleUpdatedAt = scheduleUpdatedAt;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     @XmlTransient
-    public List<MovieSchedule> getMovieScheduleList() {
-        return movieScheduleList;
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
     }
 
-    public void setMovieScheduleList(List<MovieSchedule> movieScheduleList) {
-        this.movieScheduleList = movieScheduleList;
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override

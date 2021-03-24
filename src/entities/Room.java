@@ -6,7 +6,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -54,14 +51,12 @@ public class Room implements Serializable {
     private short roomStatus;
     @Basic(optional = false)
     @Column(name = "roomCreatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date roomCreatedAt;
+    private String roomCreatedAt;
     @Basic(optional = false)
     @Column(name = "roomUpdatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date roomUpdatedAt;
+    private String roomUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
-    private List<Schedule> scheduleList;
+    private List<Assistance> assistanceList;
 
     public Room() {
     }
@@ -70,7 +65,7 @@ public class Room implements Serializable {
         this.roomId = roomId;
     }
 
-    public Room(Integer roomId, int roomNumber, short roomStatus, Date roomCreatedAt, Date roomUpdatedAt) {
+    public Room(Integer roomId, int roomNumber, short roomStatus, String roomCreatedAt, String roomUpdatedAt) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.roomStatus = roomStatus;
@@ -102,29 +97,29 @@ public class Room implements Serializable {
         this.roomStatus = roomStatus;
     }
 
-    public Date getRoomCreatedAt() {
+    public String getRoomCreatedAt() {
         return roomCreatedAt;
     }
 
-    public void setRoomCreatedAt(Date roomCreatedAt) {
+    public void setRoomCreatedAt(String roomCreatedAt) {
         this.roomCreatedAt = roomCreatedAt;
     }
 
-    public Date getRoomUpdatedAt() {
+    public String getRoomUpdatedAt() {
         return roomUpdatedAt;
     }
 
-    public void setRoomUpdatedAt(Date roomUpdatedAt) {
+    public void setRoomUpdatedAt(String roomUpdatedAt) {
         this.roomUpdatedAt = roomUpdatedAt;
     }
 
     @XmlTransient
-    public List<Schedule> getScheduleList() {
-        return scheduleList;
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
     }
 
-    public void setScheduleList(List<Schedule> scheduleList) {
-        this.scheduleList = scheduleList;
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override

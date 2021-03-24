@@ -17,6 +17,11 @@ import sun.rmi.runtime.Log;
  *
  * @author Armando Del Rio
  */
+
+//    public MovieJpaController() {
+//        this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
+//    }
+
 public class Tests {
     public static void main(String[] args) {
 //        Movie m = new Movie();
@@ -32,6 +37,8 @@ public class Tests {
   
 //        MovieJpaController pjc = new MovieJpaController();
 //        UserJpaController ujc = new UserJpaController();
+
+
         try {
 //            pjc.create(m);
 //          ujc.create(u);

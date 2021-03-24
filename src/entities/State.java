@@ -6,7 +6,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -54,12 +51,10 @@ public class State implements Serializable {
     private short stateStatus;
     @Basic(optional = false)
     @Column(name = "stateCreatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date stateCreatedAt;
+    private String stateCreatedAt;
     @Basic(optional = false)
     @Column(name = "stateUpdatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date stateUpdatedAt;
+    private String stateUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "state")
     private List<Municipality> municipalityList;
 
@@ -70,7 +65,7 @@ public class State implements Serializable {
         this.stateId = stateId;
     }
 
-    public State(Integer stateId, String stateName, short stateStatus, Date stateCreatedAt, Date stateUpdatedAt) {
+    public State(Integer stateId, String stateName, short stateStatus, String stateCreatedAt, String stateUpdatedAt) {
         this.stateId = stateId;
         this.stateName = stateName;
         this.stateStatus = stateStatus;
@@ -102,19 +97,19 @@ public class State implements Serializable {
         this.stateStatus = stateStatus;
     }
 
-    public Date getStateCreatedAt() {
+    public String getStateCreatedAt() {
         return stateCreatedAt;
     }
 
-    public void setStateCreatedAt(Date stateCreatedAt) {
+    public void setStateCreatedAt(String stateCreatedAt) {
         this.stateCreatedAt = stateCreatedAt;
     }
 
-    public Date getStateUpdatedAt() {
+    public String getStateUpdatedAt() {
         return stateUpdatedAt;
     }
 
-    public void setStateUpdatedAt(Date stateUpdatedAt) {
+    public void setStateUpdatedAt(String stateUpdatedAt) {
         this.stateUpdatedAt = stateUpdatedAt;
     }
 

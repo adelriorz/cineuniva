@@ -6,20 +6,18 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -55,20 +53,18 @@ public class User implements Serializable {
     private String userPassword;
     @Basic(optional = false)
     @Column(name = "userType")
-    private boolean userType;
+    private short userType;
     @Basic(optional = false)
     @Column(name = "userStatus")
-    private boolean userStatus;
+    private short userStatus;
     @Basic(optional = false)
     @Column(name = "userCreatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date userCreatedAt;
+    private String userCreatedAt;
     @Basic(optional = false)
     @Column(name = "userUpdatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date userUpdatedAt;
-    @ManyToMany(mappedBy = "userList")
-    private List<MovieLocation> movieLocationList;
+    private String userUpdatedAt;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Assistance> assistanceList;
 
     public User() {
     }
@@ -77,7 +73,7 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(Integer userId, String userName, String userPassword, boolean userType, boolean userStatus, Date userCreatedAt, Date userUpdatedAt) {
+    public User(Integer userId, String userName, String userPassword, short userType, short userStatus, String userCreatedAt, String userUpdatedAt) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
@@ -111,45 +107,45 @@ public class User implements Serializable {
         this.userPassword = userPassword;
     }
 
-    public boolean getUserType() {
+    public short getUserType() {
         return userType;
     }
 
-    public void setUserType(boolean userType) {
+    public void setUserType(short userType) {
         this.userType = userType;
     }
 
-    public boolean getUserStatus() {
+    public short getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(boolean userStatus) {
+    public void setUserStatus(short userStatus) {
         this.userStatus = userStatus;
     }
 
-    public Date getUserCreatedAt() {
+    public String getUserCreatedAt() {
         return userCreatedAt;
     }
 
-    public void setUserCreatedAt(Date userCreatedAt) {
+    public void setUserCreatedAt(String userCreatedAt) {
         this.userCreatedAt = userCreatedAt;
     }
 
-    public Date getUserUpdatedAt() {
+    public String getUserUpdatedAt() {
         return userUpdatedAt;
     }
 
-    public void setUserUpdatedAt(Date userUpdatedAt) {
+    public void setUserUpdatedAt(String userUpdatedAt) {
         this.userUpdatedAt = userUpdatedAt;
     }
 
     @XmlTransient
-    public List<MovieLocation> getMovieLocationList() {
-        return movieLocationList;
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
     }
 
-    public void setMovieLocationList(List<MovieLocation> movieLocationList) {
-        this.movieLocationList = movieLocationList;
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override

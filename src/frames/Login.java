@@ -3,6 +3,9 @@ package frames;
 import entities.User;
 import com.placeholder.PlaceHolder;
 import controllers.UserJpaController;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Window;
 import javax.swing.JOptionPane;
 import javax.swing.InputVerifier; //IMPLEMENT CLASS
 
@@ -16,10 +19,19 @@ public class Login extends javax.swing.JFrame {
     
     
     public Login() {
+        centreWindow(this);
+        //Login.setLocationRelativeTo(null);
         u = new User();
         ujc = new UserJpaController();
         initComponents();
         placeHolders();
+    }
+    
+    public static void centreWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
     
     private void placeHolders(){

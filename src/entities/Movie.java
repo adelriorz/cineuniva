@@ -74,10 +74,9 @@ public class Movie implements Serializable {
     private Date movieCreatedAt;
     @Basic(optional = false)
     @Column(name = "movieUpdatedAt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date movieUpdatedAt;
+    private String movieUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "movie")
-    private List<MovieSchedule> movieScheduleList;
+    private List<Assistance> assistanceList;
 
     public Movie() {
     }
@@ -86,7 +85,7 @@ public class Movie implements Serializable {
         this.movieId = movieId;
     }
 
-    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, short movieStatus, Date movieCreatedAt, Date movieUpdatedAt) {
+    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, short movieStatus, Date movieCreatedAt, String movieUpdatedAt) {
         this.movieId = movieId;
         this.movieName = movieName;
         this.movieDirector = movieDirector;
@@ -162,21 +161,21 @@ public class Movie implements Serializable {
         this.movieCreatedAt = movieCreatedAt;
     }
 
-    public Date getMovieUpdatedAt() {
+    public String getMovieUpdatedAt() {
         return movieUpdatedAt;
     }
 
-    public void setMovieUpdatedAt(Date movieUpdatedAt) {
+    public void setMovieUpdatedAt(String movieUpdatedAt) {
         this.movieUpdatedAt = movieUpdatedAt;
     }
 
     @XmlTransient
-    public List<MovieSchedule> getMovieScheduleList() {
-        return movieScheduleList;
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
     }
 
-    public void setMovieScheduleList(List<MovieSchedule> movieScheduleList) {
-        this.movieScheduleList = movieScheduleList;
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override

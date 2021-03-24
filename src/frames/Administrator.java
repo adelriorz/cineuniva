@@ -12,6 +12,10 @@ import entities.Schedule;
 import entities.Room;
 import entities.Movie;
 import entities.MovieLocation;
+import static frames.Login.centreWindow;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -27,6 +31,8 @@ public class Administrator extends javax.swing.JFrame {
     
     public Administrator(String st, String mun) {
         initComponents();
+        centreWindow(this);
+        //Administrator.setLocationRelativeTo(null);
         this.state = state;
         this.mun = mun;
         movie = new Movie();
@@ -34,6 +40,13 @@ public class Administrator extends javax.swing.JFrame {
         room = new Room();
         loadTable();
         tblAdministrator.setShowGrid(true);
+    }
+    
+    public static void centreWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
     
     /*
