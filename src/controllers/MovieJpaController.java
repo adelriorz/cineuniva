@@ -92,7 +92,7 @@ public class MovieJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
+            List<Assistance> attachedAssistanceListNew = new ArrayList<>();
             for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
                 assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
                 attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);

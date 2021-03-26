@@ -7,15 +7,15 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-03-24T01:38:58")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-03-25T00:33:13")
 @StaticMetamodel(Movie.class)
 public class Movie_ { 
 
     public static volatile SingularAttribute<Movie, String> movieDirector;
     public static volatile SingularAttribute<Movie, String> movieProducer;
-    public static volatile SingularAttribute<Movie, Short> movieStatus;
+    public static volatile SingularAttribute<Movie, Boolean> movieStatus;
     public static volatile ListAttribute<Movie, Assistance> assistanceList;
-    public static volatile SingularAttribute<Movie, String> movieUpdatedAt;
+    public static volatile SingularAttribute<Movie, Date> movieUpdatedAt;
     public static volatile SingularAttribute<Movie, String> movieClassification;
     public static volatile SingularAttribute<Movie, Integer> movieId;
     public static volatile SingularAttribute<Movie, Integer> movieDuration;

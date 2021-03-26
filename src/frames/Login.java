@@ -76,7 +76,7 @@ public class Login extends javax.swing.JFrame {
 
         if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true){
             JOptionPane.showMessageDialog(this, "Hurray!");
-            Administrator admin = new Administrator(tS, tM);
+            Administrator admin = new Administrator();
             this.setVisible(false);
             admin.setVisible(true);
         } else JOptionPane.showMessageDialog(this, "Nope!");
