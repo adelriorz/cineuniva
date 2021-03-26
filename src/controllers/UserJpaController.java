@@ -5,13 +5,14 @@
  */
 package controllers;
 
+import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.MovieLocation;
+import entities.Assistance;
 import entities.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,23 +41,28 @@ public class UserJpaController implements Serializable {
     }
 
     public void create(User user) {
-        if (user.getMovieLocationList() == null) {
-            user.setMovieLocationList(new ArrayList<MovieLocation>());
+        if (user.getAssistanceList() == null) {
+            user.setAssistanceList(new ArrayList<Assistance>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<MovieLocation> attachedMovieLocationList = new ArrayList<MovieLocation>();
-            for (MovieLocation movieLocationListMovieLocationToAttach : user.getMovieLocationList()) {
-                movieLocationListMovieLocationToAttach = em.getReference(movieLocationListMovieLocationToAttach.getClass(), movieLocationListMovieLocationToAttach.getMovieLocationPK());
-                attachedMovieLocationList.add(movieLocationListMovieLocationToAttach);
+            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
+            for (Assistance assistanceListAssistanceToAttach : user.getAssistanceList()) {
+                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
+                attachedAssistanceList.add(assistanceListAssistanceToAttach);
             }
-            user.setMovieLocationList(attachedMovieLocationList);
+            user.setAssistanceList(attachedAssistanceList);
             em.persist(user);
-            for (MovieLocation movieLocationListMovieLocation : user.getMovieLocationList()) {
-                movieLocationListMovieLocation.getUserList().add(user);
-                movieLocationListMovieLocation = em.merge(movieLocationListMovieLocation);
+            for (Assistance assistanceListAssistance : user.getAssistanceList()) {
+                User oldUserOfAssistanceListAssistance = assistanceListAssistance.getUser();
+                assistanceListAssistance.setUser(user);
+                assistanceListAssistance = em.merge(assistanceListAssistance);
+                if (oldUserOfAssistanceListAssistance != null) {
+                    oldUserOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
+                    oldUserOfAssistanceListAssistance = em.merge(oldUserOfAssistanceListAssistance);
+                }
             }
             em.getTransaction().commit();
         } finally {
@@ -66,32 +72,43 @@ public class UserJpaController implements Serializable {
         }
     }
 
-    public void edit(User user) throws NonexistentEntityException, Exception {
+    public void edit(User user) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             User persistentUser = em.find(User.class, user.getUserId());
-            List<MovieLocation> movieLocationListOld = persistentUser.getMovieLocationList();
-            List<MovieLocation> movieLocationListNew = user.getMovieLocationList();
-            List<MovieLocation> attachedMovieLocationListNew = new ArrayList<MovieLocation>();
-            for (MovieLocation movieLocationListNewMovieLocationToAttach : movieLocationListNew) {
-                movieLocationListNewMovieLocationToAttach = em.getReference(movieLocationListNewMovieLocationToAttach.getClass(), movieLocationListNewMovieLocationToAttach.getMovieLocationPK());
-                attachedMovieLocationListNew.add(movieLocationListNewMovieLocationToAttach);
-            }
-            movieLocationListNew = attachedMovieLocationListNew;
-            user.setMovieLocationList(movieLocationListNew);
-            user = em.merge(user);
-            for (MovieLocation movieLocationListOldMovieLocation : movieLocationListOld) {
-                if (!movieLocationListNew.contains(movieLocationListOldMovieLocation)) {
-                    movieLocationListOldMovieLocation.getUserList().remove(user);
-                    movieLocationListOldMovieLocation = em.merge(movieLocationListOldMovieLocation);
+            List<Assistance> assistanceListOld = persistentUser.getAssistanceList();
+            List<Assistance> assistanceListNew = user.getAssistanceList();
+            List<String> illegalOrphanMessages = null;
+            for (Assistance assistanceListOldAssistance : assistanceListOld) {
+                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its user field is not nullable.");
                 }
             }
-            for (MovieLocation movieLocationListNewMovieLocation : movieLocationListNew) {
-                if (!movieLocationListOld.contains(movieLocationListNewMovieLocation)) {
-                    movieLocationListNewMovieLocation.getUserList().add(user);
-                    movieLocationListNewMovieLocation = em.merge(movieLocationListNewMovieLocation);
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
+            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
+                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
+                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
+            }
+            assistanceListNew = attachedAssistanceListNew;
+            user.setAssistanceList(assistanceListNew);
+            user = em.merge(user);
+            for (Assistance assistanceListNewAssistance : assistanceListNew) {
+                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
+                    User oldUserOfAssistanceListNewAssistance = assistanceListNewAssistance.getUser();
+                    assistanceListNewAssistance.setUser(user);
+                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
+                    if (oldUserOfAssistanceListNewAssistance != null && !oldUserOfAssistanceListNewAssistance.equals(user)) {
+                        oldUserOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
+                        oldUserOfAssistanceListNewAssistance = em.merge(oldUserOfAssistanceListNewAssistance);
+                    }
                 }
             }
             em.getTransaction().commit();
@@ -111,7 +128,7 @@ public class UserJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -123,10 +140,16 @@ public class UserJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The user with id " + id + " no longer exists.", enfe);
             }
-            List<MovieLocation> movieLocationList = user.getMovieLocationList();
-            for (MovieLocation movieLocationListMovieLocation : movieLocationList) {
-                movieLocationListMovieLocation.getUserList().remove(user);
-                movieLocationListMovieLocation = em.merge(movieLocationListMovieLocation);
+            List<String> illegalOrphanMessages = null;
+            List<Assistance> assistanceListOrphanCheck = user.getAssistanceList();
+            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable user field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(user);
             em.getTransaction().commit();

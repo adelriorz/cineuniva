@@ -13,8 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Room;
-import entities.MovieSchedule;
+import entities.Assistance;
 import entities.Schedule;
 import entities.SchedulePK;
 import java.util.ArrayList;
@@ -47,37 +46,27 @@ public class ScheduleJpaController implements Serializable {
         if (schedule.getSchedulePK() == null) {
             schedule.setSchedulePK(new SchedulePK());
         }
-        if (schedule.getMovieScheduleList() == null) {
-            schedule.setMovieScheduleList(new ArrayList<MovieSchedule>());
+        if (schedule.getAssistanceList() == null) {
+            schedule.setAssistanceList(new ArrayList<Assistance>());
         }
-        schedule.getSchedulePK().setRoomId(schedule.getRoom().getRoomId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Room room = schedule.getRoom();
-            if (room != null) {
-                room = em.getReference(room.getClass(), room.getRoomId());
-                schedule.setRoom(room);
+            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
+            for (Assistance assistanceListAssistanceToAttach : schedule.getAssistanceList()) {
+                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
+                attachedAssistanceList.add(assistanceListAssistanceToAttach);
             }
-            List<MovieSchedule> attachedMovieScheduleList = new ArrayList<MovieSchedule>();
-            for (MovieSchedule movieScheduleListMovieScheduleToAttach : schedule.getMovieScheduleList()) {
-                movieScheduleListMovieScheduleToAttach = em.getReference(movieScheduleListMovieScheduleToAttach.getClass(), movieScheduleListMovieScheduleToAttach.getMovieSchedulePK());
-                attachedMovieScheduleList.add(movieScheduleListMovieScheduleToAttach);
-            }
-            schedule.setMovieScheduleList(attachedMovieScheduleList);
+            schedule.setAssistanceList(attachedAssistanceList);
             em.persist(schedule);
-            if (room != null) {
-                room.getScheduleList().add(schedule);
-                room = em.merge(room);
-            }
-            for (MovieSchedule movieScheduleListMovieSchedule : schedule.getMovieScheduleList()) {
-                Schedule oldScheduleOfMovieScheduleListMovieSchedule = movieScheduleListMovieSchedule.getSchedule();
-                movieScheduleListMovieSchedule.setSchedule(schedule);
-                movieScheduleListMovieSchedule = em.merge(movieScheduleListMovieSchedule);
-                if (oldScheduleOfMovieScheduleListMovieSchedule != null) {
-                    oldScheduleOfMovieScheduleListMovieSchedule.getMovieScheduleList().remove(movieScheduleListMovieSchedule);
-                    oldScheduleOfMovieScheduleListMovieSchedule = em.merge(oldScheduleOfMovieScheduleListMovieSchedule);
+            for (Assistance assistanceListAssistance : schedule.getAssistanceList()) {
+                Schedule oldScheduleOfAssistanceListAssistance = assistanceListAssistance.getSchedule();
+                assistanceListAssistance.setSchedule(schedule);
+                assistanceListAssistance = em.merge(assistanceListAssistance);
+                if (oldScheduleOfAssistanceListAssistance != null) {
+                    oldScheduleOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
+                    oldScheduleOfAssistanceListAssistance = em.merge(oldScheduleOfAssistanceListAssistance);
                 }
             }
             em.getTransaction().commit();
@@ -94,56 +83,41 @@ public class ScheduleJpaController implements Serializable {
     }
 
     public void edit(Schedule schedule) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        schedule.getSchedulePK().setRoomId(schedule.getRoom().getRoomId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Schedule persistentSchedule = em.find(Schedule.class, schedule.getSchedulePK());
-            Room roomOld = persistentSchedule.getRoom();
-            Room roomNew = schedule.getRoom();
-            List<MovieSchedule> movieScheduleListOld = persistentSchedule.getMovieScheduleList();
-            List<MovieSchedule> movieScheduleListNew = schedule.getMovieScheduleList();
+            List<Assistance> assistanceListOld = persistentSchedule.getAssistanceList();
+            List<Assistance> assistanceListNew = schedule.getAssistanceList();
             List<String> illegalOrphanMessages = null;
-            for (MovieSchedule movieScheduleListOldMovieSchedule : movieScheduleListOld) {
-                if (!movieScheduleListNew.contains(movieScheduleListOldMovieSchedule)) {
+            for (Assistance assistanceListOldAssistance : assistanceListOld) {
+                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain MovieSchedule " + movieScheduleListOldMovieSchedule + " since its schedule field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its schedule field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (roomNew != null) {
-                roomNew = em.getReference(roomNew.getClass(), roomNew.getRoomId());
-                schedule.setRoom(roomNew);
+            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
+            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
+                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
+                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
             }
-            List<MovieSchedule> attachedMovieScheduleListNew = new ArrayList<MovieSchedule>();
-            for (MovieSchedule movieScheduleListNewMovieScheduleToAttach : movieScheduleListNew) {
-                movieScheduleListNewMovieScheduleToAttach = em.getReference(movieScheduleListNewMovieScheduleToAttach.getClass(), movieScheduleListNewMovieScheduleToAttach.getMovieSchedulePK());
-                attachedMovieScheduleListNew.add(movieScheduleListNewMovieScheduleToAttach);
-            }
-            movieScheduleListNew = attachedMovieScheduleListNew;
-            schedule.setMovieScheduleList(movieScheduleListNew);
+            assistanceListNew = attachedAssistanceListNew;
+            schedule.setAssistanceList(assistanceListNew);
             schedule = em.merge(schedule);
-            if (roomOld != null && !roomOld.equals(roomNew)) {
-                roomOld.getScheduleList().remove(schedule);
-                roomOld = em.merge(roomOld);
-            }
-            if (roomNew != null && !roomNew.equals(roomOld)) {
-                roomNew.getScheduleList().add(schedule);
-                roomNew = em.merge(roomNew);
-            }
-            for (MovieSchedule movieScheduleListNewMovieSchedule : movieScheduleListNew) {
-                if (!movieScheduleListOld.contains(movieScheduleListNewMovieSchedule)) {
-                    Schedule oldScheduleOfMovieScheduleListNewMovieSchedule = movieScheduleListNewMovieSchedule.getSchedule();
-                    movieScheduleListNewMovieSchedule.setSchedule(schedule);
-                    movieScheduleListNewMovieSchedule = em.merge(movieScheduleListNewMovieSchedule);
-                    if (oldScheduleOfMovieScheduleListNewMovieSchedule != null && !oldScheduleOfMovieScheduleListNewMovieSchedule.equals(schedule)) {
-                        oldScheduleOfMovieScheduleListNewMovieSchedule.getMovieScheduleList().remove(movieScheduleListNewMovieSchedule);
-                        oldScheduleOfMovieScheduleListNewMovieSchedule = em.merge(oldScheduleOfMovieScheduleListNewMovieSchedule);
+            for (Assistance assistanceListNewAssistance : assistanceListNew) {
+                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
+                    Schedule oldScheduleOfAssistanceListNewAssistance = assistanceListNewAssistance.getSchedule();
+                    assistanceListNewAssistance.setSchedule(schedule);
+                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
+                    if (oldScheduleOfAssistanceListNewAssistance != null && !oldScheduleOfAssistanceListNewAssistance.equals(schedule)) {
+                        oldScheduleOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
+                        oldScheduleOfAssistanceListNewAssistance = em.merge(oldScheduleOfAssistanceListNewAssistance);
                     }
                 }
             }
@@ -177,20 +151,15 @@ public class ScheduleJpaController implements Serializable {
                 throw new NonexistentEntityException("The schedule with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<MovieSchedule> movieScheduleListOrphanCheck = schedule.getMovieScheduleList();
-            for (MovieSchedule movieScheduleListOrphanCheckMovieSchedule : movieScheduleListOrphanCheck) {
+            List<Assistance> assistanceListOrphanCheck = schedule.getAssistanceList();
+            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Schedule (" + schedule + ") cannot be destroyed since the MovieSchedule " + movieScheduleListOrphanCheckMovieSchedule + " in its movieScheduleList field has a non-nullable schedule field.");
+                illegalOrphanMessages.add("This Schedule (" + schedule + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable schedule field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            Room room = schedule.getRoom();
-            if (room != null) {
-                room.getScheduleList().remove(schedule);
-                room = em.merge(room);
             }
             em.remove(schedule);
             em.getTransaction().commit();

@@ -7,13 +7,13 @@ package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
-import entities.Movie;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.MovieSchedule;
+import entities.Assistance;
+import entities.Movie;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -41,27 +41,27 @@ public class MovieJpaController implements Serializable {
     }
 
     public void create(Movie movie) {
-        if (movie.getMovieScheduleList() == null) {
-            movie.setMovieScheduleList(new ArrayList<MovieSchedule>());
+        if (movie.getAssistanceList() == null) {
+            movie.setAssistanceList(new ArrayList<Assistance>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<MovieSchedule> attachedMovieScheduleList = new ArrayList<MovieSchedule>();
-            for (MovieSchedule movieScheduleListMovieScheduleToAttach : movie.getMovieScheduleList()) {
-                movieScheduleListMovieScheduleToAttach = em.getReference(movieScheduleListMovieScheduleToAttach.getClass(), movieScheduleListMovieScheduleToAttach.getMovieSchedulePK());
-                attachedMovieScheduleList.add(movieScheduleListMovieScheduleToAttach);
+            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
+            for (Assistance assistanceListAssistanceToAttach : movie.getAssistanceList()) {
+                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
+                attachedAssistanceList.add(assistanceListAssistanceToAttach);
             }
-            movie.setMovieScheduleList(attachedMovieScheduleList);
+            movie.setAssistanceList(attachedAssistanceList);
             em.persist(movie);
-            for (MovieSchedule movieScheduleListMovieSchedule : movie.getMovieScheduleList()) {
-                Movie oldMovieOfMovieScheduleListMovieSchedule = movieScheduleListMovieSchedule.getMovie();
-                movieScheduleListMovieSchedule.setMovie(movie);
-                movieScheduleListMovieSchedule = em.merge(movieScheduleListMovieSchedule);
-                if (oldMovieOfMovieScheduleListMovieSchedule != null) {
-                    oldMovieOfMovieScheduleListMovieSchedule.getMovieScheduleList().remove(movieScheduleListMovieSchedule);
-                    oldMovieOfMovieScheduleListMovieSchedule = em.merge(oldMovieOfMovieScheduleListMovieSchedule);
+            for (Assistance assistanceListAssistance : movie.getAssistanceList()) {
+                Movie oldMovieOfAssistanceListAssistance = assistanceListAssistance.getMovie();
+                assistanceListAssistance.setMovie(movie);
+                assistanceListAssistance = em.merge(assistanceListAssistance);
+                if (oldMovieOfAssistanceListAssistance != null) {
+                    oldMovieOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
+                    oldMovieOfAssistanceListAssistance = em.merge(oldMovieOfAssistanceListAssistance);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +78,36 @@ public class MovieJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Movie persistentMovie = em.find(Movie.class, movie.getMovieId());
-            List<MovieSchedule> movieScheduleListOld = persistentMovie.getMovieScheduleList();
-            List<MovieSchedule> movieScheduleListNew = movie.getMovieScheduleList();
+            List<Assistance> assistanceListOld = persistentMovie.getAssistanceList();
+            List<Assistance> assistanceListNew = movie.getAssistanceList();
             List<String> illegalOrphanMessages = null;
-            for (MovieSchedule movieScheduleListOldMovieSchedule : movieScheduleListOld) {
-                if (!movieScheduleListNew.contains(movieScheduleListOldMovieSchedule)) {
+            for (Assistance assistanceListOldAssistance : assistanceListOld) {
+                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain MovieSchedule " + movieScheduleListOldMovieSchedule + " since its movie field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its movie field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<MovieSchedule> attachedMovieScheduleListNew = new ArrayList<MovieSchedule>();
-            for (MovieSchedule movieScheduleListNewMovieScheduleToAttach : movieScheduleListNew) {
-                movieScheduleListNewMovieScheduleToAttach = em.getReference(movieScheduleListNewMovieScheduleToAttach.getClass(), movieScheduleListNewMovieScheduleToAttach.getMovieSchedulePK());
-                attachedMovieScheduleListNew.add(movieScheduleListNewMovieScheduleToAttach);
+            List<Assistance> attachedAssistanceListNew = new ArrayList<>();
+            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
+                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
+                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
             }
-            movieScheduleListNew = attachedMovieScheduleListNew;
-            movie.setMovieScheduleList(movieScheduleListNew);
+            assistanceListNew = attachedAssistanceListNew;
+            movie.setAssistanceList(assistanceListNew);
             movie = em.merge(movie);
-            for (MovieSchedule movieScheduleListNewMovieSchedule : movieScheduleListNew) {
-                if (!movieScheduleListOld.contains(movieScheduleListNewMovieSchedule)) {
-                    Movie oldMovieOfMovieScheduleListNewMovieSchedule = movieScheduleListNewMovieSchedule.getMovie();
-                    movieScheduleListNewMovieSchedule.setMovie(movie);
-                    movieScheduleListNewMovieSchedule = em.merge(movieScheduleListNewMovieSchedule);
-                    if (oldMovieOfMovieScheduleListNewMovieSchedule != null && !oldMovieOfMovieScheduleListNewMovieSchedule.equals(movie)) {
-                        oldMovieOfMovieScheduleListNewMovieSchedule.getMovieScheduleList().remove(movieScheduleListNewMovieSchedule);
-                        oldMovieOfMovieScheduleListNewMovieSchedule = em.merge(oldMovieOfMovieScheduleListNewMovieSchedule);
+            for (Assistance assistanceListNewAssistance : assistanceListNew) {
+                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
+                    Movie oldMovieOfAssistanceListNewAssistance = assistanceListNewAssistance.getMovie();
+                    assistanceListNewAssistance.setMovie(movie);
+                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
+                    if (oldMovieOfAssistanceListNewAssistance != null && !oldMovieOfAssistanceListNewAssistance.equals(movie)) {
+                        oldMovieOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
+                        oldMovieOfAssistanceListNewAssistance = em.merge(oldMovieOfAssistanceListNewAssistance);
                     }
                 }
             }
@@ -141,12 +141,12 @@ public class MovieJpaController implements Serializable {
                 throw new NonexistentEntityException("The movie with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<MovieSchedule> movieScheduleListOrphanCheck = movie.getMovieScheduleList();
-            for (MovieSchedule movieScheduleListOrphanCheckMovieSchedule : movieScheduleListOrphanCheck) {
+            List<Assistance> assistanceListOrphanCheck = movie.getAssistanceList();
+            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Movie (" + movie + ") cannot be destroyed since the MovieSchedule " + movieScheduleListOrphanCheckMovieSchedule + " in its movieScheduleList field has a non-nullable movie field.");
+                illegalOrphanMessages.add("This Movie (" + movie + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable movie field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

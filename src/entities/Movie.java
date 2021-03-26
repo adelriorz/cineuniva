@@ -67,7 +67,7 @@ public class Movie implements Serializable {
     private int movieDuration;
     @Basic(optional = false)
     @Column(name = "movieStatus")
-    private short movieStatus;
+    private boolean movieStatus;
     @Basic(optional = false)
     @Column(name = "movieCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -77,7 +77,7 @@ public class Movie implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date movieUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "movie")
-    private List<MovieSchedule> movieScheduleList;
+    private List<Assistance> assistanceList;
 
     public Movie() {
     }
@@ -86,7 +86,7 @@ public class Movie implements Serializable {
         this.movieId = movieId;
     }
 
-    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, short movieStatus, Date movieCreatedAt, Date movieUpdatedAt) {
+    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, boolean movieStatus, Date movieCreatedAt, Date movieUpdatedAt) {
         this.movieId = movieId;
         this.movieName = movieName;
         this.movieDirector = movieDirector;
@@ -146,11 +146,11 @@ public class Movie implements Serializable {
         this.movieDuration = movieDuration;
     }
 
-    public short getMovieStatus() {
+    public boolean getMovieStatus() {
         return movieStatus;
     }
 
-    public void setMovieStatus(short movieStatus) {
+    public void setMovieStatus(boolean movieStatus) {
         this.movieStatus = movieStatus;
     }
 
@@ -171,12 +171,12 @@ public class Movie implements Serializable {
     }
 
     @XmlTransient
-    public List<MovieSchedule> getMovieScheduleList() {
-        return movieScheduleList;
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
     }
 
-    public void setMovieScheduleList(List<MovieSchedule> movieScheduleList) {
-        this.movieScheduleList = movieScheduleList;
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override

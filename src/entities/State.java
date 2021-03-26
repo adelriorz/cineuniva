@@ -51,7 +51,7 @@ public class State implements Serializable {
     private String stateName;
     @Basic(optional = false)
     @Column(name = "stateStatus")
-    private short stateStatus;
+    private boolean stateStatus;
     @Basic(optional = false)
     @Column(name = "stateCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -70,7 +70,7 @@ public class State implements Serializable {
         this.stateId = stateId;
     }
 
-    public State(Integer stateId, String stateName, short stateStatus, Date stateCreatedAt, Date stateUpdatedAt) {
+    public State(Integer stateId, String stateName, boolean stateStatus, Date stateCreatedAt, Date stateUpdatedAt) {
         this.stateId = stateId;
         this.stateName = stateName;
         this.stateStatus = stateStatus;
@@ -94,11 +94,11 @@ public class State implements Serializable {
         this.stateName = stateName;
     }
 
-    public short getStateStatus() {
+    public boolean getStateStatus() {
         return stateStatus;
     }
 
-    public void setStateStatus(short stateStatus) {
+    public void setStateStatus(boolean stateStatus) {
         this.stateStatus = stateStatus;
     }
 

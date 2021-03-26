@@ -7,13 +7,13 @@ package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
-import entities.Room;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Schedule;
+import entities.Assistance;
+import entities.Room;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -41,27 +41,27 @@ public class RoomJpaController implements Serializable {
     }
 
     public void create(Room room) {
-        if (room.getScheduleList() == null) {
-            room.setScheduleList(new ArrayList<Schedule>());
+        if (room.getAssistanceList() == null) {
+            room.setAssistanceList(new ArrayList<Assistance>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Schedule> attachedScheduleList = new ArrayList<Schedule>();
-            for (Schedule scheduleListScheduleToAttach : room.getScheduleList()) {
-                scheduleListScheduleToAttach = em.getReference(scheduleListScheduleToAttach.getClass(), scheduleListScheduleToAttach.getSchedulePK());
-                attachedScheduleList.add(scheduleListScheduleToAttach);
+            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
+            for (Assistance assistanceListAssistanceToAttach : room.getAssistanceList()) {
+                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
+                attachedAssistanceList.add(assistanceListAssistanceToAttach);
             }
-            room.setScheduleList(attachedScheduleList);
+            room.setAssistanceList(attachedAssistanceList);
             em.persist(room);
-            for (Schedule scheduleListSchedule : room.getScheduleList()) {
-                Room oldRoomOfScheduleListSchedule = scheduleListSchedule.getRoom();
-                scheduleListSchedule.setRoom(room);
-                scheduleListSchedule = em.merge(scheduleListSchedule);
-                if (oldRoomOfScheduleListSchedule != null) {
-                    oldRoomOfScheduleListSchedule.getScheduleList().remove(scheduleListSchedule);
-                    oldRoomOfScheduleListSchedule = em.merge(oldRoomOfScheduleListSchedule);
+            for (Assistance assistanceListAssistance : room.getAssistanceList()) {
+                Room oldRoomOfAssistanceListAssistance = assistanceListAssistance.getRoom();
+                assistanceListAssistance.setRoom(room);
+                assistanceListAssistance = em.merge(assistanceListAssistance);
+                if (oldRoomOfAssistanceListAssistance != null) {
+                    oldRoomOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
+                    oldRoomOfAssistanceListAssistance = em.merge(oldRoomOfAssistanceListAssistance);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +78,36 @@ public class RoomJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Room persistentRoom = em.find(Room.class, room.getRoomId());
-            List<Schedule> scheduleListOld = persistentRoom.getScheduleList();
-            List<Schedule> scheduleListNew = room.getScheduleList();
+            List<Assistance> assistanceListOld = persistentRoom.getAssistanceList();
+            List<Assistance> assistanceListNew = room.getAssistanceList();
             List<String> illegalOrphanMessages = null;
-            for (Schedule scheduleListOldSchedule : scheduleListOld) {
-                if (!scheduleListNew.contains(scheduleListOldSchedule)) {
+            for (Assistance assistanceListOldAssistance : assistanceListOld) {
+                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Schedule " + scheduleListOldSchedule + " since its room field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its room field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Schedule> attachedScheduleListNew = new ArrayList<Schedule>();
-            for (Schedule scheduleListNewScheduleToAttach : scheduleListNew) {
-                scheduleListNewScheduleToAttach = em.getReference(scheduleListNewScheduleToAttach.getClass(), scheduleListNewScheduleToAttach.getSchedulePK());
-                attachedScheduleListNew.add(scheduleListNewScheduleToAttach);
+            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
+            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
+                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
+                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
             }
-            scheduleListNew = attachedScheduleListNew;
-            room.setScheduleList(scheduleListNew);
+            assistanceListNew = attachedAssistanceListNew;
+            room.setAssistanceList(assistanceListNew);
             room = em.merge(room);
-            for (Schedule scheduleListNewSchedule : scheduleListNew) {
-                if (!scheduleListOld.contains(scheduleListNewSchedule)) {
-                    Room oldRoomOfScheduleListNewSchedule = scheduleListNewSchedule.getRoom();
-                    scheduleListNewSchedule.setRoom(room);
-                    scheduleListNewSchedule = em.merge(scheduleListNewSchedule);
-                    if (oldRoomOfScheduleListNewSchedule != null && !oldRoomOfScheduleListNewSchedule.equals(room)) {
-                        oldRoomOfScheduleListNewSchedule.getScheduleList().remove(scheduleListNewSchedule);
-                        oldRoomOfScheduleListNewSchedule = em.merge(oldRoomOfScheduleListNewSchedule);
+            for (Assistance assistanceListNewAssistance : assistanceListNew) {
+                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
+                    Room oldRoomOfAssistanceListNewAssistance = assistanceListNewAssistance.getRoom();
+                    assistanceListNewAssistance.setRoom(room);
+                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
+                    if (oldRoomOfAssistanceListNewAssistance != null && !oldRoomOfAssistanceListNewAssistance.equals(room)) {
+                        oldRoomOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
+                        oldRoomOfAssistanceListNewAssistance = em.merge(oldRoomOfAssistanceListNewAssistance);
                     }
                 }
             }
@@ -141,12 +141,12 @@ public class RoomJpaController implements Serializable {
                 throw new NonexistentEntityException("The room with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Schedule> scheduleListOrphanCheck = room.getScheduleList();
-            for (Schedule scheduleListOrphanCheckSchedule : scheduleListOrphanCheck) {
+            List<Assistance> assistanceListOrphanCheck = room.getAssistanceList();
+            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Room (" + room + ") cannot be destroyed since the Schedule " + scheduleListOrphanCheckSchedule + " in its scheduleList field has a non-nullable room field.");
+                illegalOrphanMessages.add("This Room (" + room + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable room field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

@@ -49,7 +49,7 @@ public class Municipality implements Serializable {
     private String municipalityName;
     @Basic(optional = false)
     @Column(name = "municipalityStatus")
-    private short municipalityStatus;
+    private boolean municipalityStatus;
     @Basic(optional = false)
     @Column(name = "municipalityCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -58,11 +58,11 @@ public class Municipality implements Serializable {
     @Column(name = "municipalityUpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date municipalityUpdatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "municipality")
-    private List<MovieLocation> movieLocationList;
     @JoinColumn(name = "stateId", referencedColumnName = "stateId", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private State state;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "municipality")
+    private List<Assistance> assistanceList;
 
     public Municipality() {
     }
@@ -71,7 +71,7 @@ public class Municipality implements Serializable {
         this.municipalityPK = municipalityPK;
     }
 
-    public Municipality(MunicipalityPK municipalityPK, String municipalityName, short municipalityStatus, Date municipalityCreatedAt, Date municipalityUpdatedAt) {
+    public Municipality(MunicipalityPK municipalityPK, String municipalityName, boolean municipalityStatus, Date municipalityCreatedAt, Date municipalityUpdatedAt) {
         this.municipalityPK = municipalityPK;
         this.municipalityName = municipalityName;
         this.municipalityStatus = municipalityStatus;
@@ -99,11 +99,11 @@ public class Municipality implements Serializable {
         this.municipalityName = municipalityName;
     }
 
-    public short getMunicipalityStatus() {
+    public boolean getMunicipalityStatus() {
         return municipalityStatus;
     }
 
-    public void setMunicipalityStatus(short municipalityStatus) {
+    public void setMunicipalityStatus(boolean municipalityStatus) {
         this.municipalityStatus = municipalityStatus;
     }
 
@@ -123,21 +123,21 @@ public class Municipality implements Serializable {
         this.municipalityUpdatedAt = municipalityUpdatedAt;
     }
 
-    @XmlTransient
-    public List<MovieLocation> getMovieLocationList() {
-        return movieLocationList;
-    }
-
-    public void setMovieLocationList(List<MovieLocation> movieLocationList) {
-        this.movieLocationList = movieLocationList;
-    }
-
     public State getState() {
         return state;
     }
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    @XmlTransient
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
+    }
+
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override

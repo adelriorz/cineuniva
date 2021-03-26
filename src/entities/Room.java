@@ -51,7 +51,7 @@ public class Room implements Serializable {
     private int roomNumber;
     @Basic(optional = false)
     @Column(name = "roomStatus")
-    private short roomStatus;
+    private boolean roomStatus;
     @Basic(optional = false)
     @Column(name = "roomCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -61,7 +61,7 @@ public class Room implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date roomUpdatedAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
-    private List<Schedule> scheduleList;
+    private List<Assistance> assistanceList;
 
     public Room() {
     }
@@ -70,7 +70,7 @@ public class Room implements Serializable {
         this.roomId = roomId;
     }
 
-    public Room(Integer roomId, int roomNumber, short roomStatus, Date roomCreatedAt, Date roomUpdatedAt) {
+    public Room(Integer roomId, int roomNumber, boolean roomStatus, Date roomCreatedAt, Date roomUpdatedAt) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.roomStatus = roomStatus;
@@ -94,11 +94,11 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
     }
 
-    public short getRoomStatus() {
+    public boolean getRoomStatus() {
         return roomStatus;
     }
 
-    public void setRoomStatus(short roomStatus) {
+    public void setRoomStatus(boolean roomStatus) {
         this.roomStatus = roomStatus;
     }
 
@@ -119,12 +119,12 @@ public class Room implements Serializable {
     }
 
     @XmlTransient
-    public List<Schedule> getScheduleList() {
-        return scheduleList;
+    public List<Assistance> getAssistanceList() {
+        return assistanceList;
     }
 
-    public void setScheduleList(List<Schedule> scheduleList) {
-        this.scheduleList = scheduleList;
+    public void setAssistanceList(List<Assistance> assistanceList) {
+        this.assistanceList = assistanceList;
     }
 
     @Override
