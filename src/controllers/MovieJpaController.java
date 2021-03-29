@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
@@ -84,7 +80,7 @@ public class MovieJpaController implements Serializable {
             for (Assistance assistanceListOldAssistance : assistanceListOld) {
                 if (!assistanceListNew.contains(assistanceListOldAssistance)) {
                     if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
+                        illegalOrphanMessages = new ArrayList<>();
                     }
                     illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its movie field is not nullable.");
                 }

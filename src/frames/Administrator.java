@@ -6,9 +6,11 @@
 package frames;
 
 import controllers.MovieJpaController;
+import controllers.UserJpaController;
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
 import entities.Movie;
+import entities.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,46 +27,49 @@ public class Administrator extends javax.swing.JFrame {
 
     private Movie m;
     private MovieJpaController mc;
+    private User u;
+    private UserJpaController uc;
     
     public Administrator() {
         initComponents();
         this.setFocusable(true);
         m = new Movie();
         mc = new MovieJpaController();
-        loadTable();
+        u = new User();
+        uc = new UserJpaController();
+        loadMovieTable();
+        loadUserTable();
         tblMovie.setShowGrid(true); //Shows grid in table
     }
     
-    public void clearData(){
+    public void clearMovieInfo(){
         txtName.setText("");
         txtDirector.setText("");
         txtId.setText("");
         txtProducer.setText("");
         txtDuration.setText("");
         cmbClassification.setSelectedIndex(0);
-        
         btnDelete.setEnabled(false);
         btnUpdate.setEnabled(false);
         btnAdd.setEnabled(true);
-        
         txtName.requestFocus();
     }
     
-    public void loadTable(){
+    public void loadMovieTable(){
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
-        dtm.addColumn("nombre");
+        dtm.addColumn("Name");
         dtm.addColumn("Director");
-        dtm.addColumn("Duracion");
-        dtm.addColumn("Clasificacion");
-        dtm.addColumn("Productor");
+        dtm.addColumn("Duration");
+        dtm.addColumn("Classification");
+        dtm.addColumn("Producer");
         dtm.addColumn("Status");
         
-        List<Movie> lista = new ArrayList<Movie>();
+        List<Movie> movieList = new ArrayList<>();
         MovieJpaController jm = new MovieJpaController();
-        lista = jm.findMovieEntities();
+        movieList = jm.findMovieEntities();
         
-        for(Movie m : lista){
+        for(Movie m : movieList){
             Object row[] = new Object[7];
             row[0] = m.getMovieId();
             row[1] = m.getMovieName();
@@ -73,12 +78,32 @@ public class Administrator extends javax.swing.JFrame {
             row[4] = m.getMovieClassification();
             row[5] = m.getMovieProducer();
             row[6] = m.getMovieStatus();
-            
             dtm.addRow(row);
         }
-        
         tblMovie.setModel(dtm);
+    }
+    
+    public void loadUserTable(){
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.addColumn("id");
+        dtm.addColumn("Name");
+        dtm.addColumn("Password");
+        dtm.addColumn("Status");
         
+        List<User> userList = new ArrayList<>();
+        UserJpaController ujc = new UserJpaController();
+        userList = ujc.findUserEntities();
+        
+        for(User u : userList){
+            Object row[] = new Object[5];
+            row[0] = u.getUserId();
+            row[1] = u.getUserName();
+            row[2] = u.getUserPassword();
+            row[3] = u.getUserType();
+            row[4] = u.getUserStatus();
+            dtm.addRow(row);
+        }
+        tblUser.setModel(dtm);
     }
 
     @SuppressWarnings("unchecked")
@@ -87,6 +112,7 @@ public class Administrator extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
         tab = new javax.swing.JTabbedPane();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         txtClassification = new javax.swing.JPanel();
@@ -113,26 +139,29 @@ public class Administrator extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblMovie = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        btnBackMovie = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
         btnExitMovie = new javax.swing.JButton();
+        btnBackMovie = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtIdUser = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtNameUser = new javax.swing.JTextField();
+        txtPassUser = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cmbUserType = new javax.swing.JComboBox<>();
         jLabel18 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        txtSearchUser = new javax.swing.JTextField();
+        btnDeleteUser = new javax.swing.JButton();
+        btnUpdateUser = new javax.swing.JButton();
+        btnAddUser = new javax.swing.JButton();
+        jLabel21 = new javax.swing.JLabel();
+        cmbStatusUser = new javax.swing.JComboBox<>();
+        btnClearUser = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblUser = new javax.swing.JTable();
         jDesktopPane3 = new javax.swing.JDesktopPane();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -176,6 +205,17 @@ public class Administrator extends javax.swing.JFrame {
             }
         ));
         jScrollPane2.setViewportView(jTable2);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -338,12 +378,16 @@ public class Administrator extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tblMovie);
 
-        btnBackMovie.setText("< Back");
-        btnBackMovie.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackMovieActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 579, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 183, Short.MAX_VALUE)
+        );
 
         btnExitMovie.setText("Exit");
         btnExitMovie.addActionListener(new java.awt.event.ActionListener() {
@@ -352,30 +396,38 @@ public class Administrator extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+        btnBackMovie.setText("< Back");
+        btnBackMovie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackMovieActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
                 .addComponent(btnBackMovie)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnExitMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBackMovie)
-                    .addComponent(btnExitMovie))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnExitMovie)
+                    .addComponent(btnBackMovie))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         jDesktopPane2.setLayer(txtClassification, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane2.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane2.setLayer(jPanel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jPanel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane2Layout = new javax.swing.GroupLayout(jDesktopPane2);
         jDesktopPane2.setLayout(jDesktopPane2Layout);
@@ -384,6 +436,7 @@ public class Administrator extends javax.swing.JFrame {
             .addComponent(txtClassification, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane3)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jDesktopPane2Layout.setVerticalGroup(
             jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -391,9 +444,11 @@ public class Administrator extends javax.swing.JFrame {
                 .addComponent(txtClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(1, 1, 1)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addContainerGap())
         );
 
         tab.addTab("Movies", jDesktopPane2);
@@ -406,27 +461,35 @@ public class Administrator extends javax.swing.JFrame {
 
         txtIdUser.setEnabled(false);
 
-        jTextField2.setEnabled(false);
-
-        jTextField3.setEnabled(false);
-
         jLabel4.setText("Type");
 
-        jRadioButton1.setText("status");
-        jRadioButton1.setEnabled(false);
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Administrator" }));
-        jComboBox2.setEnabled(false);
+        cmbUserType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Administrator" }));
 
         jLabel18.setText("Search");
 
-        jButton7.setText("Delete");
-        jButton7.setEnabled(false);
+        btnDeleteUser.setText("Delete");
+        btnDeleteUser.setEnabled(false);
 
-        jButton8.setText("Update");
-        jButton8.setEnabled(false);
+        btnUpdateUser.setText("Update");
+        btnUpdateUser.setEnabled(false);
 
-        jButton9.setText("Add");
+        btnAddUser.setText("Add");
+        btnAddUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddUserActionPerformed(evt);
+            }
+        });
+
+        jLabel21.setText("Status");
+
+        cmbStatusUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
+
+        btnClearUser.setText("Clear");
+        btnClearUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearUserActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -442,65 +505,82 @@ public class Administrator extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtIdUser, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                            .addComponent(jTextField2)))
+                            .addComponent(txtNameUser)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel21))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3)
-                            .addComponent(jComboBox2, 0, 95, Short.MAX_VALUE))))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(jLabel18))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(jRadioButton1)))
+                            .addComponent(txtPassUser)
+                            .addComponent(cmbUserType, 0, 95, Short.MAX_VALUE)
+                            .addComponent(cmbStatusUser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(98, 98, 98)
+                .addComponent(jLabel18)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField15)
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnUpdateUser, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(btnDeleteUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtSearchUser)
+                    .addComponent(btnAddUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(btnClearUser)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtIdUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jButton9))
-                .addGap(9, 9, 9)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18)
-                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAddUser)
+                            .addComponent(btnClearUser))
+                        .addGap(9, 9, 9)
+                        .addComponent(btnUpdateUser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDeleteUser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel18)
+                            .addComponent(txtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtIdUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtNameUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtPassUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(cmbUserType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel21)
+                            .addComponent(cmbStatusUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
             },
             new String [] {
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUserMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblUser);
 
         jDesktopPane1.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -825,8 +905,8 @@ public class Administrator extends javax.swing.JFrame {
 
         try {
             mc.create(m);
-            clearData();
-            loadTable();
+            clearMovieInfo();
+            loadMovieTable();
         } catch (Exception ex) {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -839,71 +919,26 @@ public class Administrator extends javax.swing.JFrame {
         m.setMovieClassification((String) cmbClassification.getSelectedItem());
         m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
         m.setMovieProducer(txtProducer.getText());
-        String cad = (String)cmbStatus.getSelectedItem();
-        if(cad.equals("Active")){
+        String tempMovieStatus = (String)cmbStatus.getSelectedItem();
+        if(tempMovieStatus.equals("Active")){
             m.setMovieStatus(true);
         } else { m.setMovieStatus(false); }        
         try {
             mc.edit(m);
+            clearMovieInfo();
+            loadMovieTable();
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
-            clearData();
-            loadTable();
-
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-       clearData();
+       clearMovieInfo();
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void tblMovieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMovieMouseClicked
-       int row = tblMovie.getSelectedRow();
-       
-       txtId.setText(tblMovie.getValueAt(row, 0).toString());
-       txtName.setText(tblMovie.getValueAt(row, 1).toString());
-       txtDirector.setText(tblMovie.getValueAt(row, 2).toString());
-       txtDuration.setText(tblMovie.getValueAt(row, 3).toString());
-       cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
-       txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
-       cmbStatus.setSelectedIndex(selectMovieStatus(tblMovie, row));
-       
-       btnAdd.setEnabled(false);
-       btnDelete.setEnabled(true);
-       btnUpdate.setEnabled(true);
-       loadTable();
-    }//GEN-LAST:event_tblMovieMouseClicked
-
-    private void btnExitMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitMovieActionPerformed
-        System.exit(1);
-    }//GEN-LAST:event_btnExitMovieActionPerformed
-
-    private void btnBackMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMovieActionPerformed
-       hideCurrent();
-    }//GEN-LAST:event_btnBackMovieActionPerformed
-
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        m.setMovieName(txtName.getText());
-        m.setMovieDirector(txtDirector.getText());
-        m.setMovieClassification((String) cmbClassification.getSelectedItem());
-        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
-        m.setMovieProducer(txtProducer.getText());
-        m.setMovieStatus(Boolean.parseBoolean((String) cmbStatus.getSelectedItem()));
-        
-        try{
-            mc.destroy(Integer.parseInt(txtId.getText()));
-            clearData();
-            loadTable();
-        }catch(IllegalOrphanException | NonexistentEntityException ex){
-            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
-    public int selectMovieStatus(JTable tbl, int ren){
+    public int selectStatus(JTable tbl, int ren){
         String selected = tbl.getValueAt(ren, 6).toString();
         int value = 0;
         
@@ -942,6 +977,109 @@ public class Administrator extends javax.swing.JFrame {
         return value;
     }
     
+    private void tblMovieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMovieMouseClicked
+       int row = tblMovie.getSelectedRow();
+       
+       txtId.setText(tblMovie.getValueAt(row, 0).toString());
+       txtName.setText(tblMovie.getValueAt(row, 1).toString());
+       txtDirector.setText(tblMovie.getValueAt(row, 2).toString());
+       txtDuration.setText(tblMovie.getValueAt(row, 3).toString());
+       cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
+       txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
+       cmbStatus.setSelectedIndex(selectStatus(tblMovie, row));
+       
+       btnAdd.setEnabled(false);
+       btnDelete.setEnabled(true);
+       btnUpdate.setEnabled(true);
+       loadMovieTable();
+    }//GEN-LAST:event_tblMovieMouseClicked
+
+    private void btnExitMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitMovieActionPerformed
+        System.exit(1);
+    }//GEN-LAST:event_btnExitMovieActionPerformed
+
+    private void btnBackMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMovieActionPerformed
+       hideCurrent();
+    }//GEN-LAST:event_btnBackMovieActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        m.setMovieName(txtName.getText());
+        m.setMovieDirector(txtDirector.getText());
+        m.setMovieClassification((String) cmbClassification.getSelectedItem());
+        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
+        m.setMovieProducer(txtProducer.getText());
+        m.setMovieStatus(Boolean.parseBoolean((String) cmbStatus.getSelectedItem()));
+        
+        try{
+            mc.destroy(Integer.parseInt(txtIdUser.getText()));
+            clearUserInfo();
+            loadUserTable();
+        }catch(IllegalOrphanException | NonexistentEntityException ex){
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    public void clearUserInfo(){
+        txtIdUser.setText("");
+        txtPassUser.setText("");
+        txtNameUser.setText("");
+        cmbStatusUser.setSelectedIndex(0);
+        cmbUserType.setSelectedIndex(0);
+    }
+    
+    private void btnClearUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearUserActionPerformed
+        clearUserInfo();
+    }//GEN-LAST:event_btnClearUserActionPerformed
+
+    private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
+        u.setUserName(txtNameUser.getText());
+        u.setUserPassword(txtPassUser.getText());
+        String tempUserType =  ((String) cmbUserType.getSelectedItem());
+        if(tempUserType.equals("Administrator")){
+            u.setUserStatus(true);
+        } else { u.setUserStatus(false); }
+        String tempUserStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempUserStatus.equals("Active")){
+            u.setUserStatus(true);
+        } else { u.setUserStatus(false); }
+        try {
+            uc.create(u);
+            clearMovieInfo();
+            loadUserTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddUserActionPerformed
+
+    private void tblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUserMouseClicked
+       int row = tblUser.getSelectedRow();
+       txtIdUser.setText(tblUser.getValueAt(row, 0).toString());
+       txtNameUser.setText(tblUser.getValueAt(row, 1).toString());
+       txtPassUser.setText(tblUser.getValueAt(row, 2).toString());
+       cmbUserType.setSelectedIndex(selectUserType(tblUser, row));
+       cmbStatusUser.setSelectedIndex(selectStatus(tblUser, row));
+       btnAddUser.setEnabled(false);
+       btnDeleteUser.setEnabled(true);
+       btnUpdateUser.setEnabled(true);
+       loadUserTable();
+    }//GEN-LAST:event_tblUserMouseClicked
+
+    //return int value when user type is selected
+    public int selectUserType(JTable tbl, int row){
+        String selected = tbl.getValueAt(row, 6).toString();
+        int value = 0;
+        switch(selected){
+            case "User":
+                value = 0;
+                break;
+            case "Administrator":
+                value = 1;
+                break;
+        }
+        return value;
+    }
+    
     public void hideCurrent(){
         Login welcome = new Login();
         welcome.setVisible(true);
@@ -949,7 +1087,6 @@ public class Administrator extends javax.swing.JFrame {
         this.dispose();
     }
 
-    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -991,23 +1128,25 @@ public class Administrator extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAddUser;
     private javax.swing.JButton btnBackMovie;
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnClearUser;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnDeleteUser;
     private javax.swing.JButton btnExitMovie;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnUpdateUser;
     private javax.swing.JComboBox<String> cmbClassification;
     private javax.swing.JComboBox<String> cmbStatus;
+    private javax.swing.JComboBox<String> cmbStatusUser;
+    private javax.swing.JComboBox<String> cmbUserType;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JDesktopPane jDesktopPane3;
@@ -1025,6 +1164,7 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1036,7 +1176,8 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1044,7 +1185,6 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
@@ -1053,20 +1193,21 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField9;
     private javax.swing.JTabbedPane tab;
     private javax.swing.JTable tblMovie;
+    private javax.swing.JTable tblUser;
     private javax.swing.JPanel txtClassification;
     private javax.swing.JTextField txtDirector;
     private javax.swing.JTextField txtDuration;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtIdUser;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtNameUser;
+    private javax.swing.JTextField txtPassUser;
     private javax.swing.JTextField txtProducer;
+    private javax.swing.JTextField txtSearchUser;
     // End of variables declaration//GEN-END:variables
 }
