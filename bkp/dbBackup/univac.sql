@@ -24,11 +24,48 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `billboard`
+--
+
+/*
+	peli, hora, cuarto y Estado. Falta hacer una que incluya usuario, que seria basicamente lo mismo
+*/
+
+CREATE TABLE `billboard` (
+  `billboardId` int(11) NOT NULL AUTO_INCREMENT,
+  `billboardCreatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6),
+  `billboardUpdatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6),
+  `billboardStatus` tinyint(1) NOT NULL DEFAULT 1,
+  `movieId_FK` int(11) NOT NULL,
+  `roomId_FK` int(11) NOT NULL,
+  `scheduleId_FK` int(11) NOT NULL,
+  `stateId_FK` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `room`
+--
+
+INSERT INTO `room` (`roomId`, `roomNumber`, `roomStatus`, `roomCreatedAt`, `roomUpdatedAt`) VALUES
+(1, 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(2, 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, 3, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(4, 4, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(5, 5, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(6, 6, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(7, 7, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(8, 8, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(9, 9, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(10, 10, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `assistance`
 --
 
 CREATE TABLE `assistance` (
-  `assistanceId` int(11) NOT NULL,
+  `assistanceId` int(11) NOT NULL AUTO_INCREMENT,
   `assistanceStatus` tinyint(1) NOT NULL DEFAULT 1,
   `assistanceCreatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6),
   `assistanceUpdatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6),
@@ -48,7 +85,7 @@ CREATE TABLE `assistance` (
 --
 
 CREATE TABLE `movie` (
-  `movieId` int(11) NOT NULL,
+  `movieId` int(11) NOT NULL AUTO_INCREMENT,
   `movieName` varchar(45) NOT NULL,
   `movieDirector` varchar(45) NOT NULL,
   `movieProducer` varchar(45) NOT NULL,
@@ -64,9 +101,9 @@ CREATE TABLE `movie` (
 --
 
 INSERT INTO `movie` (`movieId`, `movieName`, `movieDirector`, `movieProducer`, `movieClassification`, `movieDuration`, `movieStatus`, `movieCreatedAt`, `movieUpdatedAt`) VALUES
-(2, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 125, 1, '2021-03-24 07:50:59.926375', '2021-03-25 05:53:02.823745'),
-(8, 'Juan ', 'Pecas', 'Joel', 'B15', 23, 0, '2021-03-26 01:20:21.438668', '2021-03-26 01:20:21.438668'),
-(14, 'Pepe pecas', 'yeison', 'prueba', 'B15', 23, 0, '2021-03-26 03:59:47.213610', '2021-03-26 04:00:32.595154');
+(1, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 125, 1, '2021-03-24 07:50:59.926375', '2021-03-25 05:53:02.823745'),
+(2, 'Juan ', 'Pecas', 'Joel', 'B15', 23, 0, '2021-03-26 01:20:21.438668', '2021-03-26 01:20:21.438668'),
+(3, 'Pepe pecas', 'yeison', 'prueba', 'B15', 23, 0, '2021-03-26 03:59:47.213610', '2021-03-26 04:00:32.595154');
 
 -- --------------------------------------------------------
 
@@ -75,7 +112,7 @@ INSERT INTO `movie` (`movieId`, `movieName`, `movieDirector`, `movieProducer`, `
 --
 
 CREATE TABLE `municipality` (
-  `municipalityId` int(11) NOT NULL,
+  `municipalityId` int(11) NOT NULL AUTO_INCREMENT,
   `municipalityName` varchar(45) NOT NULL,
   `municipalityStatus` tinyint(1) NOT NULL DEFAULT 1,
   `municipalityCreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -88,9 +125,55 @@ CREATE TABLE `municipality` (
 --
 
 INSERT INTO `municipality` (`municipalityId`, `municipalityName`, `municipalityStatus`, `municipalityCreatedAt`, `municipalityUpdatedAt`, `stateId`) VALUES
-(2, 'Guadalajara', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
-(3, 'Monterrey', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
-(4, 'Zapopan', 1, '2021-03-25 06:50:36', '2021-03-25 06:50:36', 1);
+('Guadalajara', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Zapopan', 1, '2021-03-25 06:50:36', '2021-03-25 06:50:36', 1),
+('Tlaquepaque', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Tonala', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Zapotlanejo', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Tlajomulco', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Ayotlan', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Tequila', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Ocotlan', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+('Puerto Vallarta', 1, '2021-03-25 06:46:06', '2021-03-25 06:46:06', 1),
+
+('Guadalupe', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('Abasolo', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('Apodaca', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('Cienega de Flores', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('General Zaragoza', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2,
+('Iturbide', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('Juarez', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('Monterrey', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('Salinas Victoria', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+('General Zuazua', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 2),
+
+('Cuautitlan Izcalli', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Chalco', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Aculco', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Atizapan', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Chapultepec', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Ecatepec de Morelos', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Naucalpan de Juarez', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Morelos', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Texcoco', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+('Toluca', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 3),
+
+('Ignacio Allende', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Allende', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Valle de Zaragoza', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Rosario', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Nonoava', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Matamoros', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Guadalupe y Calvo', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Coronado', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Delicias', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+('Galeana', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 4),
+
+('Guasave', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 5),
+('Navolato', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 5),
+('Cosala', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 5),
+('Angostura', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 5),
+('Mocorito', 1, '2021-03-25 06:46:52', '2021-03-25 06:46:52', 5);
 
 -- --------------------------------------------------------
 
@@ -99,7 +182,7 @@ INSERT INTO `municipality` (`municipalityId`, `municipalityName`, `municipalityS
 --
 
 CREATE TABLE `room` (
-  `roomId` int(11) NOT NULL,
+  `roomId` int(11) NOT NULL AUTO_INCREMENT,
   `roomNumber` int(11) NOT NULL,
   `roomStatus` tinyint(1) NOT NULL DEFAULT 1,
   `roomCreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -111,9 +194,16 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`roomId`, `roomNumber`, `roomStatus`, `roomCreatedAt`, `roomUpdatedAt`) VALUES
-(2, 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(4, 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(5, 4, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00');
+(1, 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(2, 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, 3, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(4, 4, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(5, 5, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(6, 6, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(7, 7, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(8, 8, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(9, 9, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00'),
+(10, 10, 1, '2021-03-25 06:40:00', '2021-03-25 06:40:00');
 
 -- --------------------------------------------------------
 
@@ -122,7 +212,7 @@ INSERT INTO `room` (`roomId`, `roomNumber`, `roomStatus`, `roomCreatedAt`, `room
 --
 
 CREATE TABLE `schedule` (
-  `scheduleId` int(11) NOT NULL,
+  `scheduleId` int(11) NOT NULL AUTO_INCREMENT,
   `scheduleStart` datetime NOT NULL,
   `scheduleEnd` datetime NOT NULL,
   `scheduleStatus` tinyint(1) NOT NULL DEFAULT 1,
@@ -138,7 +228,7 @@ CREATE TABLE `schedule` (
 --
 
 CREATE TABLE `state` (
-  `stateId` int(11) NOT NULL,
+  `stateId` int(11) NOT NULL AUTO_INCREMENT,
   `stateName` varchar(45) NOT NULL,
   `stateStatus` tinyint(1) NOT NULL DEFAULT 1,
   `stateCreatedAt` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -163,7 +253,7 @@ INSERT INTO `state` (`stateId`, `stateName`, `stateStatus`, `stateCreatedAt`, `s
 --
 
 CREATE TABLE `user` (
-  `userId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL AUTO_INCREMENT,
   `userName` varchar(45) NOT NULL,
   `userPassword` varchar(45) NOT NULL,
   `userType` tinyint(1) NOT NULL DEFAULT 0,
@@ -233,52 +323,6 @@ ALTER TABLE `state`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`userId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `assistance`
---
-ALTER TABLE `assistance`
-  MODIFY `assistanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `movie`
---
-ALTER TABLE `movie`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `municipality`
---
-ALTER TABLE `municipality`
-  MODIFY `municipalityId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `room`
---
-ALTER TABLE `room`
-  MODIFY `roomId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `schedule`
---
-ALTER TABLE `schedule`
-  MODIFY `scheduleId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `state`
---
-ALTER TABLE `state`
-  MODIFY `stateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

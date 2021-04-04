@@ -34,7 +34,7 @@ public class MovieJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
-    }
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
     public void create(Movie movie) {
         if (movie.getAssistanceList() == null) {
