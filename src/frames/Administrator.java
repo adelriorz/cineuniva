@@ -1,10 +1,14 @@
 package frames;
 
 import controllers.MovieJpaController;
+import controllers.RoomJpaController;
+import controllers.ScheduleJpaController;
 import controllers.UserJpaController;
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
 import entities.Movie;
+import entities.Room;
+import entities.Schedule;
 import entities.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-/**
- *
- * @author Armando Del Rio
- */
 
 public class Administrator extends javax.swing.JFrame {
 
@@ -116,9 +115,9 @@ public class Administrator extends javax.swing.JFrame {
         
         for(Room r : roomList){
             Object row[] = new Object[3];
-            row[0] = u.getUserId();
+            row[0] = r.getRoomId();
             row[1] = r.getRoomNumber();
-            row[2] = u.getRoomStatus();
+            row[2] = r.getRoomStatus();
             dtm.addRow(row);
         }
         tblRoom.setModel(dtm);
@@ -133,14 +132,14 @@ public class Administrator extends javax.swing.JFrame {
         
         List<Schedule> scheduleList = new ArrayList<>();
         ScheduleJpaController sjc = new ScheduleJpaController();
-        scheduleList = sjc.findUserEntities();
+        scheduleList = sjc.findScheduleEntities();
         
         for(Schedule s : scheduleList){
             Object row[] = new Object[4];
-            row[0] = s.getScheuleId();
-            row[1] = s.getScheuleStart();
-            row[2] = s.getScheuleEnd();
-            row[3] = s.getScheuleStatus();
+            row[0] = s.getScheduleId();
+            row[1] = s.getScheduleStart();
+            row[2] = s.getScheduleEnd();
+            row[3] = s.getScheduleStatus();
             dtm.addRow(row);
         }
         tblScheule.setModel(dtm);
@@ -333,9 +332,9 @@ public class Administrator extends javax.swing.JFrame {
                 .addGap(1, 1, 1)
                 .addComponent(btnDelete)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSearchMovie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19))
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
+                    .addComponent(txtSearchMovie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnClear)
                 .addContainerGap(26, Short.MAX_VALUE))
@@ -454,7 +453,7 @@ public class Administrator extends javax.swing.JFrame {
             .addGroup(txtClassificationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(txtClassificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 209, Short.MAX_VALUE)
                     .addGroup(txtClassificationLayout.createSequentialGroup()
                         .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 24, Short.MAX_VALUE)))
