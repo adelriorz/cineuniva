@@ -2,7 +2,11 @@ package frames;
 
 import entities.User;
 import com.placeholder.PlaceHolder;
+import controllers.MunicipalityJpaController;
+import controllers.StateJpaController;
 import controllers.UserJpaController;
+import entities.Municipality;
+import entities.State;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -14,21 +18,26 @@ import javax.swing.InputVerifier; //IMPLEMENT CLASS
 import javax.swing.JTable;
 import tools.QueueString;
 
-
-
 public class Login extends javax.swing.JFrame {
     
     private PlaceHolder holder;
     private User u;
     private UserJpaController ujc;
-    //cmbMunicipality.setModel(new javax.swing.DefaultComboBoxModel<>();
+    private State st;
+    private StateJpaController stjc;
+    private Municipality mun;
+    private MunicipalityJpaController mjc;
     
     public Login() {
-        u = new User();
-        ujc = new UserJpaController();
         initComponents();
         this.setLocationRelativeTo(null);
         placeHolders();
+        u = new User();
+        ujc = new UserJpaController();
+        st = new State();
+        stjc = new StateJpaController();
+        mun = new Municipality();
+        mjc = new MunicipalityJpaController();
     }
     
     private void placeHolders(){
@@ -48,6 +57,28 @@ public class Login extends javax.swing.JFrame {
         txtPassword.setText("");
         holder = new PlaceHolder(txtUser, "User");
         holder = new PlaceHolder(txtPassword, "Password");
+    }
+    
+    //Searches Municipality by name and returns id value
+    private void loadMunicipality(String s){
+        s = (String) cmbState.getSelectedItem();
+        cmbMunicipality.setEnabled(true);
+//cmbMunicipality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{}));        
+        List<Municipality> munList = new ArrayList<>();
+        munList = mjc.findMunicipalityEntities();
+        String[] allMun = new String[10];
+        int i = 0;
+        for(Municipality mun : munList){
+            allMun[i] = mun.getMunicipalityName();
+            i++;
+          cmbMunicipality.setModel(
+                  new javax.swing.DefaultComboBoxModel<>(allMun));
+        }
+    }
+    
+    //Method matches mun with proper State
+    private void findLocationMatch(){
+        
     }
     
     //Searches user by name and returns id value
@@ -222,6 +253,11 @@ public class Login extends javax.swing.JFrame {
 
         cmbMunicipality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{}));
         cmbMunicipality.setEnabled(false);
+        cmbMunicipality.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbMunicipalityActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Choose your State: ");
 
@@ -318,6 +354,10 @@ public class Login extends javax.swing.JFrame {
     private void btnShowBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowBillboardActionPerformed
         showBillBoard();
     }//GEN-LAST:event_btnShowBillboardActionPerformed
+
+    private void cmbMunicipalityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMunicipalityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbMunicipalityActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
