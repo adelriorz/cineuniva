@@ -46,7 +46,7 @@ public class Queue{
     
     public void addValue(int value){
         if(isEmptyQueue()){
-            setEnd(0);
+            setEnd(end);
             content[end] = value;
         }
         if(!isEmptyQueue() && !isFullQueue()){
