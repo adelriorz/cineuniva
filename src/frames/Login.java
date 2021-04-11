@@ -1,5 +1,3 @@
-
-
 package frames;
 
 import entities.User;
@@ -68,7 +66,7 @@ public class Login extends javax.swing.JFrame {
         holder = new PlaceHolder(txtPassword, "Password");
     }
     
-    //Searches Municipality by name and returns id value
+    //Method matches mun with proper State
     private void loadMunicipality(String s){
         s = (String) cmbState.getSelectedItem();
         cmbMunicipality.setEnabled(true);
@@ -78,16 +76,40 @@ public class Login extends javax.swing.JFrame {
         String[] allMun = new String[10];
         int i = 0;
         for(Municipality mun : munList){
-            allMun[i] = mun.getMunicipalityName();
-            i++;
-          cmbMunicipality.setModel(
-                  new javax.swing.DefaultComboBoxModel<>(allMun));
+            if(mun.getStateId().equals(stateSelected(s))){
+                allMun[i] = mun.getMunicipalityName();
+                i++;
+            }
         }
+        cmbMunicipality.setModel(
+                  new javax.swing.DefaultComboBoxModel<>(allMun)
+          );
     }
     
-    //Method matches mun with proper State
-    private void findLocationMatch(){
-        
+    //returns int from selected State accordingly
+    public int stateSelected(String selected){
+        int value = 0;
+        switch(selected){
+            case "Jalisco":
+                value = 0;
+                break;
+            case "Nuevo Leon":
+                value = 1;
+                break;
+            case "Estado de Mexico":
+                value = 2;
+                break;
+            case "Chihuahua":
+                value = 3;
+                break;
+            case "Sinaloa":
+                value = 3;
+                break;
+            default:
+                value = -1;
+                break;
+        }
+        return value;
     }
     
     //Searches user by name and returns id value
@@ -137,6 +159,7 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -153,6 +176,8 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnShowBillboard = new javax.swing.JButton();
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -416,6 +441,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnShowBillboard;
     private javax.swing.JComboBox<String> cmbMunicipality;
     private javax.swing.JComboBox<String> cmbState;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

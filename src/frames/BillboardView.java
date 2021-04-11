@@ -1,5 +1,10 @@
-
 package frames;
+
+import controllers.BillboardJpaController;
+import entities.Billboard;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 public class BillboardView extends javax.swing.JFrame {
 /*
@@ -10,6 +15,36 @@ public class BillboardView extends javax.swing.JFrame {
     //BillboardView constructor
     public BillboardView() {
         initComponents();
+        loadBillboardViewTable();
+    }
+    
+    //Loads billboard table from DB
+    public void loadBillboardViewTable(){
+//        DefaultTableModel dtm = new DefaultTableModel();
+//        dtm.addColumn("id");
+//        dtm.addColumn("Name");
+//        dtm.addColumn("Director");
+//        dtm.addColumn("Duration");
+//        dtm.addColumn("Classification");
+//        dtm.addColumn("Producer");
+//        dtm.addColumn("Status");
+//        
+//        List<Billboard> billboardList = new ArrayList<>();
+//        BillboardJpaController bjc = new BillboardJpaController();
+//        billboardList = bjc.findBillboardEntities();
+//        
+//        for(Billboard b : billboardList){
+//            Object row[] = new Object[7];
+//            row[0] = m.getMovieId();
+//            row[1] = m.getMovieName();
+//            row[2] = m.getMovieDirector();
+//            row[3] = m.getMovieDuration();
+//            row[4] = m.getMovieClassification();
+//            row[5] = m.getMovieProducer();
+//            row[6] = m.getMovieStatus();
+//            dtm.addRow(row);
+//        }
+//        tblBillboard.setModel(dtm);
     }
 
     //Hide current Frame and activates Login
@@ -28,7 +63,7 @@ public class BillboardView extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         cmbUser = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbl1 = new javax.swing.JTable();
+        tblBillboard = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         btnBack = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
@@ -61,18 +96,7 @@ public class BillboardView extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        tbl1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
-            }
-        ));
-        jScrollPane1.setViewportView(tbl1);
+        jScrollPane1.setViewportView(tblBillboard);
 
         btnBack.setText("< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -196,6 +220,6 @@ public class BillboardView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tbl1;
+    private javax.swing.JTable tblBillboard;
     // End of variables declaration//GEN-END:variables
 }
