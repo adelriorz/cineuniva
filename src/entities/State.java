@@ -1,4 +1,3 @@
-
 package entities;
 
 import java.io.Serializable;
@@ -19,7 +18,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code for CRUD State operations
+*/
 @Entity
 @Table(name = "state")
 @XmlRootElement

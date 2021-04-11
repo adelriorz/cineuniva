@@ -15,7 +15,11 @@ import entities.State;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code for CRUD State controler operations
+*/
 public class StateJpaController implements Serializable {
 
     public StateJpaController(EntityManagerFactory emf) {

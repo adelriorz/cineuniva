@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
@@ -24,10 +19,11 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code for CRUD User operations
+*/
 @Entity
 @Table(name = "user")
 @XmlRootElement

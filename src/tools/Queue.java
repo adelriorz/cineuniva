@@ -1,6 +1,10 @@
 package tools;
 
-
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Queue code with basic data structures
+*/
 public class Queue{
     protected int end = 0, start = 0, max = 0;
     protected int[] content;

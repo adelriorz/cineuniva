@@ -1,12 +1,12 @@
 package tools;
 
-/**
- * Ejercicio (2, 3 y 4)
- * Integra los ejercicios en un solo programa con un menú
- */
-
 import java.util.Scanner;
 
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Recursive exercises
+*/
 class EjercicosRecursividad{
 
     public static double factorial(double n){ //Returns factorial of n number

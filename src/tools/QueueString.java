@@ -1,6 +1,10 @@
 package tools;
-//Changed the usage, instead
 
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Queue code with basic data structures for String
+*/
 public class QueueString{
     protected int end = 0, start = 0, max = 0;
     protected String[] content;

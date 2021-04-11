@@ -1,11 +1,13 @@
 package tools;
 
-// A Java program for Floyd Warshall All Pairs Shortest
-// Path algorithm.
 import java.util.*;
 import java.lang.*;
 import java.io.*;
-
+/*
+**Written by: Geeks for Geeks
+**Date: Unknown
+**Description: Code for implementing Floyd Warshall graph algorythm
+*/
 class AllPairShortestPath{
 	final static int INF = 99999, V = 4;
 

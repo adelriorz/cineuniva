@@ -16,7 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Administrator Frame/Panel for CRUD operations over 
+** Rooms, Schedules, Users and Movies
+*/
 public class Administrator extends javax.swing.JFrame {
     private Movie m;
     private MovieJpaController mc;
@@ -26,7 +31,8 @@ public class Administrator extends javax.swing.JFrame {
     private RoomJpaController rc;
     private Schedule s;
     private ScheduleJpaController sc;
-    
+
+    //Administrator Constructor    
     public Administrator() {
         initComponents();
         this.setFocusable(true);
@@ -45,6 +51,7 @@ public class Administrator extends javax.swing.JFrame {
         tblMovie.setShowGrid(true); //Shows grid in table
     }
     
+    //Set Movie values as default
     public void clearMovieInfo(){
         txtSearchMovie.setText("");
         txtName.setText("");
@@ -59,6 +66,7 @@ public class Administrator extends javax.swing.JFrame {
         txtName.requestFocus();
     }
     
+    //Loads movie table from DB
     public void loadMovieTable(){
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
@@ -87,6 +95,7 @@ public class Administrator extends javax.swing.JFrame {
         tblMovie.setModel(dtm);
     }
     
+    //Loads user table from db
     public void loadUserTable(){
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
@@ -110,6 +119,7 @@ public class Administrator extends javax.swing.JFrame {
         tblUser.setModel(dtm);
     }
     
+    //Loads room table from db
     public void loadRoomTable(){//Pending to fix
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
@@ -130,6 +140,7 @@ public class Administrator extends javax.swing.JFrame {
         tblRoom.setModel(dtm);
     }
     
+    //Loads schedule table from db
     public void loadScheduleTable(){//Pending to fix
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
@@ -1190,6 +1201,7 @@ public class Administrator extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRoomSearchActionPerformed
 
+    //Adds new movie
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         m.setMovieName(txtName.getText());
         m.setMovieDirector(txtDirector.getText());
@@ -1213,7 +1225,7 @@ public class Administrator extends javax.swing.JFrame {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAddActionPerformed
-
+    //Updates movie
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         m.setMovieId(Integer.parseInt(txtId.getText()));
         m.setMovieName(txtName.getText());
@@ -1236,10 +1248,12 @@ public class Administrator extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    //Invokes clear movie info method
     private void btnClearMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearMovieActionPerformed
        clearMovieInfo();
     }//GEN-LAST:event_btnClearMovieActionPerformed
-
+    
+    //returns int from selected status accordingly
     public int selectStatus(JTable tbl, int row){
         String selected = tbl.getValueAt(row, 6).toString();
         int value = 0;
@@ -1255,6 +1269,7 @@ public class Administrator extends javax.swing.JFrame {
         return value;
     }
     
+    //Returns int value from ranked movie
     public int selectMovieRank(JTable tbl, int ren){
         String selected = tbl.getValueAt(ren, 4).toString();
         int value = 0;
@@ -1279,6 +1294,7 @@ public class Administrator extends javax.swing.JFrame {
         return value;
     }
     
+    //Retrieves information to the slots at the selected row
     private void tblMovieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMovieMouseClicked
        int row = tblMovie.getSelectedRow();
        
@@ -1289,13 +1305,13 @@ public class Administrator extends javax.swing.JFrame {
        cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
        txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
        cmbStatus.setSelectedIndex(selectStatus(tblMovie, row));
-       
        btnAdd.setEnabled(false);
        btnDeleteMovie.setEnabled(true);
        btnUpdate.setEnabled(true);
        loadMovieTable();
     }//GEN-LAST:event_tblMovieMouseClicked
 
+    //Deletes movie
     private void btnDeleteMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteMovieActionPerformed
         m.setMovieName(txtName.getText());
         m.setMovieDirector(txtDirector.getText());
@@ -1313,6 +1329,7 @@ public class Administrator extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteMovieActionPerformed
 
+    //Sets user info as default
     public void clearUserInfo(){
         txtIdUser.setText("");
         txtPassUser.setText("");
@@ -1321,10 +1338,12 @@ public class Administrator extends javax.swing.JFrame {
         cmbUserType.setSelectedIndex(0);
     }
     
+    //Invokes clearUserInfo method
     private void btnClearUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearUserActionPerformed
         clearUserInfo();
     }//GEN-LAST:event_btnClearUserActionPerformed
 
+    //Adds user to db
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
         u.setUserName(txtNameUser.getText());
         u.setUserPassword(txtPassUser.getText());
@@ -1345,6 +1364,7 @@ public class Administrator extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAddUserActionPerformed
 
+    //Retrieves information to the slots at the selected row
     private void tblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUserMouseClicked
        int row = tblUser.getSelectedRow();
        txtIdUser.setText(tblUser.getValueAt(row, 0).toString());
@@ -1357,11 +1377,11 @@ public class Administrator extends javax.swing.JFrame {
        btnUpdateUser.setEnabled(true);
        loadUserTable();
     }//GEN-LAST:event_tblUserMouseClicked
-
+    //Updates schedule info to db
     private void btnUpdateScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateScheduleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnUpdateScheduleActionPerformed
-
+    //Sets all room UI values as default
     public void clearRoomInfo(){
         txtRoomId.setText("");
         txtRoomNumber.setText("");
@@ -1369,10 +1389,11 @@ public class Administrator extends javax.swing.JFrame {
         cmbRoomStatus.setSelectedIndex(0);
     }
     
+    //Invokes ClearRoom Info method
     private void btnClearRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearRoomActionPerformed
         clearRoomInfo();
     }//GEN-LAST:event_btnClearRoomActionPerformed
-
+    //Sets all UI values set as default
     public void clearScheduleInfo(){
         txtScheduleId.setText("");
         txtScheduleStart.setText("");
@@ -1381,7 +1402,7 @@ public class Administrator extends javax.swing.JFrame {
         txtScheduleSearch.setText("");
         cmbScheduleStatus.setSelectedIndex(0);
     }
-    
+    //Sets all Schedule UI values as default
     private void btnClearScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearScheduleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnClearScheduleActionPerformed
@@ -1389,15 +1410,15 @@ public class Administrator extends javax.swing.JFrame {
     private void txtProducerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProducerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtProducerActionPerformed
-
+    //Gets you back to Login
     private void btnBackMovie2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMovie2ActionPerformed
         hideCurrent();
     }//GEN-LAST:event_btnBackMovie2ActionPerformed
-
+    //Exits Program
     private void btnExitMovie1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitMovie1ActionPerformed
        System.exit(0);
     }//GEN-LAST:event_btnExitMovie1ActionPerformed
-
+    //Deletes selected Schedule
     private void btnDeleteScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteScheduleActionPerformed
         try{
             mc.destroy(Integer.parseInt(txtScheduleId.getText()));
@@ -1407,7 +1428,7 @@ public class Administrator extends javax.swing.JFrame {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteScheduleActionPerformed
-
+    //Deletes selected room
     private void btnDeleteRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRoomActionPerformed
         try{
             mc.destroy(Integer.parseInt(txtRoomId.getText()));
@@ -1417,7 +1438,7 @@ public class Administrator extends javax.swing.JFrame {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteRoomActionPerformed
-
+    //Updates selected user
     private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
         try{
             mc.destroy(Integer.parseInt(txtIdUser.getText()));
@@ -1427,7 +1448,7 @@ public class Administrator extends javax.swing.JFrame {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteUserActionPerformed
-
+    //Adds new room to DB
     private void btnAddRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoomActionPerformed
         r.setRoomNumber(Integer.parseInt(txtRoomId.getText()));
         String tempStatus = (String)cmbRoomStatus.getSelectedItem();
@@ -1442,7 +1463,7 @@ public class Administrator extends javax.swing.JFrame {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAddRoomActionPerformed
-
+    //Adds new Schedule to db
     private void btnAddScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddScheduleActionPerformed
 //        r.setRoomNumber(Integer.parseInt(txtRoomId.getText()));
 //        String tempUserStatus = (String)cmbRoomStatus.getSelectedItem();
@@ -1473,6 +1494,7 @@ public class Administrator extends javax.swing.JFrame {
         return value;
     }
     
+    //Hide current frameand set Login frame visible
     public void hideCurrent(){
         Login welcome = new Login();
         welcome.setVisible(true);

@@ -1,8 +1,4 @@
-/*
-**Written by: Armando Del Río Ramírez
-**Date: 01/05/ 2021 - 04/10/2021
-**Description: 
-*/
+
 
 package frames;
 
@@ -23,7 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.InputVerifier; //IMPLEMENT CLASS
 import javax.swing.JTable;
 import tools.QueueString;
-
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Frame for Login validation
+*/
 public class Login extends javax.swing.JFrame {
     
     private PlaceHolder holder;

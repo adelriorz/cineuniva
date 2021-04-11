@@ -1,11 +1,18 @@
+
 package frames;
 
 public class BillboardView extends javax.swing.JFrame {
-
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Billboard view where users can interact
+*/
+    //BillboardView constructor
     public BillboardView() {
         initComponents();
     }
 
+    //Hide current Frame and activates Login
     public void hideCurrent(){
         Login welcome = new Login();
         welcome.setVisible(true);

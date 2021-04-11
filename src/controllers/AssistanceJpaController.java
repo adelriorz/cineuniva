@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import controllers.exceptions.NonexistentEntityException;
@@ -19,10 +14,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code for CRUD Assistance controler operations
+*/
 public class AssistanceJpaController implements Serializable {
 
     public AssistanceJpaController(EntityManagerFactory emf) {
