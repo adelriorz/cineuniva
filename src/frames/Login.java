@@ -1,3 +1,9 @@
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: 
+*/
+
 package frames;
 
 import entities.User;
@@ -28,6 +34,7 @@ public class Login extends javax.swing.JFrame {
     private Municipality mun;
     private MunicipalityJpaController mjc;
     
+    //Login Constructor
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -40,11 +47,13 @@ public class Login extends javax.swing.JFrame {
         mjc = new MunicipalityJpaController();
     }
     
+    //Places Placeholders for the indicated variables
     private void placeHolders(){
         holder = new PlaceHolder(txtUser, "User");
         holder = new PlaceHolder(txtPassword, "Password");
     }
     
+    //Sets every value as default
     private void clearAll(){
         clearUser();
         cmbMunicipality.setSelectedIndex(0);
@@ -94,7 +103,8 @@ public class Login extends javax.swing.JFrame {
         i = -1;
         return i;
     }
-
+    
+    //Validates user login
     private void login(){
         boolean ans = false;
         String tN, tP; // Temporary name, password, state, municipality
@@ -110,6 +120,7 @@ public class Login extends javax.swing.JFrame {
         } else JOptionPane.showMessageDialog(this, "Wrong User/Password!, try again");
     }
     
+    //Shows billboards and saves State and Municipality
     private void showBillBoard(){
         List<String> locationList = new ArrayList<>();
         String tempState = (String)cmbState.getSelectedItem();
