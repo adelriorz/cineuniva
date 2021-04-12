@@ -7,16 +7,7 @@ import controllers.StateJpaController;
 import controllers.UserJpaController;
 import entities.Municipality;
 import entities.State;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.InputVerifier; //IMPLEMENT CLASS
-import javax.swing.JTable;
 import tools.QueueString;
 /*
 **Written by: Armando Del Río Ramírez
@@ -25,14 +16,15 @@ import tools.QueueString;
 */
 public class Login extends javax.swing.JFrame {
     
-    private PlaceHolder holder;
-    private User u;
-    private UserJpaController ujc;
-    private State st;
-    private StateJpaController stjc;
-    private Municipality mun;
-    private MunicipalityJpaController mjc;
-    protected QueueString q = new QueueString(1);
+    protected PlaceHolder holder;
+    protected User u;
+    protected UserJpaController ujc;
+    public State st;
+    protected StateJpaController stjc;
+    protected Municipality mun;
+    protected MunicipalityJpaController mjc;
+    protected static QueueString q = new QueueString(1);
+    protected BillboardView bv;
     
     //Login Constructor
     public Login() {
@@ -45,6 +37,7 @@ public class Login extends javax.swing.JFrame {
         stjc = new StateJpaController();
         mun = new Municipality();
         mjc = new MunicipalityJpaController();
+        bv = new BillboardView();
     }
     
     //Places Placeholders for the indicated variables
@@ -98,9 +91,9 @@ public class Login extends javax.swing.JFrame {
     private void showBillBoard(){
         String tempState = (String)cmbState.getSelectedItem();
         q.addValue(tempState);
-        BillboardView bv = new BillboardView(q);
+        BillboardView bvv = new BillboardView(q);
         this.setVisible(false);
-        bv.setVisible(true);
+        bvv.setVisible(true);
     }
     
     //Searches user by name and returns id value

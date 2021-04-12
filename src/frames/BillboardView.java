@@ -11,32 +11,37 @@ import entities.Room;
 import entities.Schedule;
 import entities.State;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tools.QueueString;
 
-public class BillboardView extends javax.swing.JFrame {
+public final class BillboardView extends javax.swing.JFrame {
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Billboard view where users can interact
 */
     protected static QueueString q;
-    private Billboard b;
-    private Movie m;
-    private Schedule s;
-    private Room r;
-    private State st;
-    private BillboardJpaController bc;
-    private MovieJpaController mc;
-    private ScheduleJpaController sc;
-    private RoomJpaController rc;
-    private StateJpaController stc;
-    
+    private final Billboard b;
+    private final Movie m;
+    private final Schedule s;
+    private final Room r;
+    private final State st;
+    private final BillboardJpaController bc;
+    private final MovieJpaController mc;
+    private final ScheduleJpaController sc;
+    private final RoomJpaController rc;
+    private final StateJpaController stc;
+    protected static Login log;
+    private String parsedQueueString[];
     //BillboardView constructor
     public BillboardView(QueueString q) {
+        super();
         initComponents();
-        BillboardView.q = q;
+        this.setLocationRelativeTo(null);
+        this.parsedQueueString = Login.q.getContent();
         b = new Billboard();
         m = new Movie();
         s = new Schedule();
@@ -51,24 +56,33 @@ public class BillboardView extends javax.swing.JFrame {
         tblBillboard.setShowGrid(true); //Shows grid in table
     }
     
-    //Empty Constructor
+    //Constructor with no parameter
     public BillboardView() {
         initComponents();
+        b = new Billboard();
+        m = new Movie();
+        s = new Schedule();
+        r = new Room();
+        st = new State();
+        bc = new BillboardJpaController();
+        mc = new MovieJpaController();
+        sc = new ScheduleJpaController();
+        rc = new RoomJpaController();
+        stc = new StateJpaController();
+        tblBillboard.setShowGrid(true); //Shows grid in table
     }
     
     //Loads billboard table from DB
     public void loadBillboardViewTable(){
         DefaultTableModel dtm = new DefaultTableModel();
+        List<Billboard> billboardList = new ArrayList<>();
+        billboardList = bc.findBillboardEntities();
+        String tempState = this.parsedQueueString[0];
         dtm.addColumn("Movie");
         dtm.addColumn("Duration");
         dtm.addColumn("Classification");
         dtm.addColumn("Room");
-        dtm.addColumn("Time");
-        //dtm.addColumn("Date");
-        
-        List<Billboard> billboardList = new ArrayList<>();
-        billboardList = bc.findBillboardEntities();
-        
+        dtm.addColumn("Date/Time");    
         for(Billboard b : billboardList){
             Object row[] = new Object[5];
             row[0] = b.getMovieId().getMovieName();
@@ -76,17 +90,23 @@ public class BillboardView extends javax.swing.JFrame {
             row[2] = b.getMovieId().getMovieClassification();
             row[3] = b.getRoomId().getRoomNumber();
             row[4] = b.getScheduleId().getScheduleStart();
-            dtm.addRow(row);
+            if(tempState.equals(b.getStateId().getStateName())){
+                dtm.addRow(row);
+            }
+        }
+        if(dtm.getRowCount()<0) { 
+            JOptionPane.showMessageDialog(this,
+                "No movies available in your State");
+            hideCurrent();
         }
         tblBillboard.setModel(dtm);
     }
 
     //Hide current Frame and displays Login
     public void hideCurrent(){
-        Login welcome = new Login();
-        welcome.setVisible(true);
+        Login login = new Login();
         this.setVisible(false);
-        this.dispose();
+        login.setVisible(true);
     }
     
     @SuppressWarnings("unchecked")
@@ -106,7 +126,8 @@ public class BillboardView extends javax.swing.JFrame {
 
         jLabel1.setText("UNIVA CINEMA");
 
-        cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] 
+		{ "Search by Name", "Search by classification", "Search by Genre", "Order A-Z", "Order Z-A" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,7 +155,7 @@ public class BillboardView extends javax.swing.JFrame {
             }
         });
 
-        btnExit.setText("Salir");
+        btnExit.setText("Exit");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);

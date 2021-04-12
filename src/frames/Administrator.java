@@ -35,7 +35,7 @@ public class Administrator extends javax.swing.JFrame {
     //Administrator Constructor    
     public Administrator() {
         initComponents();
-        this.setFocusable(true);
+        this.setLocationRelativeTo(null);
         m = new Movie();
         mc = new MovieJpaController();
         u = new User();
