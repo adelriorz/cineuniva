@@ -1,4 +1,3 @@
-
 package entities;
 
 import java.io.Serializable;
@@ -19,10 +18,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Class for CRUD movie operations
+**Description: Code to create new Movie Entity
 */
 @Entity
 @Table(name = "movie")
@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Movie.findByMovieDirector", query = "SELECT m FROM Movie m WHERE m.movieDirector = :movieDirector")
     , @NamedQuery(name = "Movie.findByMovieProducer", query = "SELECT m FROM Movie m WHERE m.movieProducer = :movieProducer")
     , @NamedQuery(name = "Movie.findByMovieClassification", query = "SELECT m FROM Movie m WHERE m.movieClassification = :movieClassification")
+    , @NamedQuery(name = "Movie.findByMovieGenre", query = "SELECT m FROM Movie m WHERE m.movieGenre = :movieGenre")
     , @NamedQuery(name = "Movie.findByMovieDuration", query = "SELECT m FROM Movie m WHERE m.movieDuration = :movieDuration")
     , @NamedQuery(name = "Movie.findByMovieStatus", query = "SELECT m FROM Movie m WHERE m.movieStatus = :movieStatus")
     , @NamedQuery(name = "Movie.findByMovieCreatedAt", query = "SELECT m FROM Movie m WHERE m.movieCreatedAt = :movieCreatedAt")
@@ -59,6 +60,9 @@ public class Movie implements Serializable {
     @Column(name = "movieClassification")
     private String movieClassification;
     @Basic(optional = false)
+    @Column(name = "movieGenre")
+    private String movieGenre;
+    @Basic(optional = false)
     @Column(name = "movieDuration")
     private int movieDuration;
     @Basic(optional = false)
@@ -82,12 +86,13 @@ public class Movie implements Serializable {
         this.movieId = movieId;
     }
 
-    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, int movieDuration, boolean movieStatus, Date movieCreatedAt, Date movieUpdatedAt) {
+    public Movie(Integer movieId, String movieName, String movieDirector, String movieProducer, String movieClassification, String movieGenre, int movieDuration, boolean movieStatus, Date movieCreatedAt, Date movieUpdatedAt) {
         this.movieId = movieId;
         this.movieName = movieName;
         this.movieDirector = movieDirector;
         this.movieProducer = movieProducer;
         this.movieClassification = movieClassification;
+        this.movieGenre = movieGenre;
         this.movieDuration = movieDuration;
         this.movieStatus = movieStatus;
         this.movieCreatedAt = movieCreatedAt;
@@ -132,6 +137,14 @@ public class Movie implements Serializable {
 
     public void setMovieClassification(String movieClassification) {
         this.movieClassification = movieClassification;
+    }
+
+    public String getMovieGenre() {
+        return movieGenre;
+    }
+
+    public void setMovieGenre(String movieGenre) {
+        this.movieGenre = movieGenre;
     }
 
     public int getMovieDuration() {

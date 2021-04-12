@@ -14,12 +14,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Code for CRUD Movie controler operations
+**Description: Code that allows CRUD operations for Movie Entity 
 */
+
 public class MovieJpaController implements Serializable {
 
     public MovieJpaController(EntityManagerFactory emf) {

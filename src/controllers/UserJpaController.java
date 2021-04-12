@@ -18,7 +18,7 @@ import javax.persistence.Persistence;
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Code for CRUD User controler operations
+**Description: Code that allows CRUD operations for User Entity 
 */
 public class UserJpaController implements Serializable {
 

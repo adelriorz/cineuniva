@@ -1361,10 +1361,14 @@ public class Administrator extends javax.swing.JFrame {
         m.setMovieStatus(Boolean.parseBoolean((String) cmbStatus.getSelectedItem()));
         
         try{
-            mc.destroy(Integer.parseInt(txtIdUser.getText()));
+            try {
+                mc.destroy(Integer.parseInt(txtIdUser.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
             clearUserInfo();
             loadUserTable();
-        }catch(IllegalOrphanException | NonexistentEntityException ex){
+        }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteMovieActionPerformed
@@ -1461,30 +1465,42 @@ public class Administrator extends javax.swing.JFrame {
     //Deletes selected Schedule
     private void btnDeleteScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteScheduleActionPerformed
         try{
-            mc.destroy(Integer.parseInt(txtScheduleId.getText()));
+            try {
+                mc.destroy(Integer.parseInt(txtScheduleId.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
             clearScheduleInfo();
             loadScheduleTable();
-        }catch(IllegalOrphanException | NonexistentEntityException ex){
+        }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteScheduleActionPerformed
     //Deletes selected room
     private void btnDeleteRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRoomActionPerformed
         try{
-            mc.destroy(Integer.parseInt(txtRoomId.getText()));
+            try {
+                mc.destroy(Integer.parseInt(txtRoomId.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
             clearRoomInfo();
             loadRoomTable();
-        }catch(IllegalOrphanException | NonexistentEntityException ex){
+        }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteRoomActionPerformed
     //Updates selected user
     private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
         try{
-            mc.destroy(Integer.parseInt(txtIdUser.getText()));
+            try {
+                mc.destroy(Integer.parseInt(txtIdUser.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
             clearRoomInfo();
             loadRoomTable();
-        }catch(IllegalOrphanException | NonexistentEntityException ex){
+        }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnDeleteUserActionPerformed

@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Code for Municipality entity CRUD operation
+**Description: Code to create new Municipality Entity
 */
 @Entity
 @Table(name = "municipality")

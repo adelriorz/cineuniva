@@ -1,4 +1,3 @@
-
 package entities;
 
 import java.io.Serializable;
@@ -18,10 +17,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/*
-**Written by: Armando Del Río Ramírez
+/**Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Class where you can link a user to a certain billboard
+**Description: Assistance Class where you can link a user to a certain billboard
+**with a User
 */
 @Entity
 @Table(name = "assistance")

@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Code for CRUD Room operations
+**Description: Code to create new Room Entity
 */
 @Entity
 @Table(name = "room")
