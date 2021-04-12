@@ -72,7 +72,75 @@ public final class BillboardView extends javax.swing.JFrame {
         tblBillboard.setShowGrid(true); //Shows grid in table
     }
     
-    //Loads billboard table from DB
+    //
+    public void userSelection(int value){
+        /*
+         "Name", "Classification", "Sort A-Z", "Sort Z-A" 
+        */
+        value = cmbUser.getSelectedIndex();
+        switch(value){
+            case 1: filterBy();
+                break;
+            case 2: filterBy();
+                break;
+            case 3: filterBy();
+                break;
+            case 4: sortMovies(true);
+                break;
+            case 5: sortMovies(false);
+                break;
+            default: 
+                JOptionPane.showMessageDialog(this,
+                        "Error found at userSelection, contact the administrator");
+                break;
+        }
+    }
+    
+    //Detects wich option has been selected by user and returns values if any
+    public void sortMovies(boolean as){
+        if(true){//"Sort A-Z"
+            
+        } else {//"Sort Z-A"
+            
+        }
+    }
+    
+    
+    //Search Criteria Method to find movies by name
+    public void filterBy(){
+        String name = txtsearchBillboard.getText().toLowerCase();
+        DefaultTableModel dtm = new DefaultTableModel();
+        List<Billboard> billboardList = new ArrayList<>();
+        billboardList = bc.findBillboardEntities();
+        String tempState = this.parsedQueueString[0];
+        dtm.addColumn("Movie");
+        dtm.addColumn("Duration");
+        dtm.addColumn("Classification");
+        dtm.addColumn("Room");
+        dtm.addColumn("Date/Time");    
+        for(Billboard b : billboardList){
+            Object row[] = new Object[5];
+            row[0] = b.getMovieId().getMovieName();
+            row[1] = b.getMovieId().getMovieDuration();
+            row[2] = b.getMovieId().getMovieClassification();
+            row[3] = b.getRoomId().getRoomNumber();
+            row[4] = b.getScheduleId().getScheduleStart();
+            if(tempState.equals(b.getStateId().getStateName()) && 
+                name.equals(b.getMovieId().getMovieName().toLowerCase())
+                || name.equals(b.getMovieId().getMovieClassification().toLowerCase())
+                || name.equals(b.getMovieId().getMovieGenre().toLowerCase())){
+                dtm.addRow(row);
+            }
+        }
+        if(dtm.getRowCount()<=0) { 
+            JOptionPane.showMessageDialog(this,
+                "No movies available");
+            hideCurrent();
+        }
+        tblBillboard.setModel(dtm);
+    }
+    
+    //Loads billboard table from DB filtering State option from user
     public void loadBillboardViewTable(){
         DefaultTableModel dtm = new DefaultTableModel();
         List<Billboard> billboardList = new ArrayList<>();
@@ -94,7 +162,7 @@ public final class BillboardView extends javax.swing.JFrame {
                 dtm.addRow(row);
             }
         }
-        if(dtm.getRowCount()<0) { 
+        if(dtm.getRowCount()<=0) { 
             JOptionPane.showMessageDialog(this,
                 "No movies available in your State");
             hideCurrent();
@@ -116,6 +184,9 @@ public final class BillboardView extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         cmbUser = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        txtsearchBillboard = new javax.swing.JTextField();
+        btnSearchBillboard = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBillboard = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -126,8 +197,21 @@ public final class BillboardView extends javax.swing.JFrame {
 
         jLabel1.setText("UNIVA CINEMA");
 
-        cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] 
-		{ "Search by Name", "Search by classification", "Search by Genre", "Order A-Z", "Order Z-A" }));
+        cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Classification", "Genre", "Sort A-Z", "Sort Z-A" }));
+        cmbUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbUserActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Search");
+
+        btnSearchBillboard.setText("Go");
+        btnSearchBillboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchBillboardActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -136,13 +220,23 @@ public final class BillboardView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(cmbUser, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(134, 134, 134)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtsearchBillboard, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSearchBillboard, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(cmbUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtsearchBillboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchBillboard))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -219,6 +313,11 @@ public final class BillboardView extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         hideCurrent();
     }//GEN-LAST:event_btnBackActionPerformed
+    //When clicked the input will be lowered and sent to filter or sort
+    private void btnSearchBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchBillboardActionPerformed
+        String input = "";
+        userSelection(input);
+    }//GEN-LAST:event_btnSearchBillboardActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,11 +360,14 @@ public final class BillboardView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnSearchBillboard;
     private javax.swing.JComboBox<String> cmbUser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblBillboard;
+    private javax.swing.JTextField txtsearchBillboard;
     // End of variables declaration//GEN-END:variables
 }
