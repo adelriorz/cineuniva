@@ -1,7 +1,0 @@
-1. Agrega una table que combine schedule, room y movie que se muestre al usuario
-
-2. Terminar el back de acciones de Administrador
-
-3. Exportar el query completo de la db de localhost a sql
-
-5. Hay que hacer las validaciones para que sólo tome el tipo de dato correspondiente.

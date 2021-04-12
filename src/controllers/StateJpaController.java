@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
@@ -13,17 +8,19 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import entities.Municipality;
-import entities.State;
 import java.util.ArrayList;
 import java.util.List;
+import entities.Billboard;
+import entities.State;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code that allows CRUD operations for State Entity 
+*/
 public class StateJpaController implements Serializable {
 
     public StateJpaController(EntityManagerFactory emf) {
@@ -44,24 +41,42 @@ public class StateJpaController implements Serializable {
         if (state.getMunicipalityList() == null) {
             state.setMunicipalityList(new ArrayList<Municipality>());
         }
+        if (state.getBillboardList() == null) {
+            state.setBillboardList(new ArrayList<Billboard>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             List<Municipality> attachedMunicipalityList = new ArrayList<Municipality>();
             for (Municipality municipalityListMunicipalityToAttach : state.getMunicipalityList()) {
-                municipalityListMunicipalityToAttach = em.getReference(municipalityListMunicipalityToAttach.getClass(), municipalityListMunicipalityToAttach.getMunicipalityPK());
+                municipalityListMunicipalityToAttach = em.getReference(municipalityListMunicipalityToAttach.getClass(), municipalityListMunicipalityToAttach.getMunicipalityId());
                 attachedMunicipalityList.add(municipalityListMunicipalityToAttach);
             }
             state.setMunicipalityList(attachedMunicipalityList);
+            List<Billboard> attachedBillboardList = new ArrayList<Billboard>();
+            for (Billboard billboardListBillboardToAttach : state.getBillboardList()) {
+                billboardListBillboardToAttach = em.getReference(billboardListBillboardToAttach.getClass(), billboardListBillboardToAttach.getBillboardId());
+                attachedBillboardList.add(billboardListBillboardToAttach);
+            }
+            state.setBillboardList(attachedBillboardList);
             em.persist(state);
             for (Municipality municipalityListMunicipality : state.getMunicipalityList()) {
-                State oldStateOfMunicipalityListMunicipality = municipalityListMunicipality.getState();
-                municipalityListMunicipality.setState(state);
+                State oldStateIdOfMunicipalityListMunicipality = municipalityListMunicipality.getStateId();
+                municipalityListMunicipality.setStateId(state);
                 municipalityListMunicipality = em.merge(municipalityListMunicipality);
-                if (oldStateOfMunicipalityListMunicipality != null) {
-                    oldStateOfMunicipalityListMunicipality.getMunicipalityList().remove(municipalityListMunicipality);
-                    oldStateOfMunicipalityListMunicipality = em.merge(oldStateOfMunicipalityListMunicipality);
+                if (oldStateIdOfMunicipalityListMunicipality != null) {
+                    oldStateIdOfMunicipalityListMunicipality.getMunicipalityList().remove(municipalityListMunicipality);
+                    oldStateIdOfMunicipalityListMunicipality = em.merge(oldStateIdOfMunicipalityListMunicipality);
+                }
+            }
+            for (Billboard billboardListBillboard : state.getBillboardList()) {
+                State oldStateIdOfBillboardListBillboard = billboardListBillboard.getStateId();
+                billboardListBillboard.setStateId(state);
+                billboardListBillboard = em.merge(billboardListBillboard);
+                if (oldStateIdOfBillboardListBillboard != null) {
+                    oldStateIdOfBillboardListBillboard.getBillboardList().remove(billboardListBillboard);
+                    oldStateIdOfBillboardListBillboard = em.merge(oldStateIdOfBillboardListBillboard);
                 }
             }
             em.getTransaction().commit();
@@ -80,13 +95,23 @@ public class StateJpaController implements Serializable {
             State persistentState = em.find(State.class, state.getStateId());
             List<Municipality> municipalityListOld = persistentState.getMunicipalityList();
             List<Municipality> municipalityListNew = state.getMunicipalityList();
+            List<Billboard> billboardListOld = persistentState.getBillboardList();
+            List<Billboard> billboardListNew = state.getBillboardList();
             List<String> illegalOrphanMessages = null;
             for (Municipality municipalityListOldMunicipality : municipalityListOld) {
                 if (!municipalityListNew.contains(municipalityListOldMunicipality)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Municipality " + municipalityListOldMunicipality + " since its state field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Municipality " + municipalityListOldMunicipality + " since its stateId field is not nullable.");
+                }
+            }
+            for (Billboard billboardListOldBillboard : billboardListOld) {
+                if (!billboardListNew.contains(billboardListOldBillboard)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Billboard " + billboardListOldBillboard + " since its stateId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -94,20 +119,38 @@ public class StateJpaController implements Serializable {
             }
             List<Municipality> attachedMunicipalityListNew = new ArrayList<Municipality>();
             for (Municipality municipalityListNewMunicipalityToAttach : municipalityListNew) {
-                municipalityListNewMunicipalityToAttach = em.getReference(municipalityListNewMunicipalityToAttach.getClass(), municipalityListNewMunicipalityToAttach.getMunicipalityPK());
+                municipalityListNewMunicipalityToAttach = em.getReference(municipalityListNewMunicipalityToAttach.getClass(), municipalityListNewMunicipalityToAttach.getMunicipalityId());
                 attachedMunicipalityListNew.add(municipalityListNewMunicipalityToAttach);
             }
             municipalityListNew = attachedMunicipalityListNew;
             state.setMunicipalityList(municipalityListNew);
+            List<Billboard> attachedBillboardListNew = new ArrayList<Billboard>();
+            for (Billboard billboardListNewBillboardToAttach : billboardListNew) {
+                billboardListNewBillboardToAttach = em.getReference(billboardListNewBillboardToAttach.getClass(), billboardListNewBillboardToAttach.getBillboardId());
+                attachedBillboardListNew.add(billboardListNewBillboardToAttach);
+            }
+            billboardListNew = attachedBillboardListNew;
+            state.setBillboardList(billboardListNew);
             state = em.merge(state);
             for (Municipality municipalityListNewMunicipality : municipalityListNew) {
                 if (!municipalityListOld.contains(municipalityListNewMunicipality)) {
-                    State oldStateOfMunicipalityListNewMunicipality = municipalityListNewMunicipality.getState();
-                    municipalityListNewMunicipality.setState(state);
+                    State oldStateIdOfMunicipalityListNewMunicipality = municipalityListNewMunicipality.getStateId();
+                    municipalityListNewMunicipality.setStateId(state);
                     municipalityListNewMunicipality = em.merge(municipalityListNewMunicipality);
-                    if (oldStateOfMunicipalityListNewMunicipality != null && !oldStateOfMunicipalityListNewMunicipality.equals(state)) {
-                        oldStateOfMunicipalityListNewMunicipality.getMunicipalityList().remove(municipalityListNewMunicipality);
-                        oldStateOfMunicipalityListNewMunicipality = em.merge(oldStateOfMunicipalityListNewMunicipality);
+                    if (oldStateIdOfMunicipalityListNewMunicipality != null && !oldStateIdOfMunicipalityListNewMunicipality.equals(state)) {
+                        oldStateIdOfMunicipalityListNewMunicipality.getMunicipalityList().remove(municipalityListNewMunicipality);
+                        oldStateIdOfMunicipalityListNewMunicipality = em.merge(oldStateIdOfMunicipalityListNewMunicipality);
+                    }
+                }
+            }
+            for (Billboard billboardListNewBillboard : billboardListNew) {
+                if (!billboardListOld.contains(billboardListNewBillboard)) {
+                    State oldStateIdOfBillboardListNewBillboard = billboardListNewBillboard.getStateId();
+                    billboardListNewBillboard.setStateId(state);
+                    billboardListNewBillboard = em.merge(billboardListNewBillboard);
+                    if (oldStateIdOfBillboardListNewBillboard != null && !oldStateIdOfBillboardListNewBillboard.equals(state)) {
+                        oldStateIdOfBillboardListNewBillboard.getBillboardList().remove(billboardListNewBillboard);
+                        oldStateIdOfBillboardListNewBillboard = em.merge(oldStateIdOfBillboardListNewBillboard);
                     }
                 }
             }
@@ -146,7 +189,14 @@ public class StateJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This State (" + state + ") cannot be destroyed since the Municipality " + municipalityListOrphanCheckMunicipality + " in its municipalityList field has a non-nullable state field.");
+                illegalOrphanMessages.add("This State (" + state + ") cannot be destroyed since the Municipality " + municipalityListOrphanCheckMunicipality + " in its municipalityList field has a non-nullable stateId field.");
+            }
+            List<Billboard> billboardListOrphanCheck = state.getBillboardList();
+            for (Billboard billboardListOrphanCheckBillboard : billboardListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This State (" + state + ") cannot be destroyed since the Billboard " + billboardListOrphanCheckBillboard + " in its billboardList field has a non-nullable stateId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

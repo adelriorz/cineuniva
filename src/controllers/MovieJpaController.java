@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
@@ -12,18 +7,19 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Assistance;
+import entities.Billboard;
 import entities.Movie;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code that allows CRUD operations for Movie Entity 
+*/
 
-/**
- *
- * @author Armando Del Rio
- */
 public class MovieJpaController implements Serializable {
 
     public MovieJpaController(EntityManagerFactory emf) {
@@ -41,27 +37,27 @@ public class MovieJpaController implements Serializable {
     }
 
     public void create(Movie movie) {
-        if (movie.getAssistanceList() == null) {
-            movie.setAssistanceList(new ArrayList<Assistance>());
+        if (movie.getBillboardList() == null) {
+            movie.setBillboardList(new ArrayList<Billboard>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
-            for (Assistance assistanceListAssistanceToAttach : movie.getAssistanceList()) {
-                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
-                attachedAssistanceList.add(assistanceListAssistanceToAttach);
+            List<Billboard> attachedBillboardList = new ArrayList<Billboard>();
+            for (Billboard billboardListBillboardToAttach : movie.getBillboardList()) {
+                billboardListBillboardToAttach = em.getReference(billboardListBillboardToAttach.getClass(), billboardListBillboardToAttach.getBillboardId());
+                attachedBillboardList.add(billboardListBillboardToAttach);
             }
-            movie.setAssistanceList(attachedAssistanceList);
+            movie.setBillboardList(attachedBillboardList);
             em.persist(movie);
-            for (Assistance assistanceListAssistance : movie.getAssistanceList()) {
-                Movie oldMovieOfAssistanceListAssistance = assistanceListAssistance.getMovie();
-                assistanceListAssistance.setMovie(movie);
-                assistanceListAssistance = em.merge(assistanceListAssistance);
-                if (oldMovieOfAssistanceListAssistance != null) {
-                    oldMovieOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
-                    oldMovieOfAssistanceListAssistance = em.merge(oldMovieOfAssistanceListAssistance);
+            for (Billboard billboardListBillboard : movie.getBillboardList()) {
+                Movie oldMovieIdOfBillboardListBillboard = billboardListBillboard.getMovieId();
+                billboardListBillboard.setMovieId(movie);
+                billboardListBillboard = em.merge(billboardListBillboard);
+                if (oldMovieIdOfBillboardListBillboard != null) {
+                    oldMovieIdOfBillboardListBillboard.getBillboardList().remove(billboardListBillboard);
+                    oldMovieIdOfBillboardListBillboard = em.merge(oldMovieIdOfBillboardListBillboard);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +74,36 @@ public class MovieJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Movie persistentMovie = em.find(Movie.class, movie.getMovieId());
-            List<Assistance> assistanceListOld = persistentMovie.getAssistanceList();
-            List<Assistance> assistanceListNew = movie.getAssistanceList();
+            List<Billboard> billboardListOld = persistentMovie.getBillboardList();
+            List<Billboard> billboardListNew = movie.getBillboardList();
             List<String> illegalOrphanMessages = null;
-            for (Assistance assistanceListOldAssistance : assistanceListOld) {
-                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
+            for (Billboard billboardListOldBillboard : billboardListOld) {
+                if (!billboardListNew.contains(billboardListOldBillboard)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its movie field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Billboard " + billboardListOldBillboard + " since its movieId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Assistance> attachedAssistanceListNew = new ArrayList<>();
-            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
-                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
-                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
+            List<Billboard> attachedBillboardListNew = new ArrayList<Billboard>();
+            for (Billboard billboardListNewBillboardToAttach : billboardListNew) {
+                billboardListNewBillboardToAttach = em.getReference(billboardListNewBillboardToAttach.getClass(), billboardListNewBillboardToAttach.getBillboardId());
+                attachedBillboardListNew.add(billboardListNewBillboardToAttach);
             }
-            assistanceListNew = attachedAssistanceListNew;
-            movie.setAssistanceList(assistanceListNew);
+            billboardListNew = attachedBillboardListNew;
+            movie.setBillboardList(billboardListNew);
             movie = em.merge(movie);
-            for (Assistance assistanceListNewAssistance : assistanceListNew) {
-                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
-                    Movie oldMovieOfAssistanceListNewAssistance = assistanceListNewAssistance.getMovie();
-                    assistanceListNewAssistance.setMovie(movie);
-                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
-                    if (oldMovieOfAssistanceListNewAssistance != null && !oldMovieOfAssistanceListNewAssistance.equals(movie)) {
-                        oldMovieOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
-                        oldMovieOfAssistanceListNewAssistance = em.merge(oldMovieOfAssistanceListNewAssistance);
+            for (Billboard billboardListNewBillboard : billboardListNew) {
+                if (!billboardListOld.contains(billboardListNewBillboard)) {
+                    Movie oldMovieIdOfBillboardListNewBillboard = billboardListNewBillboard.getMovieId();
+                    billboardListNewBillboard.setMovieId(movie);
+                    billboardListNewBillboard = em.merge(billboardListNewBillboard);
+                    if (oldMovieIdOfBillboardListNewBillboard != null && !oldMovieIdOfBillboardListNewBillboard.equals(movie)) {
+                        oldMovieIdOfBillboardListNewBillboard.getBillboardList().remove(billboardListNewBillboard);
+                        oldMovieIdOfBillboardListNewBillboard = em.merge(oldMovieIdOfBillboardListNewBillboard);
                     }
                 }
             }
@@ -141,12 +137,12 @@ public class MovieJpaController implements Serializable {
                 throw new NonexistentEntityException("The movie with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Assistance> assistanceListOrphanCheck = movie.getAssistanceList();
-            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
+            List<Billboard> billboardListOrphanCheck = movie.getBillboardList();
+            for (Billboard billboardListOrphanCheckBillboard : billboardListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Movie (" + movie + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable movie field.");
+                illegalOrphanMessages.add("This Movie (" + movie + ") cannot be destroyed since the Billboard " + billboardListOrphanCheckBillboard + " in its billboardList field has a non-nullable movieId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

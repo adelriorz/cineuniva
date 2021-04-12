@@ -1,18 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -21,34 +17,28 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Armando Del Rio
- */
+/**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Assistance Class where you can link a user to a certain billboard
+**with a User
+*/
 @Entity
 @Table(name = "assistance")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Assistance.findAll", query = "SELECT a FROM Assistance a")
-    , @NamedQuery(name = "Assistance.findByAssistanceId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.assistanceId = :assistanceId")
-    , @NamedQuery(name = "Assistance.findByAssistanceStatus", query = "SELECT a FROM Assistance a WHERE a.assistanceStatus = :assistanceStatus")
+    , @NamedQuery(name = "Assistance.findByAssistanceId", query = "SELECT a FROM Assistance a WHERE a.assistanceId = :assistanceId")
     , @NamedQuery(name = "Assistance.findByAssistanceCreatedAt", query = "SELECT a FROM Assistance a WHERE a.assistanceCreatedAt = :assistanceCreatedAt")
     , @NamedQuery(name = "Assistance.findByAssistanceUpdatedAt", query = "SELECT a FROM Assistance a WHERE a.assistanceUpdatedAt = :assistanceUpdatedAt")
-    , @NamedQuery(name = "Assistance.findByMoviemovieId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.moviemovieId = :moviemovieId")
-    , @NamedQuery(name = "Assistance.findBySchedulescheduleId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.schedulescheduleId = :schedulescheduleId")
-    , @NamedQuery(name = "Assistance.findByScheduleroomId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.scheduleroomId = :scheduleroomId")
-    , @NamedQuery(name = "Assistance.findByMunicipalitymunicipalityId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.municipalitymunicipalityId = :municipalitymunicipalityId")
-    , @NamedQuery(name = "Assistance.findByMunicipalitystateId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.municipalitystateId = :municipalitystateId")
-    , @NamedQuery(name = "Assistance.findByUseruserId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.useruserId = :useruserId")
-    , @NamedQuery(name = "Assistance.findByRoomroomId", query = "SELECT a FROM Assistance a WHERE a.assistancePK.roomroomId = :roomroomId")})
+    , @NamedQuery(name = "Assistance.findByAssistanceStatus", query = "SELECT a FROM Assistance a WHERE a.assistanceStatus = :assistanceStatus")})
 public class Assistance implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected AssistancePK assistancePK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "assistanceStatus")
-    private boolean assistanceStatus;
+    @Column(name = "assistanceId")
+    private Integer assistanceId;
     @Basic(optional = false)
     @Column(name = "assistanceCreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -57,58 +47,36 @@ public class Assistance implements Serializable {
     @Column(name = "assistanceUpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date assistanceUpdatedAt;
-    @JoinColumn(name = "movie_movieId", referencedColumnName = "movieId", insertable = false, updatable = false)
+    @Basic(optional = false)
+    @Column(name = "assistanceStatus")
+    private boolean assistanceStatus;
+    @JoinColumn(name = "billboardId", referencedColumnName = "billboardId")
     @ManyToOne(optional = false)
-    private Movie movie;
-    @JoinColumns({
-        @JoinColumn(name = "municipality_municipalityId", referencedColumnName = "municipalityId", insertable = false, updatable = false)
-        , @JoinColumn(name = "municipality_stateId", referencedColumnName = "stateId", insertable = false, updatable = false)})
+    private Billboard billboardId;
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     @ManyToOne(optional = false)
-    private Municipality municipality;
-    @JoinColumn(name = "room_roomId", referencedColumnName = "roomId", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Room room;
-    @JoinColumns({
-        @JoinColumn(name = "schedule_scheduleId", referencedColumnName = "scheduleId", insertable = false, updatable = false)
-        , @JoinColumn(name = "schedule_roomId", referencedColumnName = "roomId", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Schedule schedule;
-    @JoinColumn(name = "user_userId", referencedColumnName = "userId", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private User user;
+    private User userId;
 
     public Assistance() {
     }
 
-    public Assistance(AssistancePK assistancePK) {
-        this.assistancePK = assistancePK;
+    public Assistance(Integer assistanceId) {
+        this.assistanceId = assistanceId;
     }
 
-    public Assistance(AssistancePK assistancePK, boolean assistanceStatus, Date assistanceCreatedAt, Date assistanceUpdatedAt) {
-        this.assistancePK = assistancePK;
-        this.assistanceStatus = assistanceStatus;
+    public Assistance(Integer assistanceId, Date assistanceCreatedAt, Date assistanceUpdatedAt, boolean assistanceStatus) {
+        this.assistanceId = assistanceId;
         this.assistanceCreatedAt = assistanceCreatedAt;
         this.assistanceUpdatedAt = assistanceUpdatedAt;
-    }
-
-    public Assistance(int assistanceId, int moviemovieId, int schedulescheduleId, int scheduleroomId, int municipalitymunicipalityId, int municipalitystateId, int useruserId, int roomroomId) {
-        this.assistancePK = new AssistancePK(assistanceId, moviemovieId, schedulescheduleId, scheduleroomId, municipalitymunicipalityId, municipalitystateId, useruserId, roomroomId);
-    }
-
-    public AssistancePK getAssistancePK() {
-        return assistancePK;
-    }
-
-    public void setAssistancePK(AssistancePK assistancePK) {
-        this.assistancePK = assistancePK;
-    }
-
-    public boolean getAssistanceStatus() {
-        return assistanceStatus;
-    }
-
-    public void setAssistanceStatus(boolean assistanceStatus) {
         this.assistanceStatus = assistanceStatus;
+    }
+
+    public Integer getAssistanceId() {
+        return assistanceId;
+    }
+
+    public void setAssistanceId(Integer assistanceId) {
+        this.assistanceId = assistanceId;
     }
 
     public Date getAssistanceCreatedAt() {
@@ -127,50 +95,34 @@ public class Assistance implements Serializable {
         this.assistanceUpdatedAt = assistanceUpdatedAt;
     }
 
-    public Movie getMovie() {
-        return movie;
+    public boolean getAssistanceStatus() {
+        return assistanceStatus;
     }
 
-    public void setMovie(Movie movie) {
-        this.movie = movie;
+    public void setAssistanceStatus(boolean assistanceStatus) {
+        this.assistanceStatus = assistanceStatus;
     }
 
-    public Municipality getMunicipality() {
-        return municipality;
+    public Billboard getBillboardId() {
+        return billboardId;
     }
 
-    public void setMunicipality(Municipality municipality) {
-        this.municipality = municipality;
+    public void setBillboardId(Billboard billboardId) {
+        this.billboardId = billboardId;
     }
 
-    public Room getRoom() {
-        return room;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public Schedule getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (assistancePK != null ? assistancePK.hashCode() : 0);
+        hash += (assistanceId != null ? assistanceId.hashCode() : 0);
         return hash;
     }
 
@@ -181,7 +133,7 @@ public class Assistance implements Serializable {
             return false;
         }
         Assistance other = (Assistance) object;
-        if ((this.assistancePK == null && other.assistancePK != null) || (this.assistancePK != null && !this.assistancePK.equals(other.assistancePK))) {
+        if ((this.assistanceId == null && other.assistanceId != null) || (this.assistanceId != null && !this.assistanceId.equals(other.assistanceId))) {
             return false;
         }
         return true;
@@ -189,7 +141,7 @@ public class Assistance implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Assistance[ assistancePK=" + assistancePK + " ]";
+        return "entities.Assistance[ assistanceId=" + assistanceId + " ]";
     }
     
 }

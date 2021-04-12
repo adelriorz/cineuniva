@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
@@ -24,10 +19,11 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code to create new User Entity
+*/
 @Entity
 @Table(name = "user")
 @XmlRootElement
@@ -68,7 +64,7 @@ public class User implements Serializable {
     @Column(name = "userUpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date userUpdatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Assistance> assistanceList;
 
     public User() {

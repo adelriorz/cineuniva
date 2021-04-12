@@ -4,8 +4,12 @@ import java.util.Scanner;
 import java.util.Arrays;
 import java.time.Duration;
 import java.time.Instant;
-
-class Ordenamiento{
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Sorting algorythms
+*/
+public class Ordenamiento{
 
     protected int[] intArr;
     protected String[] elements;

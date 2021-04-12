@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
@@ -20,10 +15,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code that allows CRUD operations for User Entity 
+*/
 public class UserJpaController implements Serializable {
 
     public UserJpaController(EntityManagerFactory emf) {
@@ -50,18 +46,18 @@ public class UserJpaController implements Serializable {
             em.getTransaction().begin();
             List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
             for (Assistance assistanceListAssistanceToAttach : user.getAssistanceList()) {
-                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
+                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistanceId());
                 attachedAssistanceList.add(assistanceListAssistanceToAttach);
             }
             user.setAssistanceList(attachedAssistanceList);
             em.persist(user);
             for (Assistance assistanceListAssistance : user.getAssistanceList()) {
-                User oldUserOfAssistanceListAssistance = assistanceListAssistance.getUser();
-                assistanceListAssistance.setUser(user);
+                User oldUserIdOfAssistanceListAssistance = assistanceListAssistance.getUserId();
+                assistanceListAssistance.setUserId(user);
                 assistanceListAssistance = em.merge(assistanceListAssistance);
-                if (oldUserOfAssistanceListAssistance != null) {
-                    oldUserOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
-                    oldUserOfAssistanceListAssistance = em.merge(oldUserOfAssistanceListAssistance);
+                if (oldUserIdOfAssistanceListAssistance != null) {
+                    oldUserIdOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
+                    oldUserIdOfAssistanceListAssistance = em.merge(oldUserIdOfAssistanceListAssistance);
                 }
             }
             em.getTransaction().commit();
@@ -86,7 +82,7 @@ public class UserJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its user field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its userId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -94,7 +90,7 @@ public class UserJpaController implements Serializable {
             }
             List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
             for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
-                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
+                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistanceId());
                 attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
             }
             assistanceListNew = attachedAssistanceListNew;
@@ -102,12 +98,12 @@ public class UserJpaController implements Serializable {
             user = em.merge(user);
             for (Assistance assistanceListNewAssistance : assistanceListNew) {
                 if (!assistanceListOld.contains(assistanceListNewAssistance)) {
-                    User oldUserOfAssistanceListNewAssistance = assistanceListNewAssistance.getUser();
-                    assistanceListNewAssistance.setUser(user);
+                    User oldUserIdOfAssistanceListNewAssistance = assistanceListNewAssistance.getUserId();
+                    assistanceListNewAssistance.setUserId(user);
                     assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
-                    if (oldUserOfAssistanceListNewAssistance != null && !oldUserOfAssistanceListNewAssistance.equals(user)) {
-                        oldUserOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
-                        oldUserOfAssistanceListNewAssistance = em.merge(oldUserOfAssistanceListNewAssistance);
+                    if (oldUserIdOfAssistanceListNewAssistance != null && !oldUserIdOfAssistanceListNewAssistance.equals(user)) {
+                        oldUserIdOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
+                        oldUserIdOfAssistanceListNewAssistance = em.merge(oldUserIdOfAssistanceListNewAssistance);
                     }
                 }
             }
@@ -146,7 +142,7 @@ public class UserJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable user field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable userId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

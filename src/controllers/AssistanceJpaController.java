@@ -1,33 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import controllers.exceptions.NonexistentEntityException;
-import controllers.exceptions.PreexistingEntityException;
 import entities.Assistance;
-import entities.AssistancePK;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Movie;
-import entities.Municipality;
-import entities.Room;
-import entities.Schedule;
+import entities.Billboard;
 import entities.User;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code that allows CRUD operations for Assistance Entity 
+*/
 public class AssistanceJpaController implements Serializable {
 
     public AssistanceJpaController(EntityManagerFactory emf) {
@@ -44,73 +34,31 @@ public class AssistanceJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Assistance assistance) throws PreexistingEntityException, Exception {
-        if (assistance.getAssistancePK() == null) {
-            assistance.setAssistancePK(new AssistancePK());
-        }
-        assistance.getAssistancePK().setSchedulescheduleId(assistance.getSchedule().getSchedulePK().getScheduleId());
-        assistance.getAssistancePK().setMoviemovieId(assistance.getMovie().getMovieId());
-        assistance.getAssistancePK().setScheduleroomId(assistance.getSchedule().getSchedulePK().getRoomId());
-        assistance.getAssistancePK().setRoomroomId(assistance.getRoom().getRoomId());
-        assistance.getAssistancePK().setMunicipalitymunicipalityId(assistance.getMunicipality().getMunicipalityPK().getMunicipalityId());
-        assistance.getAssistancePK().setUseruserId(assistance.getUser().getUserId());
-        assistance.getAssistancePK().setMunicipalitystateId(assistance.getMunicipality().getMunicipalityPK().getStateId());
+    public void create(Assistance assistance) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Movie movie = assistance.getMovie();
-            if (movie != null) {
-                movie = em.getReference(movie.getClass(), movie.getMovieId());
-                assistance.setMovie(movie);
+            Billboard billboardId = assistance.getBillboardId();
+            if (billboardId != null) {
+                billboardId = em.getReference(billboardId.getClass(), billboardId.getBillboardId());
+                assistance.setBillboardId(billboardId);
             }
-            Municipality municipality = assistance.getMunicipality();
-            if (municipality != null) {
-                municipality = em.getReference(municipality.getClass(), municipality.getMunicipalityPK());
-                assistance.setMunicipality(municipality);
-            }
-            Room room = assistance.getRoom();
-            if (room != null) {
-                room = em.getReference(room.getClass(), room.getRoomId());
-                assistance.setRoom(room);
-            }
-            Schedule schedule = assistance.getSchedule();
-            if (schedule != null) {
-                schedule = em.getReference(schedule.getClass(), schedule.getSchedulePK());
-                assistance.setSchedule(schedule);
-            }
-            User user = assistance.getUser();
-            if (user != null) {
-                user = em.getReference(user.getClass(), user.getUserId());
-                assistance.setUser(user);
+            User userId = assistance.getUserId();
+            if (userId != null) {
+                userId = em.getReference(userId.getClass(), userId.getUserId());
+                assistance.setUserId(userId);
             }
             em.persist(assistance);
-            if (movie != null) {
-                movie.getAssistanceList().add(assistance);
-                movie = em.merge(movie);
+            if (billboardId != null) {
+                billboardId.getAssistanceList().add(assistance);
+                billboardId = em.merge(billboardId);
             }
-            if (municipality != null) {
-                municipality.getAssistanceList().add(assistance);
-                municipality = em.merge(municipality);
-            }
-            if (room != null) {
-                room.getAssistanceList().add(assistance);
-                room = em.merge(room);
-            }
-            if (schedule != null) {
-                schedule.getAssistanceList().add(assistance);
-                schedule = em.merge(schedule);
-            }
-            if (user != null) {
-                user.getAssistanceList().add(assistance);
-                user = em.merge(user);
+            if (userId != null) {
+                userId.getAssistanceList().add(assistance);
+                userId = em.merge(userId);
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findAssistance(assistance.getAssistancePK()) != null) {
-                throw new PreexistingEntityException("Assistance " + assistance + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -119,94 +67,45 @@ public class AssistanceJpaController implements Serializable {
     }
 
     public void edit(Assistance assistance) throws NonexistentEntityException, Exception {
-        assistance.getAssistancePK().setSchedulescheduleId(assistance.getSchedule().getSchedulePK().getScheduleId());
-        assistance.getAssistancePK().setMoviemovieId(assistance.getMovie().getMovieId());
-        assistance.getAssistancePK().setScheduleroomId(assistance.getSchedule().getSchedulePK().getRoomId());
-        assistance.getAssistancePK().setRoomroomId(assistance.getRoom().getRoomId());
-        assistance.getAssistancePK().setMunicipalitymunicipalityId(assistance.getMunicipality().getMunicipalityPK().getMunicipalityId());
-        assistance.getAssistancePK().setUseruserId(assistance.getUser().getUserId());
-        assistance.getAssistancePK().setMunicipalitystateId(assistance.getMunicipality().getMunicipalityPK().getStateId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Assistance persistentAssistance = em.find(Assistance.class, assistance.getAssistancePK());
-            Movie movieOld = persistentAssistance.getMovie();
-            Movie movieNew = assistance.getMovie();
-            Municipality municipalityOld = persistentAssistance.getMunicipality();
-            Municipality municipalityNew = assistance.getMunicipality();
-            Room roomOld = persistentAssistance.getRoom();
-            Room roomNew = assistance.getRoom();
-            Schedule scheduleOld = persistentAssistance.getSchedule();
-            Schedule scheduleNew = assistance.getSchedule();
-            User userOld = persistentAssistance.getUser();
-            User userNew = assistance.getUser();
-            if (movieNew != null) {
-                movieNew = em.getReference(movieNew.getClass(), movieNew.getMovieId());
-                assistance.setMovie(movieNew);
+            Assistance persistentAssistance = em.find(Assistance.class, assistance.getAssistanceId());
+            Billboard billboardIdOld = persistentAssistance.getBillboardId();
+            Billboard billboardIdNew = assistance.getBillboardId();
+            User userIdOld = persistentAssistance.getUserId();
+            User userIdNew = assistance.getUserId();
+            if (billboardIdNew != null) {
+                billboardIdNew = em.getReference(billboardIdNew.getClass(), billboardIdNew.getBillboardId());
+                assistance.setBillboardId(billboardIdNew);
             }
-            if (municipalityNew != null) {
-                municipalityNew = em.getReference(municipalityNew.getClass(), municipalityNew.getMunicipalityPK());
-                assistance.setMunicipality(municipalityNew);
-            }
-            if (roomNew != null) {
-                roomNew = em.getReference(roomNew.getClass(), roomNew.getRoomId());
-                assistance.setRoom(roomNew);
-            }
-            if (scheduleNew != null) {
-                scheduleNew = em.getReference(scheduleNew.getClass(), scheduleNew.getSchedulePK());
-                assistance.setSchedule(scheduleNew);
-            }
-            if (userNew != null) {
-                userNew = em.getReference(userNew.getClass(), userNew.getUserId());
-                assistance.setUser(userNew);
+            if (userIdNew != null) {
+                userIdNew = em.getReference(userIdNew.getClass(), userIdNew.getUserId());
+                assistance.setUserId(userIdNew);
             }
             assistance = em.merge(assistance);
-            if (movieOld != null && !movieOld.equals(movieNew)) {
-                movieOld.getAssistanceList().remove(assistance);
-                movieOld = em.merge(movieOld);
+            if (billboardIdOld != null && !billboardIdOld.equals(billboardIdNew)) {
+                billboardIdOld.getAssistanceList().remove(assistance);
+                billboardIdOld = em.merge(billboardIdOld);
             }
-            if (movieNew != null && !movieNew.equals(movieOld)) {
-                movieNew.getAssistanceList().add(assistance);
-                movieNew = em.merge(movieNew);
+            if (billboardIdNew != null && !billboardIdNew.equals(billboardIdOld)) {
+                billboardIdNew.getAssistanceList().add(assistance);
+                billboardIdNew = em.merge(billboardIdNew);
             }
-            if (municipalityOld != null && !municipalityOld.equals(municipalityNew)) {
-                municipalityOld.getAssistanceList().remove(assistance);
-                municipalityOld = em.merge(municipalityOld);
+            if (userIdOld != null && !userIdOld.equals(userIdNew)) {
+                userIdOld.getAssistanceList().remove(assistance);
+                userIdOld = em.merge(userIdOld);
             }
-            if (municipalityNew != null && !municipalityNew.equals(municipalityOld)) {
-                municipalityNew.getAssistanceList().add(assistance);
-                municipalityNew = em.merge(municipalityNew);
-            }
-            if (roomOld != null && !roomOld.equals(roomNew)) {
-                roomOld.getAssistanceList().remove(assistance);
-                roomOld = em.merge(roomOld);
-            }
-            if (roomNew != null && !roomNew.equals(roomOld)) {
-                roomNew.getAssistanceList().add(assistance);
-                roomNew = em.merge(roomNew);
-            }
-            if (scheduleOld != null && !scheduleOld.equals(scheduleNew)) {
-                scheduleOld.getAssistanceList().remove(assistance);
-                scheduleOld = em.merge(scheduleOld);
-            }
-            if (scheduleNew != null && !scheduleNew.equals(scheduleOld)) {
-                scheduleNew.getAssistanceList().add(assistance);
-                scheduleNew = em.merge(scheduleNew);
-            }
-            if (userOld != null && !userOld.equals(userNew)) {
-                userOld.getAssistanceList().remove(assistance);
-                userOld = em.merge(userOld);
-            }
-            if (userNew != null && !userNew.equals(userOld)) {
-                userNew.getAssistanceList().add(assistance);
-                userNew = em.merge(userNew);
+            if (userIdNew != null && !userIdNew.equals(userIdOld)) {
+                userIdNew.getAssistanceList().add(assistance);
+                userIdNew = em.merge(userIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                AssistancePK id = assistance.getAssistancePK();
+                Integer id = assistance.getAssistanceId();
                 if (findAssistance(id) == null) {
                     throw new NonexistentEntityException("The assistance with id " + id + " no longer exists.");
                 }
@@ -219,7 +118,7 @@ public class AssistanceJpaController implements Serializable {
         }
     }
 
-    public void destroy(AssistancePK id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -227,34 +126,19 @@ public class AssistanceJpaController implements Serializable {
             Assistance assistance;
             try {
                 assistance = em.getReference(Assistance.class, id);
-                assistance.getAssistancePK();
+                assistance.getAssistanceId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The assistance with id " + id + " no longer exists.", enfe);
             }
-            Movie movie = assistance.getMovie();
-            if (movie != null) {
-                movie.getAssistanceList().remove(assistance);
-                movie = em.merge(movie);
+            Billboard billboardId = assistance.getBillboardId();
+            if (billboardId != null) {
+                billboardId.getAssistanceList().remove(assistance);
+                billboardId = em.merge(billboardId);
             }
-            Municipality municipality = assistance.getMunicipality();
-            if (municipality != null) {
-                municipality.getAssistanceList().remove(assistance);
-                municipality = em.merge(municipality);
-            }
-            Room room = assistance.getRoom();
-            if (room != null) {
-                room.getAssistanceList().remove(assistance);
-                room = em.merge(room);
-            }
-            Schedule schedule = assistance.getSchedule();
-            if (schedule != null) {
-                schedule.getAssistanceList().remove(assistance);
-                schedule = em.merge(schedule);
-            }
-            User user = assistance.getUser();
-            if (user != null) {
-                user.getAssistanceList().remove(assistance);
-                user = em.merge(user);
+            User userId = assistance.getUserId();
+            if (userId != null) {
+                userId.getAssistanceList().remove(assistance);
+                userId = em.merge(userId);
             }
             em.remove(assistance);
             em.getTransaction().commit();
@@ -289,7 +173,7 @@ public class AssistanceJpaController implements Serializable {
         }
     }
 
-    public Assistance findAssistance(AssistancePK id) {
+    public Assistance findAssistance(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Assistance.class, id);

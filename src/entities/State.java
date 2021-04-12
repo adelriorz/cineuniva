@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
@@ -24,10 +19,11 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code to create new State Entity
+*/
 @Entity
 @Table(name = "state")
 @XmlRootElement
@@ -60,8 +56,10 @@ public class State implements Serializable {
     @Column(name = "stateUpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date stateUpdatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "state")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "stateId")
     private List<Municipality> municipalityList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "stateId")
+    private List<Billboard> billboardList;
 
     public State() {
     }
@@ -125,6 +123,15 @@ public class State implements Serializable {
 
     public void setMunicipalityList(List<Municipality> municipalityList) {
         this.municipalityList = municipalityList;
+    }
+
+    @XmlTransient
+    public List<Billboard> getBillboardList() {
+        return billboardList;
+    }
+
+    public void setBillboardList(List<Billboard> billboardList) {
+        this.billboardList = billboardList;
     }
 
     @Override

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
@@ -11,8 +6,12 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -22,33 +21,38 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code to create new Schedule Entity
+*/
 @Entity
 @Table(name = "schedule")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Schedule.findAll", query = "SELECT s FROM Schedule s")
-    , @NamedQuery(name = "Schedule.findByScheduleId", query = "SELECT s FROM Schedule s WHERE s.schedulePK.scheduleId = :scheduleId")
+    , @NamedQuery(name = "Schedule.findByScheduleId", query = "SELECT s FROM Schedule s WHERE s.scheduleId = :scheduleId")
     , @NamedQuery(name = "Schedule.findByScheduleStart", query = "SELECT s FROM Schedule s WHERE s.scheduleStart = :scheduleStart")
     , @NamedQuery(name = "Schedule.findByScheduleEnd", query = "SELECT s FROM Schedule s WHERE s.scheduleEnd = :scheduleEnd")
     , @NamedQuery(name = "Schedule.findByScheduleStatus", query = "SELECT s FROM Schedule s WHERE s.scheduleStatus = :scheduleStatus")
     , @NamedQuery(name = "Schedule.findByScheduleCreatedAt", query = "SELECT s FROM Schedule s WHERE s.scheduleCreatedAt = :scheduleCreatedAt")
-    , @NamedQuery(name = "Schedule.findByScheduleUpdatedAt", query = "SELECT s FROM Schedule s WHERE s.scheduleUpdatedAt = :scheduleUpdatedAt")
-    , @NamedQuery(name = "Schedule.findByRoomId", query = "SELECT s FROM Schedule s WHERE s.schedulePK.roomId = :roomId")})
+    , @NamedQuery(name = "Schedule.findByScheduleUpdatedAt", query = "SELECT s FROM Schedule s WHERE s.scheduleUpdatedAt = :scheduleUpdatedAt")})
 public class Schedule implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected SchedulePK schedulePK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "scheduleId")
+    private Integer scheduleId;
     @Basic(optional = false)
     @Column(name = "scheduleStart")
-    private String scheduleStart;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date scheduleStart;
     @Basic(optional = false)
     @Column(name = "scheduleEnd")
-    private String scheduleEnd;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date scheduleEnd;
     @Basic(optional = false)
     @Column(name = "scheduleStatus")
     private boolean scheduleStatus;
@@ -60,18 +64,21 @@ public class Schedule implements Serializable {
     @Column(name = "scheduleUpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date scheduleUpdatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "schedule")
-    private List<Assistance> assistanceList;
+    @JoinColumn(name = "roomId", referencedColumnName = "roomId")
+    @ManyToOne(optional = false)
+    private Room roomId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scheduleId")
+    private List<Billboard> billboardList;
 
     public Schedule() {
     }
 
-    public Schedule(SchedulePK schedulePK) {
-        this.schedulePK = schedulePK;
+    public Schedule(Integer scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
-    public Schedule(SchedulePK schedulePK, String scheduleStart, String scheduleEnd, boolean scheduleStatus, Date scheduleCreatedAt, Date scheduleUpdatedAt) {
-        this.schedulePK = schedulePK;
+    public Schedule(Integer scheduleId, Date scheduleStart, Date scheduleEnd, boolean scheduleStatus, Date scheduleCreatedAt, Date scheduleUpdatedAt) {
+        this.scheduleId = scheduleId;
         this.scheduleStart = scheduleStart;
         this.scheduleEnd = scheduleEnd;
         this.scheduleStatus = scheduleStatus;
@@ -79,31 +86,27 @@ public class Schedule implements Serializable {
         this.scheduleUpdatedAt = scheduleUpdatedAt;
     }
 
-    public Schedule(int scheduleId, int roomId) {
-        this.schedulePK = new SchedulePK(scheduleId, roomId);
+    public Integer getScheduleId() {
+        return scheduleId;
     }
 
-    public SchedulePK getSchedulePK() {
-        return schedulePK;
+    public void setScheduleId(Integer scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
-    public void setSchedulePK(SchedulePK schedulePK) {
-        this.schedulePK = schedulePK;
-    }
-
-    public String getScheduleStart() {
+    public Date getScheduleStart() {
         return scheduleStart;
     }
 
-    public void setScheduleStart(String scheduleStart) {
+    public void setScheduleStart(Date scheduleStart) {
         this.scheduleStart = scheduleStart;
     }
 
-    public String getScheduleEnd() {
+    public Date getScheduleEnd() {
         return scheduleEnd;
     }
 
-    public void setScheduleEnd(String scheduleEnd) {
+    public void setScheduleEnd(Date scheduleEnd) {
         this.scheduleEnd = scheduleEnd;
     }
 
@@ -131,19 +134,27 @@ public class Schedule implements Serializable {
         this.scheduleUpdatedAt = scheduleUpdatedAt;
     }
 
-    @XmlTransient
-    public List<Assistance> getAssistanceList() {
-        return assistanceList;
+    public Room getRoomId() {
+        return roomId;
     }
 
-    public void setAssistanceList(List<Assistance> assistanceList) {
-        this.assistanceList = assistanceList;
+    public void setRoomId(Room roomId) {
+        this.roomId = roomId;
+    }
+
+    @XmlTransient
+    public List<Billboard> getBillboardList() {
+        return billboardList;
+    }
+
+    public void setBillboardList(List<Billboard> billboardList) {
+        this.billboardList = billboardList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (schedulePK != null ? schedulePK.hashCode() : 0);
+        hash += (scheduleId != null ? scheduleId.hashCode() : 0);
         return hash;
     }
 
@@ -154,7 +165,7 @@ public class Schedule implements Serializable {
             return false;
         }
         Schedule other = (Schedule) object;
-        if ((this.schedulePK == null && other.schedulePK != null) || (this.schedulePK != null && !this.schedulePK.equals(other.schedulePK))) {
+        if ((this.scheduleId == null && other.scheduleId != null) || (this.scheduleId != null && !this.scheduleId.equals(other.scheduleId))) {
             return false;
         }
         return true;
@@ -162,7 +173,7 @@ public class Schedule implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Schedule[ schedulePK=" + schedulePK + " ]";
+        return "entities.Schedule[ scheduleId=" + scheduleId + " ]";
     }
     
 }

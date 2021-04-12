@@ -1,32 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
-import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
-import controllers.exceptions.PreexistingEntityException;
+import entities.Municipality;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import entities.State;
-import entities.Assistance;
-import entities.Municipality;
-import entities.MunicipalityPK;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code that allows CRUD operations for Municipality Entity 
+*/
 public class MunicipalityJpaController implements Serializable {
 
     public MunicipalityJpaController(EntityManagerFactory emf) {
@@ -43,49 +34,22 @@ public class MunicipalityJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Municipality municipality) throws PreexistingEntityException, Exception {
-        if (municipality.getMunicipalityPK() == null) {
-            municipality.setMunicipalityPK(new MunicipalityPK());
-        }
-        if (municipality.getAssistanceList() == null) {
-            municipality.setAssistanceList(new ArrayList<Assistance>());
-        }
-        municipality.getMunicipalityPK().setStateId(municipality.getState().getStateId());
+    public void create(Municipality municipality) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            State state = municipality.getState();
-            if (state != null) {
-                state = em.getReference(state.getClass(), state.getStateId());
-                municipality.setState(state);
+            State stateId = municipality.getStateId();
+            if (stateId != null) {
+                stateId = em.getReference(stateId.getClass(), stateId.getStateId());
+                municipality.setStateId(stateId);
             }
-            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
-            for (Assistance assistanceListAssistanceToAttach : municipality.getAssistanceList()) {
-                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
-                attachedAssistanceList.add(assistanceListAssistanceToAttach);
-            }
-            municipality.setAssistanceList(attachedAssistanceList);
             em.persist(municipality);
-            if (state != null) {
-                state.getMunicipalityList().add(municipality);
-                state = em.merge(state);
-            }
-            for (Assistance assistanceListAssistance : municipality.getAssistanceList()) {
-                Municipality oldMunicipalityOfAssistanceListAssistance = assistanceListAssistance.getMunicipality();
-                assistanceListAssistance.setMunicipality(municipality);
-                assistanceListAssistance = em.merge(assistanceListAssistance);
-                if (oldMunicipalityOfAssistanceListAssistance != null) {
-                    oldMunicipalityOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
-                    oldMunicipalityOfAssistanceListAssistance = em.merge(oldMunicipalityOfAssistanceListAssistance);
-                }
+            if (stateId != null) {
+                stateId.getMunicipalityList().add(municipality);
+                stateId = em.merge(stateId);
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findMunicipality(municipality.getMunicipalityPK()) != null) {
-                throw new PreexistingEntityException("Municipality " + municipality + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -93,65 +57,32 @@ public class MunicipalityJpaController implements Serializable {
         }
     }
 
-    public void edit(Municipality municipality) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        municipality.getMunicipalityPK().setStateId(municipality.getState().getStateId());
+    public void edit(Municipality municipality) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Municipality persistentMunicipality = em.find(Municipality.class, municipality.getMunicipalityPK());
-            State stateOld = persistentMunicipality.getState();
-            State stateNew = municipality.getState();
-            List<Assistance> assistanceListOld = persistentMunicipality.getAssistanceList();
-            List<Assistance> assistanceListNew = municipality.getAssistanceList();
-            List<String> illegalOrphanMessages = null;
-            for (Assistance assistanceListOldAssistance : assistanceListOld) {
-                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its municipality field is not nullable.");
-                }
+            Municipality persistentMunicipality = em.find(Municipality.class, municipality.getMunicipalityId());
+            State stateIdOld = persistentMunicipality.getStateId();
+            State stateIdNew = municipality.getStateId();
+            if (stateIdNew != null) {
+                stateIdNew = em.getReference(stateIdNew.getClass(), stateIdNew.getStateId());
+                municipality.setStateId(stateIdNew);
             }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (stateNew != null) {
-                stateNew = em.getReference(stateNew.getClass(), stateNew.getStateId());
-                municipality.setState(stateNew);
-            }
-            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
-            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
-                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
-                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
-            }
-            assistanceListNew = attachedAssistanceListNew;
-            municipality.setAssistanceList(assistanceListNew);
             municipality = em.merge(municipality);
-            if (stateOld != null && !stateOld.equals(stateNew)) {
-                stateOld.getMunicipalityList().remove(municipality);
-                stateOld = em.merge(stateOld);
+            if (stateIdOld != null && !stateIdOld.equals(stateIdNew)) {
+                stateIdOld.getMunicipalityList().remove(municipality);
+                stateIdOld = em.merge(stateIdOld);
             }
-            if (stateNew != null && !stateNew.equals(stateOld)) {
-                stateNew.getMunicipalityList().add(municipality);
-                stateNew = em.merge(stateNew);
-            }
-            for (Assistance assistanceListNewAssistance : assistanceListNew) {
-                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
-                    Municipality oldMunicipalityOfAssistanceListNewAssistance = assistanceListNewAssistance.getMunicipality();
-                    assistanceListNewAssistance.setMunicipality(municipality);
-                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
-                    if (oldMunicipalityOfAssistanceListNewAssistance != null && !oldMunicipalityOfAssistanceListNewAssistance.equals(municipality)) {
-                        oldMunicipalityOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
-                        oldMunicipalityOfAssistanceListNewAssistance = em.merge(oldMunicipalityOfAssistanceListNewAssistance);
-                    }
-                }
+            if (stateIdNew != null && !stateIdNew.equals(stateIdOld)) {
+                stateIdNew.getMunicipalityList().add(municipality);
+                stateIdNew = em.merge(stateIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                MunicipalityPK id = municipality.getMunicipalityPK();
+                Integer id = municipality.getMunicipalityId();
                 if (findMunicipality(id) == null) {
                     throw new NonexistentEntityException("The municipality with id " + id + " no longer exists.");
                 }
@@ -164,7 +95,7 @@ public class MunicipalityJpaController implements Serializable {
         }
     }
 
-    public void destroy(MunicipalityPK id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -172,25 +103,14 @@ public class MunicipalityJpaController implements Serializable {
             Municipality municipality;
             try {
                 municipality = em.getReference(Municipality.class, id);
-                municipality.getMunicipalityPK();
+                municipality.getMunicipalityId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The municipality with id " + id + " no longer exists.", enfe);
             }
-            List<String> illegalOrphanMessages = null;
-            List<Assistance> assistanceListOrphanCheck = municipality.getAssistanceList();
-            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Municipality (" + municipality + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable municipality field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            State state = municipality.getState();
-            if (state != null) {
-                state.getMunicipalityList().remove(municipality);
-                state = em.merge(state);
+            State stateId = municipality.getStateId();
+            if (stateId != null) {
+                stateId.getMunicipalityList().remove(municipality);
+                stateId = em.merge(stateId);
             }
             em.remove(municipality);
             em.getTransaction().commit();
@@ -225,7 +145,7 @@ public class MunicipalityJpaController implements Serializable {
         }
     }
 
-    public Municipality findMunicipality(MunicipalityPK id) {
+    public Municipality findMunicipality(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Municipality.class, id);

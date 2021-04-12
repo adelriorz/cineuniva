@@ -1,31 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
-import controllers.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entities.Assistance;
+import entities.Room;
+import entities.Billboard;
 import entities.Schedule;
-import entities.SchedulePK;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code that allows CRUD operations for Schedule Entity 
+*/
 public class ScheduleJpaController implements Serializable {
 
     public ScheduleJpaController(EntityManagerFactory emf) {
@@ -42,39 +37,40 @@ public class ScheduleJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Schedule schedule) throws PreexistingEntityException, Exception {
-        if (schedule.getSchedulePK() == null) {
-            schedule.setSchedulePK(new SchedulePK());
-        }
-        if (schedule.getAssistanceList() == null) {
-            schedule.setAssistanceList(new ArrayList<Assistance>());
+    public void create(Schedule schedule) {
+        if (schedule.getBillboardList() == null) {
+            schedule.setBillboardList(new ArrayList<Billboard>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Assistance> attachedAssistanceList = new ArrayList<Assistance>();
-            for (Assistance assistanceListAssistanceToAttach : schedule.getAssistanceList()) {
-                assistanceListAssistanceToAttach = em.getReference(assistanceListAssistanceToAttach.getClass(), assistanceListAssistanceToAttach.getAssistancePK());
-                attachedAssistanceList.add(assistanceListAssistanceToAttach);
+            Room roomId = schedule.getRoomId();
+            if (roomId != null) {
+                roomId = em.getReference(roomId.getClass(), roomId.getRoomId());
+                schedule.setRoomId(roomId);
             }
-            schedule.setAssistanceList(attachedAssistanceList);
+            List<Billboard> attachedBillboardList = new ArrayList<Billboard>();
+            for (Billboard billboardListBillboardToAttach : schedule.getBillboardList()) {
+                billboardListBillboardToAttach = em.getReference(billboardListBillboardToAttach.getClass(), billboardListBillboardToAttach.getBillboardId());
+                attachedBillboardList.add(billboardListBillboardToAttach);
+            }
+            schedule.setBillboardList(attachedBillboardList);
             em.persist(schedule);
-            for (Assistance assistanceListAssistance : schedule.getAssistanceList()) {
-                Schedule oldScheduleOfAssistanceListAssistance = assistanceListAssistance.getSchedule();
-                assistanceListAssistance.setSchedule(schedule);
-                assistanceListAssistance = em.merge(assistanceListAssistance);
-                if (oldScheduleOfAssistanceListAssistance != null) {
-                    oldScheduleOfAssistanceListAssistance.getAssistanceList().remove(assistanceListAssistance);
-                    oldScheduleOfAssistanceListAssistance = em.merge(oldScheduleOfAssistanceListAssistance);
+            if (roomId != null) {
+                roomId.getScheduleList().add(schedule);
+                roomId = em.merge(roomId);
+            }
+            for (Billboard billboardListBillboard : schedule.getBillboardList()) {
+                Schedule oldScheduleIdOfBillboardListBillboard = billboardListBillboard.getScheduleId();
+                billboardListBillboard.setScheduleId(schedule);
+                billboardListBillboard = em.merge(billboardListBillboard);
+                if (oldScheduleIdOfBillboardListBillboard != null) {
+                    oldScheduleIdOfBillboardListBillboard.getBillboardList().remove(billboardListBillboard);
+                    oldScheduleIdOfBillboardListBillboard = em.merge(oldScheduleIdOfBillboardListBillboard);
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findSchedule(schedule.getSchedulePK()) != null) {
-                throw new PreexistingEntityException("Schedule " + schedule + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -87,37 +83,51 @@ public class ScheduleJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Schedule persistentSchedule = em.find(Schedule.class, schedule.getSchedulePK());
-            List<Assistance> assistanceListOld = persistentSchedule.getAssistanceList();
-            List<Assistance> assistanceListNew = schedule.getAssistanceList();
+            Schedule persistentSchedule = em.find(Schedule.class, schedule.getScheduleId());
+            Room roomIdOld = persistentSchedule.getRoomId();
+            Room roomIdNew = schedule.getRoomId();
+            List<Billboard> billboardListOld = persistentSchedule.getBillboardList();
+            List<Billboard> billboardListNew = schedule.getBillboardList();
             List<String> illegalOrphanMessages = null;
-            for (Assistance assistanceListOldAssistance : assistanceListOld) {
-                if (!assistanceListNew.contains(assistanceListOldAssistance)) {
+            for (Billboard billboardListOldBillboard : billboardListOld) {
+                if (!billboardListNew.contains(billboardListOldBillboard)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Assistance " + assistanceListOldAssistance + " since its schedule field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Billboard " + billboardListOldBillboard + " since its scheduleId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Assistance> attachedAssistanceListNew = new ArrayList<Assistance>();
-            for (Assistance assistanceListNewAssistanceToAttach : assistanceListNew) {
-                assistanceListNewAssistanceToAttach = em.getReference(assistanceListNewAssistanceToAttach.getClass(), assistanceListNewAssistanceToAttach.getAssistancePK());
-                attachedAssistanceListNew.add(assistanceListNewAssistanceToAttach);
+            if (roomIdNew != null) {
+                roomIdNew = em.getReference(roomIdNew.getClass(), roomIdNew.getRoomId());
+                schedule.setRoomId(roomIdNew);
             }
-            assistanceListNew = attachedAssistanceListNew;
-            schedule.setAssistanceList(assistanceListNew);
+            List<Billboard> attachedBillboardListNew = new ArrayList<Billboard>();
+            for (Billboard billboardListNewBillboardToAttach : billboardListNew) {
+                billboardListNewBillboardToAttach = em.getReference(billboardListNewBillboardToAttach.getClass(), billboardListNewBillboardToAttach.getBillboardId());
+                attachedBillboardListNew.add(billboardListNewBillboardToAttach);
+            }
+            billboardListNew = attachedBillboardListNew;
+            schedule.setBillboardList(billboardListNew);
             schedule = em.merge(schedule);
-            for (Assistance assistanceListNewAssistance : assistanceListNew) {
-                if (!assistanceListOld.contains(assistanceListNewAssistance)) {
-                    Schedule oldScheduleOfAssistanceListNewAssistance = assistanceListNewAssistance.getSchedule();
-                    assistanceListNewAssistance.setSchedule(schedule);
-                    assistanceListNewAssistance = em.merge(assistanceListNewAssistance);
-                    if (oldScheduleOfAssistanceListNewAssistance != null && !oldScheduleOfAssistanceListNewAssistance.equals(schedule)) {
-                        oldScheduleOfAssistanceListNewAssistance.getAssistanceList().remove(assistanceListNewAssistance);
-                        oldScheduleOfAssistanceListNewAssistance = em.merge(oldScheduleOfAssistanceListNewAssistance);
+            if (roomIdOld != null && !roomIdOld.equals(roomIdNew)) {
+                roomIdOld.getScheduleList().remove(schedule);
+                roomIdOld = em.merge(roomIdOld);
+            }
+            if (roomIdNew != null && !roomIdNew.equals(roomIdOld)) {
+                roomIdNew.getScheduleList().add(schedule);
+                roomIdNew = em.merge(roomIdNew);
+            }
+            for (Billboard billboardListNewBillboard : billboardListNew) {
+                if (!billboardListOld.contains(billboardListNewBillboard)) {
+                    Schedule oldScheduleIdOfBillboardListNewBillboard = billboardListNewBillboard.getScheduleId();
+                    billboardListNewBillboard.setScheduleId(schedule);
+                    billboardListNewBillboard = em.merge(billboardListNewBillboard);
+                    if (oldScheduleIdOfBillboardListNewBillboard != null && !oldScheduleIdOfBillboardListNewBillboard.equals(schedule)) {
+                        oldScheduleIdOfBillboardListNewBillboard.getBillboardList().remove(billboardListNewBillboard);
+                        oldScheduleIdOfBillboardListNewBillboard = em.merge(oldScheduleIdOfBillboardListNewBillboard);
                     }
                 }
             }
@@ -125,7 +135,7 @@ public class ScheduleJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                SchedulePK id = schedule.getSchedulePK();
+                Integer id = schedule.getScheduleId();
                 if (findSchedule(id) == null) {
                     throw new NonexistentEntityException("The schedule with id " + id + " no longer exists.");
                 }
@@ -138,7 +148,7 @@ public class ScheduleJpaController implements Serializable {
         }
     }
 
-    public void destroy(SchedulePK id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -146,20 +156,25 @@ public class ScheduleJpaController implements Serializable {
             Schedule schedule;
             try {
                 schedule = em.getReference(Schedule.class, id);
-                schedule.getSchedulePK();
+                schedule.getScheduleId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The schedule with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Assistance> assistanceListOrphanCheck = schedule.getAssistanceList();
-            for (Assistance assistanceListOrphanCheckAssistance : assistanceListOrphanCheck) {
+            List<Billboard> billboardListOrphanCheck = schedule.getBillboardList();
+            for (Billboard billboardListOrphanCheckBillboard : billboardListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Schedule (" + schedule + ") cannot be destroyed since the Assistance " + assistanceListOrphanCheckAssistance + " in its assistanceList field has a non-nullable schedule field.");
+                illegalOrphanMessages.add("This Schedule (" + schedule + ") cannot be destroyed since the Billboard " + billboardListOrphanCheckBillboard + " in its billboardList field has a non-nullable scheduleId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Room roomId = schedule.getRoomId();
+            if (roomId != null) {
+                roomId.getScheduleList().remove(schedule);
+                roomId = em.merge(roomId);
             }
             em.remove(schedule);
             em.getTransaction().commit();
@@ -194,7 +209,7 @@ public class ScheduleJpaController implements Serializable {
         }
     }
 
-    public Schedule findSchedule(SchedulePK id) {
+    public Schedule findSchedule(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Schedule.class, id);

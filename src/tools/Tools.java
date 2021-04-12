@@ -4,8 +4,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Scanner;
 
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Several methods for coding
+**such as converting from one type to another
+**measure time, String to array and input validation
+*/
 public class Tools {
-    
     
     protected Scanner sc = new Scanner(System.in);;
     protected int[] arr;

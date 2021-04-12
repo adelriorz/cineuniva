@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import java.io.Serializable;
@@ -24,10 +19,11 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Armando Del Rio
- */
+/*
+**Written by: Armando Del Río Ramírez
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code to create new Room Entity
+*/
 @Entity
 @Table(name = "room")
 @XmlRootElement
@@ -60,8 +56,10 @@ public class Room implements Serializable {
     @Column(name = "roomUpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date roomUpdatedAt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
-    private List<Assistance> assistanceList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roomId")
+    private List<Schedule> scheduleList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roomId")
+    private List<Billboard> billboardList;
 
     public Room() {
     }
@@ -119,12 +117,21 @@ public class Room implements Serializable {
     }
 
     @XmlTransient
-    public List<Assistance> getAssistanceList() {
-        return assistanceList;
+    public List<Schedule> getScheduleList() {
+        return scheduleList;
     }
 
-    public void setAssistanceList(List<Assistance> assistanceList) {
-        this.assistanceList = assistanceList;
+    public void setScheduleList(List<Schedule> scheduleList) {
+        this.scheduleList = scheduleList;
+    }
+
+    @XmlTransient
+    public List<Billboard> getBillboardList() {
+        return billboardList;
+    }
+
+    public void setBillboardList(List<Billboard> billboardList) {
+        this.billboardList = billboardList;
     }
 
     @Override
