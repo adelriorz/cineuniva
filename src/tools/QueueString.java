@@ -1,12 +1,14 @@
 package tools;
 
+import java.util.Arrays;
+
 /*
 **Written by: Armando Del Río Ramírez
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Queue code with basic data structures for String
 */
 public class QueueString{
-    protected int end = 0, start = 0, max = 0;
+    protected int end = -1, start = 0, max = 0;
     protected String[] content;
 
     public QueueString(int max){
@@ -50,12 +52,12 @@ public class QueueString{
     
     public void addValue(String value){
         if(isEmptyQueue()){
-            setEnd(end);
+            setEnd(end+1);
             content[end] = value;
         }
         if(!isEmptyQueue() && !isFullQueue()){
-            end++;
-            content[end++] = value;
+            content[end] = value;
+            setEnd(end+1);
         } else System.out.print("\nQueue is full.");
     }
     
@@ -80,9 +82,7 @@ public class QueueString{
         if(end < 0 ){
             System.out.print("\nEmpty pile.");
         } else{
-            for(int i=start; i <= end; i++){
-                System.out.print(content[i] + ", ");
-            }
+            System.out.println(Arrays.toString(content));
         }
     }
     

@@ -1,13 +1,30 @@
 # cineuniva
 
-#A (Visual Layer):
+#Documentation:
+C:\Users\Armando Del Rio\Desktop\cineuniva\bkp\documentation
 
-cineuniva/bkp/cinemaUniva_visualLayer.png
+____________________
+#ESTRUCTURA DE DATOS Y ALGORITMOS
 
-#A (Business Layer):
+/*Queue*/
+
+C:\Users\Armando Del Rio\Desktop\cineuniva\src\frames\Login.java
+
+Line: 98, method showBillBoard() and 
+
+C:\Users\Armando Del Rio\Desktop\cineuniva\src\frames\BillboardView.java
+Line: 21, constructor public BillboardView(QueueString q)
+
+/*Pile*/
 
 
 
-#Entity Relationship Diagram (Data Layer): 
+/*Quick Sort*/
 
-cineuniva/bkp/dbBackupDER_cineUniva.mwb
+
+
+/*Floyd Algorythm*/
+
+
+
+/*Recursiveness*/

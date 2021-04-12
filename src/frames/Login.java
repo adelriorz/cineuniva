@@ -13,6 +13,7 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.InputVerifier; //IMPLEMENT CLASS
 import javax.swing.JTable;
@@ -31,6 +32,7 @@ public class Login extends javax.swing.JFrame {
     private StateJpaController stjc;
     private Municipality mun;
     private MunicipalityJpaController mjc;
+    protected QueueString q = new QueueString(1);
     
     //Login Constructor
     public Login() {
@@ -54,7 +56,6 @@ public class Login extends javax.swing.JFrame {
     //Sets every value as default
     private void clearAll(){
         clearUser();
-        cmbMunicipality.setSelectedIndex(0);
         cmbState.setSelectedIndex(0);
     }
    
@@ -66,28 +67,9 @@ public class Login extends javax.swing.JFrame {
         holder = new PlaceHolder(txtPassword, "Password");
     }
     
-    //Method matches mun with proper State
-    private void loadMunicipality(String s){
-        s = (String) cmbState.getSelectedItem();
-        cmbMunicipality.setEnabled(true);
-//cmbMunicipality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{}));        
-        List<Municipality> munList = new ArrayList<>();
-        munList = mjc.findMunicipalityEntities();
-        String[] allMun = new String[10];
-        int i = 0;
-        for(Municipality mun : munList){
-            if(mun.getStateId().equals(stateSelected(s))){
-                allMun[i] = mun.getMunicipalityName();
-                i++;
-            }
-        }
-        cmbMunicipality.setModel(
-                  new javax.swing.DefaultComboBoxModel<>(allMun)
-          );
-    }
-    
     //returns int from selected State accordingly
     public int stateSelected(String selected){
+        selected = (String)cmbState.getSelectedItem();
         int value = 0;
         switch(selected){
             case "Jalisco":
@@ -110,6 +92,15 @@ public class Login extends javax.swing.JFrame {
                 break;
         }
         return value;
+    }
+    
+    //Shows billboards and saves State and Municipality
+    private void showBillBoard(){
+        String tempState = (String)cmbState.getSelectedItem();
+        q.addValue(tempState);
+        BillboardView bv = new BillboardView(q);
+        this.setVisible(false);
+        bv.setVisible(true);
     }
     
     //Searches user by name and returns id value
@@ -142,19 +133,6 @@ public class Login extends javax.swing.JFrame {
         } else JOptionPane.showMessageDialog(this, "Wrong User/Password!, try again");
     }
     
-    //Shows billboards and saves State and Municipality
-    private void showBillBoard(){
-        List<String> locationList = new ArrayList<>();
-        String tempState = (String)cmbState.getSelectedItem();
-        String tempMun = (String)cmbMunicipality.getSelectedItem();
-        locationList.add(tempState);
-        locationList.add(tempMun);
-//  System.out.println(Arrays.toString(locationList.toArray())); //for debugging
-        BillboardView bv = new BillboardView();
-        this.setVisible(false);
-        bv.setVisible(true);
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -172,9 +150,7 @@ public class Login extends javax.swing.JFrame {
         txtPassword = new javax.swing.JPasswordField();
         jPanel4 = new javax.swing.JPanel();
         cmbState = new javax.swing.JComboBox<>();
-        cmbMunicipality = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         btnShowBillboard = new javax.swing.JButton();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -287,17 +263,7 @@ public class Login extends javax.swing.JFrame {
 
         cmbState.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Jalisco", "Nuevo Leon", "Estado de Mexico", "Chihuahua", "Sinaloa"}));
 
-        cmbMunicipality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{}));
-        cmbMunicipality.setEnabled(false);
-        cmbMunicipality.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbMunicipalityActionPerformed(evt);
-            }
-        });
-
         jLabel2.setText("Choose your State: ");
-
-        jLabel3.setText("Choose your Municipality: ");
 
         btnShowBillboard.setText("Show Billboard");
         btnShowBillboard.addActionListener(new java.awt.event.ActionListener() {
@@ -312,31 +278,23 @@ public class Login extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(60, 60, 60)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbState, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbMunicipality, 0, 122, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btnShowBillboard, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnShowBillboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbState, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(76, 76, 76))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(36, 36, 36)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbMunicipality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addComponent(cmbState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(btnShowBillboard)
                 .addContainerGap())
         );
@@ -391,10 +349,6 @@ public class Login extends javax.swing.JFrame {
         showBillBoard();
     }//GEN-LAST:event_btnShowBillboardActionPerformed
 
-    private void cmbMunicipalityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMunicipalityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbMunicipalityActionPerformed
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -439,12 +393,10 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnResetData;
     private javax.swing.JButton btnShowBillboard;
-    private javax.swing.JComboBox<String> cmbMunicipality;
     private javax.swing.JComboBox<String> cmbState;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

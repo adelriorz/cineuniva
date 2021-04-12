@@ -5,6 +5,7 @@ import entities.Billboard;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import tools.QueueString;
 
 public class BillboardView extends javax.swing.JFrame {
 /*
@@ -12,9 +13,12 @@ public class BillboardView extends javax.swing.JFrame {
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Billboard view where users can interact
 */
+    protected static QueueString q;
+    
     //BillboardView constructor
-    public BillboardView() {
+    public BillboardView(QueueString q) {
         initComponents();
+        BillboardView.q = q;
         loadBillboardViewTable();
     }
     
@@ -207,7 +211,7 @@ public class BillboardView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BillboardView().setVisible(true);
+                new BillboardView(q).setVisible(true);
             }
         });
     }
