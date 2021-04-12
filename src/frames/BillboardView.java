@@ -198,11 +198,6 @@ public final class BillboardView extends javax.swing.JFrame {
         jLabel1.setText("UNIVA CINEMA");
 
         cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Classification", "Genre", "Sort A-Z", "Sort Z-A" }));
-        cmbUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbUserActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Search");
 
