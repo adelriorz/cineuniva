@@ -73,21 +73,20 @@ public final class BillboardView extends javax.swing.JFrame {
     }
     
     //
-    public void userSelection(int value){
-        /*
-         "Name", "Classification", "Sort A-Z", "Sort Z-A" 
-        */
+    public void userSelection(){
+        int value;
         value = cmbUser.getSelectedIndex();
+        System.out.println("value = " + value);
         switch(value){
+            case 0: filterBy();
+                break;
             case 1: filterBy();
                 break;
             case 2: filterBy();
                 break;
-            case 3: filterBy();
+            case 3: sortMovies(true);
                 break;
-            case 4: sortMovies(true);
-                break;
-            case 5: sortMovies(false);
+            case 4: sortMovies(false);
                 break;
             default: 
                 JOptionPane.showMessageDialog(this,
@@ -116,15 +115,17 @@ public final class BillboardView extends javax.swing.JFrame {
         dtm.addColumn("Movie");
         dtm.addColumn("Duration");
         dtm.addColumn("Classification");
+        dtm.addColumn("Genre");
         dtm.addColumn("Room");
         dtm.addColumn("Date/Time");    
         for(Billboard b : billboardList){
-            Object row[] = new Object[5];
+            Object row[] = new Object[6];
             row[0] = b.getMovieId().getMovieName();
             row[1] = b.getMovieId().getMovieDuration();
             row[2] = b.getMovieId().getMovieClassification();
-            row[3] = b.getRoomId().getRoomNumber();
-            row[4] = b.getScheduleId().getScheduleStart();
+            row[3] = b.getMovieId().getMovieGenre();
+            row[4] = b.getRoomId().getRoomNumber();
+            row[5] = b.getScheduleId().getScheduleStart();
             if(tempState.equals(b.getStateId().getStateName()) && 
                 name.equals(b.getMovieId().getMovieName().toLowerCase())
                 || name.equals(b.getMovieId().getMovieClassification().toLowerCase())
@@ -149,15 +150,17 @@ public final class BillboardView extends javax.swing.JFrame {
         dtm.addColumn("Movie");
         dtm.addColumn("Duration");
         dtm.addColumn("Classification");
+        dtm.addColumn("Genre");
         dtm.addColumn("Room");
         dtm.addColumn("Date/Time");    
         for(Billboard b : billboardList){
-            Object row[] = new Object[5];
+            Object row[] = new Object[6];
             row[0] = b.getMovieId().getMovieName();
             row[1] = b.getMovieId().getMovieDuration();
             row[2] = b.getMovieId().getMovieClassification();
-            row[3] = b.getRoomId().getRoomNumber();
-            row[4] = b.getScheduleId().getScheduleStart();
+            row[3] = b.getMovieId().getMovieGenre();
+            row[4] = b.getRoomId().getRoomNumber();
+            row[5] = b.getScheduleId().getScheduleStart();
             if(tempState.equals(b.getStateId().getStateName())){
                 dtm.addRow(row);
             }
@@ -310,8 +313,7 @@ public final class BillboardView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBackActionPerformed
     //When clicked the input will be lowered and sent to filter or sort
     private void btnSearchBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchBillboardActionPerformed
-        String input = "";
-        userSelection(input);
+        userSelection();
     }//GEN-LAST:event_btnSearchBillboardActionPerformed
 
     /**
