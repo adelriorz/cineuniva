@@ -49,6 +49,9 @@ public class Administrator extends javax.swing.JFrame {
         loadRoomTable();
         loadScheduleTable();
         tblMovie.setShowGrid(true); //Shows grid in table
+        tblUser.setShowGrid(true);
+        tblRoom.setShowGrid(true);
+        tblScheule.setShowGrid(true);
     }
     
     //Set Movie values as default

@@ -1,7 +1,15 @@
 package frames;
 
 import controllers.BillboardJpaController;
+import controllers.MovieJpaController;
+import controllers.RoomJpaController;
+import controllers.ScheduleJpaController;
+import controllers.StateJpaController;
 import entities.Billboard;
+import entities.Movie;
+import entities.Room;
+import entities.Schedule;
+import entities.State;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -14,44 +22,66 @@ public class BillboardView extends javax.swing.JFrame {
 **Description: Billboard view where users can interact
 */
     protected static QueueString q;
+    private Billboard b;
+    private Movie m;
+    private Schedule s;
+    private Room r;
+    private State st;
+    private BillboardJpaController bc;
+    private MovieJpaController mc;
+    private ScheduleJpaController sc;
+    private RoomJpaController rc;
+    private StateJpaController stc;
     
     //BillboardView constructor
     public BillboardView(QueueString q) {
         initComponents();
         BillboardView.q = q;
+        b = new Billboard();
+        m = new Movie();
+        s = new Schedule();
+        r = new Room();
+        st = new State();
+        bc = new BillboardJpaController();
+        mc = new MovieJpaController();
+        sc = new ScheduleJpaController();
+        rc = new RoomJpaController();
+        stc = new StateJpaController();
         loadBillboardViewTable();
+        tblBillboard.setShowGrid(true); //Shows grid in table
+    }
+    
+    //Empty Constructor
+    public BillboardView() {
+        initComponents();
     }
     
     //Loads billboard table from DB
     public void loadBillboardViewTable(){
-//        DefaultTableModel dtm = new DefaultTableModel();
-//        dtm.addColumn("id");
-//        dtm.addColumn("Name");
-//        dtm.addColumn("Director");
-//        dtm.addColumn("Duration");
-//        dtm.addColumn("Classification");
-//        dtm.addColumn("Producer");
-//        dtm.addColumn("Status");
-//        
-//        List<Billboard> billboardList = new ArrayList<>();
-//        BillboardJpaController bjc = new BillboardJpaController();
-//        billboardList = bjc.findBillboardEntities();
-//        
-//        for(Billboard b : billboardList){
-//            Object row[] = new Object[7];
-//            row[0] = m.getMovieId();
-//            row[1] = m.getMovieName();
-//            row[2] = m.getMovieDirector();
-//            row[3] = m.getMovieDuration();
-//            row[4] = m.getMovieClassification();
-//            row[5] = m.getMovieProducer();
-//            row[6] = m.getMovieStatus();
-//            dtm.addRow(row);
-//        }
-//        tblBillboard.setModel(dtm);
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.addColumn("Movie");
+        dtm.addColumn("Duration");
+        dtm.addColumn("Classification");
+        dtm.addColumn("Room");
+        dtm.addColumn("Time");
+        //dtm.addColumn("Date");
+        
+        List<Billboard> billboardList = new ArrayList<>();
+        billboardList = bc.findBillboardEntities();
+        
+        for(Billboard b : billboardList){
+            Object row[] = new Object[5];
+            row[0] = b.getMovieId().getMovieName();
+            row[1] = b.getMovieId().getMovieDuration();
+            row[2] = b.getMovieId().getMovieClassification();
+            row[3] = b.getRoomId().getRoomNumber();
+            row[4] = b.getScheduleId().getScheduleStart();
+            dtm.addRow(row);
+        }
+        tblBillboard.setModel(dtm);
     }
 
-    //Hide current Frame and activates Login
+    //Hide current Frame and displays Login
     public void hideCurrent(){
         Login welcome = new Login();
         welcome.setVisible(true);
@@ -77,11 +107,6 @@ public class BillboardView extends javax.swing.JFrame {
         jLabel1.setText("UNIVA CINEMA");
 
         cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbUserActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -173,10 +198,6 @@ public class BillboardView extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         hideCurrent();
     }//GEN-LAST:event_btnBackActionPerformed
-
-    private void cmbUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbUserActionPerformed
 
     /**
      * @param args the command line arguments
