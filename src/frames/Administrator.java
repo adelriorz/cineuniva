@@ -60,6 +60,7 @@ public class Administrator extends javax.swing.JFrame {
         txtProducer.setText("");
         txtDuration.setText("");
         cmbClassification.setSelectedIndex(0);
+        cmbGenre.setSelectedIndex(0);
         btnDeleteMovie.setEnabled(false);
         btnUpdate.setEnabled(false);
         btnAdd.setEnabled(true);
@@ -196,6 +197,8 @@ public class Administrator extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         cmbStatus = new javax.swing.JComboBox<>();
         jLabel20 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        cmbGenre = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblMovie = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -350,7 +353,7 @@ public class Administrator extends javax.swing.JFrame {
                         .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSearchMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnClearMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnClearMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
@@ -397,6 +400,10 @@ public class Administrator extends javax.swing.JFrame {
 
         jLabel20.setText("Status");
 
+        jLabel25.setText("Genre");
+
+        cmbGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Action", "Adventure", "Comedy", "Sci-Fy", "Terror" }));
+
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
@@ -421,12 +428,14 @@ public class Administrator extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel9)
-                                .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel25))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cmbClassification, 0, 163, Short.MAX_VALUE)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cmbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbGenre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel14Layout.createSequentialGroup()
                         .addGap(37, 37, 37)
                         .addComponent(jLabel6)
@@ -453,11 +462,15 @@ public class Administrator extends javax.swing.JFrame {
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtProducer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(cmbGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(cmbClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -483,12 +496,9 @@ public class Administrator extends javax.swing.JFrame {
             txtClassificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(txtClassificationLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(txtClassificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 209, Short.MAX_VALUE)
-                    .addGroup(txtClassificationLayout.createSequentialGroup()
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 24, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 236, Short.MAX_VALUE)
         );
 
         tblMovie.setModel(new javax.swing.table.DefaultTableModel(
@@ -594,6 +604,9 @@ public class Administrator extends javax.swing.JFrame {
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(btnClearUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
                         .addGap(0, 111, Short.MAX_VALUE)
                         .addComponent(jLabel18)
@@ -604,10 +617,7 @@ public class Administrator extends javax.swing.JFrame {
                             .addComponent(btnDeleteUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnUpdateUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnAddUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(6, 6, 6))
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addComponent(btnClearUser, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(6, 6, 6))))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -840,6 +850,8 @@ public class Administrator extends javax.swing.JFrame {
                 .addGap(0, 19, Short.MAX_VALUE))
         );
 
+        jPanel9.setPreferredSize(new java.awt.Dimension(170, 124));
+
         jLabel11.setText("Id");
 
         txtRoomId.setEnabled(false);
@@ -871,7 +883,7 @@ public class Administrator extends javax.swing.JFrame {
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtRoomId, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 16, Short.MAX_VALUE)))
+                        .addGap(0, 39, Short.MAX_VALUE)))
                 .addGap(10, 10, 10))
         );
         jPanel9Layout.setVerticalGroup(
@@ -888,7 +900,7 @@ public class Administrator extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel24)
                     .addComponent(cmbRoomStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 34, Short.MAX_VALUE))
+                .addGap(0, 52, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -1206,6 +1218,7 @@ public class Administrator extends javax.swing.JFrame {
         m.setMovieName(txtName.getText());
         m.setMovieDirector(txtDirector.getText());
         m.setMovieClassification((String) cmbClassification.getSelectedItem());
+        m.setMovieGenre((String) cmbGenre.getSelectedItem());
         try{
             m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
         } catch(Exception ex){
@@ -1231,6 +1244,7 @@ public class Administrator extends javax.swing.JFrame {
         m.setMovieName(txtName.getText());
         m.setMovieDirector(txtDirector.getText());
         m.setMovieClassification((String) cmbClassification.getSelectedItem());
+        m.setMovieGenre((String) cmbGenre.getSelectedItem());
         m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
         m.setMovieProducer(txtProducer.getText());
         String tempMovieStatus = (String)cmbStatus.getSelectedItem();
@@ -1270,8 +1284,8 @@ public class Administrator extends javax.swing.JFrame {
     }
     
     //Returns int value from ranked movie
-    public int selectMovieRank(JTable tbl, int ren){
-        String selected = tbl.getValueAt(ren, 4).toString();
+    public int selectMovieRank(JTable tbl, int row){
+        String selected = tbl.getValueAt(row, 4).toString();
         int value = 0;
         
         switch(selected){
@@ -1294,6 +1308,31 @@ public class Administrator extends javax.swing.JFrame {
         return value;
     }
     
+    //Returns int value from ranked movie
+    public int selectMovieGenre(JTable tbl, int row){
+        String selected = tbl.getValueAt(row, 4).toString();
+        int value = 0;
+        
+        switch(selected){
+            case "Action":
+                value = 0;
+                break;
+            case "Adventure":
+                value = 1;
+                break;
+            case "Comedy":
+                value = 2;
+                break;
+            case "Sci-Fy":
+                value = 3;
+                break;
+            case "Terror":
+                value = 4;
+                break;
+        }
+        return value;
+    }
+    
     //Retrieves information to the slots at the selected row
     private void tblMovieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMovieMouseClicked
        int row = tblMovie.getSelectedRow();
@@ -1303,6 +1342,7 @@ public class Administrator extends javax.swing.JFrame {
        txtDirector.setText(tblMovie.getValueAt(row, 2).toString());
        txtDuration.setText(tblMovie.getValueAt(row, 3).toString());
        cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
+       cmbGenre.setSelectedIndex(selectMovieGenre(tblMovie, row));
        txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
        cmbStatus.setSelectedIndex(selectStatus(tblMovie, row));
        btnAdd.setEnabled(false);
@@ -1561,6 +1601,7 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdateSchedule;
     private javax.swing.JButton btnUpdateUser;
     private javax.swing.JComboBox<String> cmbClassification;
+    private javax.swing.JComboBox<String> cmbGenre;
     private javax.swing.JComboBox<String> cmbRoomStatus;
     private javax.swing.JComboBox<String> cmbScheduleStatus;
     private javax.swing.JComboBox<String> cmbStatus;
@@ -1587,6 +1628,7 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

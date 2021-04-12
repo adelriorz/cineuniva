@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2021 at 09:03 AM
+-- Generation Time: Apr 12, 2021 at 02:56 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.2.34
 
@@ -47,31 +47,6 @@ INSERT INTO `assistance` (`assistanceId`, `assistanceCreatedAt`, `assistanceUpda
 -- --------------------------------------------------------
 
 --
--- Table structure for table `billboard`
---
-
-CREATE TABLE `billboard` (
-  `billboardId` int(11) NOT NULL,
-  `billboardCreatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6),
-  `billboardUpdatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6),
-  `billboardStatus` tinyint(1) NOT NULL DEFAULT 1,
-  `movieId` int(11) NOT NULL,
-  `roomId` int(11) NOT NULL,
-  `scheduleId` int(11) NOT NULL,
-  `stateId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `billboard`
---
-
-INSERT INTO `billboard` (`billboardId`, `billboardCreatedAt`, `billboardUpdatedAt`, `billboardStatus`, `movieId`, `roomId`, `scheduleId`, `stateId`) VALUES
-(1, '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', 1, 1, 1, 1, 1),
-(2, '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', 1, 1, 1, 1, 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `movie`
 --
 
@@ -81,6 +56,7 @@ CREATE TABLE `movie` (
   `movieDirector` varchar(45) NOT NULL,
   `movieProducer` varchar(45) NOT NULL,
   `movieClassification` varchar(45) NOT NULL,
+  `movieGenre` varchar(45) NOT NULL,
   `movieDuration` int(11) NOT NULL,
   `movieStatus` tinyint(1) NOT NULL DEFAULT 1,
   `movieCreatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6),
@@ -91,10 +67,11 @@ CREATE TABLE `movie` (
 -- Dumping data for table `movie`
 --
 
-INSERT INTO `movie` (`movieId`, `movieName`, `movieDirector`, `movieProducer`, `movieClassification`, `movieDuration`, `movieStatus`, `movieCreatedAt`, `movieUpdatedAt`) VALUES
-(1, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 125, 1, '2021-03-24 07:50:59.926375', '2021-03-25 05:53:02.823745'),
-(2, 'Juan ', 'Pecas', 'Joel', 'B15', 23, 0, '2021-03-26 01:20:21.438668', '2021-03-26 01:20:21.438668'),
-(3, 'Pepe pecas', 'yeison', 'prueba', 'B15', 23, 0, '2021-03-26 03:59:47.213610', '2021-03-26 04:00:32.595154');
+INSERT INTO `movie` (`movieId`, `movieName`, `movieDirector`, `movieProducer`, `movieClassification`, `movieGenre`, `movieDuration`, `movieStatus`, `movieCreatedAt`, `movieUpdatedAt`) VALUES
+(1, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 'Adventure', 125, 1, '2021-03-24 07:50:59.926375', '2021-04-12 00:55:47.618060'),
+(2, 'Juan ', 'Pecas', 'Joel', 'B15', 'Terror', 23, 1, '2021-04-10 22:47:19.895037', '2021-04-12 00:55:51.637169'),
+(3, 'Pepe pecas', 'yaison2', 'prueba', 'B15', 'Action', 23, 1, '2021-04-10 22:46:29.883720', '2021-04-12 00:55:55.763768'),
+(4, 'Juan Pepe', 'Pai', 'Pao', 'D', 'Comedy', 123, 0, '2021-04-10 22:46:11.234432', '2021-04-12 00:55:59.092267');
 
 -- --------------------------------------------------------
 
@@ -264,7 +241,8 @@ INSERT INTO `user` (`userId`, `userName`, `userPassword`, `userType`, `userStatu
 (1, 'Paola', '3', 0, 0, '2021-03-24 13:30:00.314843', '2021-03-24 13:30:00.314843'),
 (2, 'armando', '2', 1, 0, '2021-03-24 13:30:38.854061', '2021-03-24 13:30:38.854061'),
 (3, 'joel flores', 'maria', 1, 0, '2021-03-24 13:30:53.446548', '2021-03-24 13:30:53.446548'),
-(4, 'julio', 'pass', 1, 0, '2021-03-24 13:31:05.761260', '2021-03-24 13:31:05.761260');
+(4, 'julio', 'pass', 1, 0, '2021-03-24 13:31:05.761260', '2021-03-24 13:31:05.761260'),
+(5, 'Paoluqui', '123', 0, 1, '2021-04-10 22:44:47.486598', '2021-04-10 22:44:47.486598');
 
 --
 -- Indexes for dumped tables
@@ -277,16 +255,6 @@ ALTER TABLE `assistance`
   ADD PRIMARY KEY (`assistanceId`),
   ADD KEY `billboardId` (`billboardId`),
   ADD KEY `userId` (`userId`);
-
---
--- Indexes for table `billboard`
---
-ALTER TABLE `billboard`
-  ADD PRIMARY KEY (`billboardId`),
-  ADD KEY `movieId` (`movieId`),
-  ADD KEY `roomId` (`roomId`),
-  ADD KEY `scheduleId` (`scheduleId`),
-  ADD KEY `stateId` (`stateId`);
 
 --
 -- Indexes for table `movie`
@@ -337,16 +305,10 @@ ALTER TABLE `assistance`
   MODIFY `assistanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `billboard`
---
-ALTER TABLE `billboard`
-  MODIFY `billboardId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `movie`
 --
 ALTER TABLE `movie`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `municipality`
@@ -376,7 +338,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -388,15 +350,6 @@ ALTER TABLE `user`
 ALTER TABLE `assistance`
   ADD CONSTRAINT `assistance_ibfk_1` FOREIGN KEY (`billboardId`) REFERENCES `billboard` (`billboardId`),
   ADD CONSTRAINT `assistance_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
-
---
--- Constraints for table `billboard`
---
-ALTER TABLE `billboard`
-  ADD CONSTRAINT `billboard_ibfk_1` FOREIGN KEY (`movieId`) REFERENCES `movie` (`movieId`),
-  ADD CONSTRAINT `billboard_ibfk_2` FOREIGN KEY (`roomId`) REFERENCES `room` (`roomId`),
-  ADD CONSTRAINT `billboard_ibfk_3` FOREIGN KEY (`scheduleId`) REFERENCES `schedule` (`scheduleId`),
-  ADD CONSTRAINT `billboard_ibfk_4` FOREIGN KEY (`stateId`) REFERENCES `state` (`stateId`);
 
 --
 -- Constraints for table `municipality`

@@ -41,6 +41,7 @@
 	  `movieDirector` varchar(45) NOT NULL,
 	  `movieProducer` varchar(45) NOT NULL,
 	  `movieClassification` varchar(45) NOT NULL,
+	  `movieGenre` varchar(45) NOT NULL,
 	  `movieDuration` int(11) NOT NULL,
 	  `movieStatus` tinyint(1) NOT NULL DEFAULT 1,
 	  `movieCreatedAt` timestamp(6) NOT NULL DEFAULT current_timestamp(6),
@@ -52,9 +53,9 @@
 	--
 
 	INSERT INTO `movie` (`movieId`, `movieName`, `movieDirector`, `movieProducer`, `movieClassification`, `movieDuration`, `movieStatus`, `movieCreatedAt`, `movieUpdatedAt`) VALUES
-	(1, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 125, 1, '2021-03-24 07:50:59.926375', '2021-03-25 05:53:02.823745'),
-	(2, 'Juan ', 'Pecas', 'Joel', 'B15', 23, 0, '2021-03-26 01:20:21.438668', '2021-03-26 01:20:21.438668'),
-	(3, 'Pepe pecas', 'yeison', 'prueba', 'B15', 23, 0, '2021-03-26 03:59:47.213610', '2021-03-26 04:00:32.595154');
+	(1, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 'Terror', 125, 1, '2021-03-24 07:50:59.926375', '2021-03-25 05:53:02.823745'),
+	(2, 'Juan ', 'Pecas', 'Joel', 'B15', 'Action', 23, 0, '2021-03-26 01:20:21.438668', '2021-03-26 01:20:21.438668'),
+	(3, 'Pepe pecas', 'yeison', 'prueba', 'B15', 'Comedy', 23, 0, '2021-03-26 03:59:47.213610', '2021-03-26 04:00:32.595154');
 
 	-- --------------------------------------------------------
 
