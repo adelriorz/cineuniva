@@ -38,6 +38,7 @@ public final class BillboardView extends javax.swing.JFrame {
     private final StateJpaController stc;
     protected static Login log;
     private String parsedQueueString[];
+    private StringQuickSort qS;
     
     //BillboardView constructor
     public BillboardView(QueueString q) {
@@ -45,6 +46,7 @@ public final class BillboardView extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.parsedQueueString = Login.q.getContent();
+        qS = new StringQuickSort();
         b = new Billboard();
         m = new Movie();
         s = new Schedule();
@@ -62,6 +64,7 @@ public final class BillboardView extends javax.swing.JFrame {
     //Constructor with no parameter
     public BillboardView() {
         initComponents();
+        qS = new StringQuickSort();
         b = new Billboard();
         m = new Movie();
         s = new Schedule();
@@ -101,19 +104,13 @@ public final class BillboardView extends javax.swing.JFrame {
                 break;
         }
     }
-    
-    public void sorti(){
-        StringQuickSort qS = new StringQuickSort();
-        List<String> list = new ArrayList<>();
-        String[] s = parseListToArr(list);
-        qS.sort(s);
-    }
-    
+ 
     //Detects wich option has been selected by user and returns values if any
     public void sortMovies(boolean as){
         if(true){//"Sort A-Z"
             DefaultTableModel dtm = new DefaultTableModel();
             List<Billboard> billboardList = new ArrayList<>();
+            List<String> billboardDriverList = new ArrayList<>();
             billboardList = bc.findBillboardEntities();
             String tempState = this.parsedQueueString[0];
             dtm.addColumn("Movie");
@@ -125,7 +122,9 @@ public final class BillboardView extends javax.swing.JFrame {
             
             for(Billboard b : billboardList){
                 Object row[] = new Object[6];
-                row[0] = b.getMovieId().getMovieName();
+                billboardDriverList.add(b.getMovieId().getMovieName());
+                parseListToArr(billboardDriverList);
+                row[0] = b.getMovieId().getMovieName();//String
                 row[1] = b.getMovieId().getMovieDuration();
                 row[2] = b.getMovieId().getMovieClassification();
                 row[3] = b.getMovieId().getMovieGenre();
@@ -193,7 +192,6 @@ public final class BillboardView extends javax.swing.JFrame {
     
     //Loads billboard table from DB filtering State option from user
     public void loadBillboardViewTable(){
-        sorti();
         DefaultTableModel dtm = new DefaultTableModel();
         List<Billboard> billboardList = new ArrayList<>();
         billboardList = bc.findBillboardEntities();
