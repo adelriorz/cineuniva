@@ -145,7 +145,7 @@ public class Administrator extends javax.swing.JFrame {
     }
     
     //Loads schedule table from db
-    public void loadScheduleTable(){//Pending to fix
+    public void loadScheduleTable(){
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
         dtm.addColumn("Start");

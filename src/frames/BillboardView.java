@@ -76,7 +76,6 @@ public final class BillboardView extends javax.swing.JFrame {
     public void userSelection(){
         int value;
         value = cmbUser.getSelectedIndex();
-        System.out.println("value = " + value);
         switch(value){
             case 0: filterBy();
                 break;
@@ -97,8 +96,40 @@ public final class BillboardView extends javax.swing.JFrame {
     
     //Detects wich option has been selected by user and returns values if any
     public void sortMovies(boolean as){
+        txtsearchBillboard.setEnabled(false);
         if(true){//"Sort A-Z"
-            
+//            String name = txtsearchBillboard.getText().toLowerCase();
+//            DefaultTableModel dtm = new DefaultTableModel();
+//            List<Billboard> billboardList = new ArrayList<>();
+//            billboardList = bc.findBillboardEntities();
+//            String tempState = this.parsedQueueString[0];
+//            dtm.addColumn("Movie");
+//            dtm.addColumn("Duration");
+//            dtm.addColumn("Classification");
+//            dtm.addColumn("Genre");
+//            dtm.addColumn("Room");
+//            dtm.addColumn("Date/Time");    
+//            for(Billboard b : billboardList){
+//                Object row[] = new Object[6];
+//                row[0] = b.getMovieId().getMovieName();
+//                row[1] = b.getMovieId().getMovieDuration();
+//                row[2] = b.getMovieId().getMovieClassification();
+//                row[3] = b.getMovieId().getMovieGenre();
+//                row[4] = b.getRoomId().getRoomNumber();
+//                row[5] = b.getScheduleId().getScheduleStart();
+//                if(tempState.equals(b.getStateId().getStateName()) && 
+//                    name.equals(b.getMovieId().getMovieName().toLowerCase())
+//                    || name.equals(b.getMovieId().getMovieClassification().toLowerCase())
+//                    || name.equals(b.getMovieId().getMovieGenre().toLowerCase())){
+//                    dtm.addRow(row);
+//                }
+//            }
+//            if(dtm.getRowCount()<=0) { 
+//                JOptionPane.showMessageDialog(this,
+//                    "No movies available");
+//                hideCurrent();
+//            }
+//            tblBillboard.setModel(dtm);
         } else {//"Sort Z-A"
             
         }
@@ -107,6 +138,7 @@ public final class BillboardView extends javax.swing.JFrame {
     
     //Search Criteria Method to find movies by name
     public void filterBy(){
+        txtsearchBillboard.setEnabled(true);
         String name = txtsearchBillboard.getText().toLowerCase();
         DefaultTableModel dtm = new DefaultTableModel();
         List<Billboard> billboardList = new ArrayList<>();
@@ -203,6 +235,8 @@ public final class BillboardView extends javax.swing.JFrame {
         cmbUser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Classification", "Genre", "Sort A-Z", "Sort Z-A" }));
 
         jLabel2.setText("Search");
+
+        txtsearchBillboard.setEnabled(false);
 
         btnSearchBillboard.setText("Go");
         btnSearchBillboard.addActionListener(new java.awt.event.ActionListener() {
