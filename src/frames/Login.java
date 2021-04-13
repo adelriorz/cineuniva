@@ -89,10 +89,11 @@ public class Login extends javax.swing.JFrame {
     
     //Shows billboards and saves State and Municipality
     private void showBillBoard(){
+        q = new QueueString(1);
         String tempState = (String)cmbState.getSelectedItem();
         q.addValue(tempState);
         BillboardView bvv = new BillboardView(q);
-        this.setVisible(false);
+        this.dispose();
         bvv.setVisible(true);
     }
     
@@ -118,10 +119,11 @@ public class Login extends javax.swing.JFrame {
         tP = txtPassword.getText();
         ujc.findUser(searchUserName(tN));
 
-        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true){
+        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true
+                && u.getUserStatus() == true){
             JOptionPane.showMessageDialog(this, "Welcome "+ tN + " !");
             Administrator admin = new Administrator();
-            this.setVisible(false);
+            this.dispose();
             admin.setVisible(true);
         } else JOptionPane.showMessageDialog(this, "Wrong User/Password!, try again");
     }
