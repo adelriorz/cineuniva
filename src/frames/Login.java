@@ -120,7 +120,7 @@ public class Login extends javax.swing.JFrame {
         ujc.findUser(searchUserName(tN));
 
         if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true
-                && u.getUserStatus() == true){
+                && u.getUserStatus()){
             JOptionPane.showMessageDialog(this, "Welcome "+ tN + " !");
             Administrator admin = new Administrator();
             this.dispose();

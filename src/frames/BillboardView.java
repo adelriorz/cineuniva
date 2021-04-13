@@ -105,14 +105,8 @@ public final class BillboardView extends javax.swing.JFrame {
     public void sorti(){
         StringQuickSort qS = new StringQuickSort();
         List<String> list = new ArrayList<>();
-        list.add("hola");
-        list.add("adios");
-        list.add("aaa");
-        list.add("hakuna matata");
         String[] s = parseListToArr(list);
-        System.out.println("s = " + Arrays.toString(s));
         qS.sort(s);
-        System.out.println("qS = " + Arrays.toString(s));
     }
     
     //Detects wich option has been selected by user and returns values if any
@@ -125,7 +119,7 @@ public final class BillboardView extends javax.swing.JFrame {
             dtm.addColumn("Movie");
             dtm.addColumn("Duration");
             dtm.addColumn("Classification");
-            dtm.addColumn("Genre");
+            dtm.addColumn("Gender");
             dtm.addColumn("Room");
             dtm.addColumn("Date/Time");
             
@@ -166,7 +160,7 @@ public final class BillboardView extends javax.swing.JFrame {
         dtm.addColumn("Movie");
         dtm.addColumn("Duration");
         dtm.addColumn("Classification");
-        dtm.addColumn("Genre");
+        dtm.addColumn("Gender");
         dtm.addColumn("Room");
         dtm.addColumn("Date/Time");    
         for(Billboard b : billboardList){
@@ -178,6 +172,9 @@ public final class BillboardView extends javax.swing.JFrame {
             row[4] = b.getRoomId().getRoomNumber();
             row[5] = b.getScheduleId().getScheduleStart();
             if(tempState.equals(b.getStateId().getStateName())
+                && b.getMovieId().getMovieStatus()==true 
+                && b.getRoomId().getRoomStatus()==true
+                && b.getScheduleId().getScheduleStatus()==true
                 && name.equals(b.getMovieId().getMovieName().toLowerCase())
                 || name.equals(b.getMovieId().getMovieClassification().toLowerCase())
                 || name.equals(b.getMovieId().getMovieGenre().toLowerCase())
@@ -204,7 +201,7 @@ public final class BillboardView extends javax.swing.JFrame {
         dtm.addColumn("Movie");
         dtm.addColumn("Duration");
         dtm.addColumn("Classification");
-        dtm.addColumn("Genre");
+        dtm.addColumn("Gender");
         dtm.addColumn("Room");
         dtm.addColumn("Date/Time");    
         for(Billboard b : billboardList){
