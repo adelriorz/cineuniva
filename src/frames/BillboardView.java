@@ -118,12 +118,18 @@ public final class BillboardView extends javax.swing.JFrame {
             dtm.addColumn("Classification");
             dtm.addColumn("Gender");
             dtm.addColumn("Room");
-            dtm.addColumn("Date/Time");
+            dtm.addColumn("Date/Time"); 
             
             for(Billboard b : billboardList){
                 Object row[] = new Object[6];
+                
                 billboardDriverList.add(b.getMovieId().getMovieName());
-                parseListToArr(billboardDriverList);
+                String[] s = parseListToArr(billboardDriverList);
+                System.out.println(Arrays.toString(billboardDriverList.toArray()));
+                System.out.println(Arrays.toString(s));
+                qS.sort(s);//success
+                System.out.println("s.sorted = " + Arrays.toString(s));
+                
                 row[0] = b.getMovieId().getMovieName();//String
                 row[1] = b.getMovieId().getMovieDuration();
                 row[2] = b.getMovieId().getMovieClassification();
@@ -192,6 +198,7 @@ public final class BillboardView extends javax.swing.JFrame {
     
     //Loads billboard table from DB filtering State option from user
     public void loadBillboardViewTable(){
+        sortMovies(true);
         DefaultTableModel dtm = new DefaultTableModel();
         List<Billboard> billboardList = new ArrayList<>();
         billboardList = bc.findBillboardEntities();
