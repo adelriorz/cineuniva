@@ -20,7 +20,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /*
-**Written by: Armando Del Río Ramírez
+**Written by: Armando Del Río Ramírez & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Code that allows CRUD operations for Billboard Entity 
 */

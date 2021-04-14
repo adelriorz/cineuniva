@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.time.Duration;
 import java.time.Instant;
 /*
-**Written by: Armando Del Río Ramírez
+**Written by: Armando Del Río Ramírez & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Sorting algorythms
+**Description: Code for input verifier
 */
 public class Ordenamiento{
 

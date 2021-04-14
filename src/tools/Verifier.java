@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /*
-**Written by: Armando Del Río Ramírez
+**Written by: Armando Del Río & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Input Verifier
 **example of implementation

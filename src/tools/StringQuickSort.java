@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /*
-**Written by: John Smith
+**Written by: Armando Del Río & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Adaptation for QuickSort Algorythm to String[]
 */

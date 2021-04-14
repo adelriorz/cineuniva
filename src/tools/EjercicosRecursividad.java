@@ -3,9 +3,9 @@ package tools;
 import java.util.Scanner;
 
 /*
-**Written by: Armando Del Río Ramírez
+**Written by: Armando Del Río Ramírez & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
-**Description: Recursive exercises
+**Description: Code for input verifier
 */
 class EjercicosRecursividad{
 

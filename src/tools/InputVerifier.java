@@ -3,7 +3,7 @@ package tools;
 //import javax.swing.InputVerifier;
 import javax.swing.JTextField;
 /*
-**Written by: Armando Del Río Ramírez
+**Written by: Armando Del Río Ramírez & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Code for input verifier
 */

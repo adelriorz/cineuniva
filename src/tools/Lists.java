@@ -3,7 +3,11 @@ package tools;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*
+**Written by: Armando Del Río Ramírez & Paola Escalera
+**Date: 01/05/ 2021 - 04/10/2021
+**Description: Code for input verifier
+*/
 public class Lists<X>{
 	
 	private int stackPointer;

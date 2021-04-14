@@ -15,13 +15,15 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import tools.Lists;
+import tools.Stack;
 import tools.QueueString;
 import tools.StringQuickSort;
 import static tools.StringQuickSort.parseListToArr;
 
 public final class BillboardView extends javax.swing.JFrame {
 /*
-**Written by: Armando Del Río Ramírez
+**Written by: Armando Del Río & Paola Escalera
 **Date: 01/05/ 2021 - 04/10/2021
 **Description: Billboard view where users can interact
 */
@@ -39,6 +41,7 @@ public final class BillboardView extends javax.swing.JFrame {
     protected static Login log;
     private String parsedQueueString[];
     private StringQuickSort qS;
+    private Stack stack;
     
     //BillboardView constructor
     public BillboardView(QueueString q) {
@@ -75,6 +78,7 @@ public final class BillboardView extends javax.swing.JFrame {
         sc = new ScheduleJpaController();
         rc = new RoomJpaController();
         stc = new StateJpaController();
+        stack = new Stack();
         tblBillboard.setShowGrid(true); //Shows grid in table
     }
     
@@ -208,9 +212,21 @@ public final class BillboardView extends javax.swing.JFrame {
         dtm.addColumn("Classification");
         dtm.addColumn("Gender");
         dtm.addColumn("Room");
-        dtm.addColumn("Date/Time");    
+        dtm.addColumn("Date/Time");
+        
+        stack = new Stack();
+        stack.push("Movie");
+        stack.push("Duration");
+        stack.push("Classification");
+        stack.push("Gender");
+        stack.push("Room");
+        stack.push("Date/Time");
+        stack.printStack();
+        Lists li = new Lists();
+        
         for(Billboard b : billboardList){
             Object row[] = new Object[6];
+            li.push(b.getMovieId().getMovieName());
             row[0] = b.getMovieId().getMovieName();
             row[1] = b.getMovieId().getMovieDuration();
             row[2] = b.getMovieId().getMovieClassification();
@@ -222,6 +238,8 @@ public final class BillboardView extends javax.swing.JFrame {
                     && b.getRoomId().getRoomStatus()==true
                     && b.getScheduleId().getScheduleStatus()==true
               ){ dtm.addRow(row); }
+            System.out.println("Printing List: ");
+            li.printStack();
         }
         if(dtm.getRowCount()<=0) { 
             JOptionPane.showMessageDialog(this,

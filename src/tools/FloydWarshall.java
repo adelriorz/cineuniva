@@ -4,7 +4,7 @@ import java.util.*;
 import java.lang.*;
 import java.io.*;
 /*
-**Written by: Geeks for Geeks
+**Written by: Armando Del Río & Paola Escalera
 **Date: Unknown
 **Description: Code for implementing Floyd Warshall graph algorythm
 */
