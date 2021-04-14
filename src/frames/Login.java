@@ -7,16 +7,7 @@ import controllers.StateJpaController;
 import controllers.UserJpaController;
 import entities.Municipality;
 import entities.State;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.InputVerifier; //IMPLEMENT CLASS
-import javax.swing.JTable;
 import tools.QueueString;
 /*
 **Written by: Armando Del Río Ramírez
@@ -25,14 +16,15 @@ import tools.QueueString;
 */
 public class Login extends javax.swing.JFrame {
     
-    private PlaceHolder holder;
-    private User u;
-    private UserJpaController ujc;
-    private State st;
-    private StateJpaController stjc;
-    private Municipality mun;
-    private MunicipalityJpaController mjc;
-    protected QueueString q = new QueueString(1);
+    protected PlaceHolder holder;
+    protected User u;
+    protected UserJpaController ujc;
+    public State st;
+    protected StateJpaController stjc;
+    protected Municipality mun;
+    protected MunicipalityJpaController mjc;
+    protected static QueueString q = new QueueString(1);
+    protected BillboardView bv;
     
     //Login Constructor
     public Login() {
@@ -45,6 +37,7 @@ public class Login extends javax.swing.JFrame {
         stjc = new StateJpaController();
         mun = new Municipality();
         mjc = new MunicipalityJpaController();
+        bv = new BillboardView();
     }
     
     //Places Placeholders for the indicated variables
@@ -96,11 +89,12 @@ public class Login extends javax.swing.JFrame {
     
     //Shows billboards and saves State and Municipality
     private void showBillBoard(){
+        q = new QueueString(1);
         String tempState = (String)cmbState.getSelectedItem();
         q.addValue(tempState);
-        BillboardView bv = new BillboardView(q);
-        this.setVisible(false);
-        bv.setVisible(true);
+        BillboardView bvv = new BillboardView(q);
+        this.dispose();
+        bvv.setVisible(true);
     }
     
     //Searches user by name and returns id value
@@ -125,10 +119,11 @@ public class Login extends javax.swing.JFrame {
         tP = txtPassword.getText();
         ujc.findUser(searchUserName(tN));
 
-        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true){
+        if(u.getUserName().equals(tN) && u.getUserPassword().equals(tP) && u.getUserType() == true
+                && u.getUserStatus()){
             JOptionPane.showMessageDialog(this, "Welcome "+ tN + " !");
             Administrator admin = new Administrator();
-            this.setVisible(false);
+            this.dispose();
             admin.setVisible(true);
         } else JOptionPane.showMessageDialog(this, "Wrong User/Password!, try again");
     }
@@ -232,15 +227,15 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
                         .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtPassword))
+                        .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(27, 27, 27)
                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))

@@ -83,6 +83,14 @@ public class Billboard implements Serializable {
         this.billboardStatus = billboardStatus;
     }
 
+    public Billboard(int mo, int ro, int sche, int sta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Billboard(int mo, int ro, int sche, int sta, String tempStatus) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public Integer getBillboardId() {
         return billboardId;
     }

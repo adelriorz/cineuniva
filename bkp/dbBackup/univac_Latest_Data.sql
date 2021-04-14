@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2021 at 02:56 AM
+-- Generation Time: Apr 14, 2021 at 05:35 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.2.34
 
@@ -69,9 +69,9 @@ CREATE TABLE `movie` (
 
 INSERT INTO `movie` (`movieId`, `movieName`, `movieDirector`, `movieProducer`, `movieClassification`, `movieGenre`, `movieDuration`, `movieStatus`, `movieCreatedAt`, `movieUpdatedAt`) VALUES
 (1, 'Lilo & Stitch', 'Leo Di Caprio', 'Leonardo Di Caprio', 'B15', 'Adventure', 125, 1, '2021-03-24 07:50:59.926375', '2021-04-12 00:55:47.618060'),
-(2, 'Juan ', 'Pecas', 'Joel', 'B15', 'Terror', 23, 1, '2021-04-10 22:47:19.895037', '2021-04-12 00:55:51.637169'),
-(3, 'Pepe pecas', 'yaison2', 'prueba', 'B15', 'Action', 23, 1, '2021-04-10 22:46:29.883720', '2021-04-12 00:55:55.763768'),
-(4, 'Juan Pepe', 'Pai', 'Pao', 'D', 'Comedy', 123, 0, '2021-04-10 22:46:11.234432', '2021-04-12 00:55:59.092267');
+(2, 'Libro de la selva', 'Pecas', 'Joel', 'B15', 'Terror', 23, 1, '2021-04-10 22:47:19.895037', '2021-04-12 03:40:47.902882'),
+(3, 'Terminator', 'yaison2', 'prueba', 'B15', 'Action', 23, 1, '2021-04-10 22:46:29.883720', '2021-04-12 03:40:55.352977'),
+(4, 'Mision Imposible', 'Pai', 'Pao', 'D', 'Comedy', 123, 1, '2021-04-10 22:46:11.234432', '2021-04-13 05:23:38.372948');
 
 -- --------------------------------------------------------
 
@@ -238,11 +238,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userId`, `userName`, `userPassword`, `userType`, `userStatus`, `userCreatedAt`, `userUpdatedAt`) VALUES
-(1, 'Paola', '3', 0, 0, '2021-03-24 13:30:00.314843', '2021-03-24 13:30:00.314843'),
-(2, 'armando', '2', 1, 0, '2021-03-24 13:30:38.854061', '2021-03-24 13:30:38.854061'),
-(3, 'joel flores', 'maria', 1, 0, '2021-03-24 13:30:53.446548', '2021-03-24 13:30:53.446548'),
-(4, 'julio', 'pass', 1, 0, '2021-03-24 13:31:05.761260', '2021-03-24 13:31:05.761260'),
-(5, 'Paoluqui', '123', 0, 1, '2021-04-10 22:44:47.486598', '2021-04-10 22:44:47.486598');
+(1, 'paola', '3', 1, 0, '2021-03-24 13:30:00.314843', '2021-04-13 06:24:59.256305'),
+(2, 'armando', '2', 1, 1, '2021-03-24 13:30:38.854061', '2021-04-13 06:22:11.019272'),
+(3, 'joel', 'maria', 1, 0, '2021-03-24 13:30:53.446548', '2021-04-13 06:24:47.476036'),
+(5, 'paoluqui', '123', 0, 1, '2021-04-10 22:44:47.486598', '2021-04-13 06:25:06.819952'),
+(6, 'joaquin', '123', 0, 1, '2021-04-14 00:19:29.349294', '2021-04-14 00:19:29.349294');
 
 --
 -- Indexes for dumped tables
@@ -338,7 +338,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

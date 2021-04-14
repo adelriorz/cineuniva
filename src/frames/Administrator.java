@@ -1,19 +1,27 @@
 package frames;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import controllers.BillboardJpaController;
 import controllers.MovieJpaController;
 import controllers.RoomJpaController;
 import controllers.ScheduleJpaController;
 import controllers.UserJpaController;
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
+import entities.Billboard;
 import entities.Movie;
 import entities.Room;
 import entities.Schedule;
 import entities.User;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 /*
@@ -31,11 +39,13 @@ public class Administrator extends javax.swing.JFrame {
     private RoomJpaController rc;
     private Schedule s;
     private ScheduleJpaController sc;
+    private Billboard b;
+    private BillboardJpaController bc;
 
     //Administrator Constructor    
     public Administrator() {
         initComponents();
-        this.setFocusable(true);
+        this.setLocationRelativeTo(null);
         m = new Movie();
         mc = new MovieJpaController();
         u = new User();
@@ -44,17 +54,24 @@ public class Administrator extends javax.swing.JFrame {
         rc = new RoomJpaController();
         s = new Schedule();
         sc = new ScheduleJpaController();
+        b = new Billboard();
+        bc = new BillboardJpaController();
         loadMovieTable();
         loadUserTable();
         loadRoomTable();
         loadScheduleTable();
+        loadBillboardTable();
         tblMovie.setShowGrid(true); //Shows grid in table
+        tblUser.setShowGrid(true);
+        tblRoom.setShowGrid(true);
+        tblScheule.setShowGrid(true);
+        tblBillboard.setShowGrid(true);
     }
     
     //Set Movie values as default
     public void clearMovieInfo(){
         txtSearchMovie.setText("");
-        txtName.setText("");
+        txtMovieName.setText("");
         txtDirector.setText("");
         txtId.setText("");
         txtProducer.setText("");
@@ -62,9 +79,10 @@ public class Administrator extends javax.swing.JFrame {
         cmbClassification.setSelectedIndex(0);
         cmbGenre.setSelectedIndex(0);
         btnDeleteMovie.setEnabled(false);
-        btnUpdate.setEnabled(false);
-        btnAdd.setEnabled(true);
-        txtName.requestFocus();
+        btnUpdateMovie.setEnabled(false);
+        btnAddMovie.setEnabled(true);
+        txtMovieName.requestFocus();
+        txtSearchMovie.setText("");
     }
     
     //Loads movie table from DB
@@ -102,6 +120,7 @@ public class Administrator extends javax.swing.JFrame {
         dtm.addColumn("id");
         dtm.addColumn("Name");
         dtm.addColumn("Password");
+        dtm.addColumn("Type");
         dtm.addColumn("Status");
         
         List<User> userList = new ArrayList<>();
@@ -142,7 +161,7 @@ public class Administrator extends javax.swing.JFrame {
     }
     
     //Loads schedule table from db
-    public void loadScheduleTable(){//Pending to fix
+    public void loadScheduleTable(){
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn("id");
         dtm.addColumn("Start");
@@ -163,6 +182,27 @@ public class Administrator extends javax.swing.JFrame {
         }
         tblScheule.setModel(dtm);
     }
+    
+    //Loads billboard table from DB filtering State option from user
+    public void loadBillboardTable(){
+        DefaultTableModel dtm = new DefaultTableModel();
+        List<Billboard> billboardList = bc.findBillboardEntities();
+        dtm.addColumn("Id");
+        dtm.addColumn("Movie Id");
+        dtm.addColumn("Room Id");
+        dtm.addColumn("Schedule Id");
+        dtm.addColumn("State Id");
+        for(Billboard b : billboardList){
+            Object row[] = new Object[5];
+            row[0] = b.getBillboardId();
+            row[1] = b.getMovieId().getMovieId();
+            row[2] = b.getRoomId().getRoomId();
+            row[3] = b.getScheduleId().getScheduleId();
+            row[4] = b.getStateId().getStateId();
+            dtm.addRow(row);
+        }
+        tblBillboard.setModel(dtm);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -176,8 +216,8 @@ public class Administrator extends javax.swing.JFrame {
         jDesktopPane2 = new javax.swing.JDesktopPane();
         txtClassification = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
-        btnAdd = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
+        btnAddMovie = new javax.swing.JButton();
+        btnUpdateMovie = new javax.swing.JButton();
         btnDeleteMovie = new javax.swing.JButton();
         txtSearchMovie = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
@@ -186,7 +226,7 @@ public class Administrator extends javax.swing.JFrame {
         txtId = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
+        txtMovieName = new javax.swing.JTextField();
         txtDirector = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtProducer = new javax.swing.JTextField();
@@ -199,6 +239,7 @@ public class Administrator extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         cmbGenre = new javax.swing.JComboBox<>();
+        lblDurationValidation = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblMovie = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -266,6 +307,34 @@ public class Administrator extends javax.swing.JFrame {
         btnUpdateSchedule = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblScheule = new javax.swing.JTable();
+        jDesktopPane5 = new javax.swing.JDesktopPane();
+        jPanel17 = new javax.swing.JPanel();
+        jPanel20 = new javax.swing.JPanel();
+        btnAddBillboard = new javax.swing.JButton();
+        btnDeleteBillboard = new javax.swing.JButton();
+        txtBillboardSearch = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        btnClearBillboard = new javax.swing.JButton();
+        btnUpdateBillboard = new javax.swing.JButton();
+        jPanel21 = new javax.swing.JPanel();
+        txtBillboardId = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        cmbBillboardStatus = new javax.swing.JComboBox<>();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        txtBillboardMovie = new javax.swing.JTextField();
+        txtBillboardRoomId = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        txtBillboardScheduleId = new javax.swing.JTextField();
+        txtBillboardStateId = new javax.swing.JTextField();
+        jLabel33 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tblBillboard = new javax.swing.JTable();
         btnBackMovie2 = new javax.swing.JButton();
         btnExitMovie1 = new javax.swing.JButton();
 
@@ -306,18 +375,18 @@ public class Administrator extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnAdd.setText("Add");
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+        btnAddMovie.setText("Add");
+        btnAddMovie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                btnAddMovieActionPerformed(evt);
             }
         });
 
-        btnUpdate.setText("Update");
-        btnUpdate.setEnabled(false);
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdateMovie.setText("Update");
+        btnUpdateMovie.setEnabled(false);
+        btnUpdateMovie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
+                btnUpdateMovieActionPerformed(evt);
             }
         });
 
@@ -346,8 +415,8 @@ public class Administrator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnAddMovie, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnUpdateMovie, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnDeleteMovie, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addComponent(jLabel19)
@@ -360,9 +429,9 @@ public class Administrator extends javax.swing.JFrame {
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnAdd)
+                .addComponent(btnAddMovie)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnUpdate)
+                .addComponent(btnUpdateMovie)
                 .addGap(1, 1, 1)
                 .addComponent(btnDeleteMovie)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -388,6 +457,12 @@ public class Administrator extends javax.swing.JFrame {
             }
         });
 
+        txtDuration.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDurationKeyPressed(evt);
+            }
+        });
+
         jLabel8.setText("Producer");
 
         jLabel10.setText("Duration");
@@ -408,18 +483,6 @@ public class Administrator extends javax.swing.JFrame {
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtProducer, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(52, 52, 52))
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,20 +491,35 @@ public class Administrator extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel9)
-                                .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jLabel25))
+                                .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING)))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbClassification, 0, 163, Short.MAX_VALUE)
+                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbGenre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbClassification, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel14Layout.createSequentialGroup()
                         .addGap(37, 37, 37)
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtMovieName, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
+                .addContainerGap(28, Short.MAX_VALUE)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtProducer, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel14Layout.createSequentialGroup()
+                        .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(lblDurationValidation))
+                    .addComponent(cmbGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52))
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,7 +530,7 @@ public class Administrator extends javax.swing.JFrame {
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMovieName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -464,21 +542,23 @@ public class Administrator extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDurationValidation))
                     .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel25))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel25)
+                    .addComponent(cmbGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(cmbClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
-                .addGap(21, 21, 21))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout txtClassificationLayout = new javax.swing.GroupLayout(txtClassification);
@@ -498,7 +578,9 @@ public class Administrator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 236, Short.MAX_VALUE)
+            .addGroup(txtClassificationLayout.createSequentialGroup()
+                .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tblMovie.setModel(new javax.swing.table.DefaultTableModel(
@@ -550,17 +632,17 @@ public class Administrator extends javax.swing.JFrame {
         jDesktopPane2.setLayout(jDesktopPane2Layout);
         jDesktopPane2Layout.setHorizontalGroup(
             jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(txtClassification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jDesktopPane2Layout.setVerticalGroup(
             jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane2Layout.createSequentialGroup()
                 .addComponent(txtClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -579,6 +661,11 @@ public class Administrator extends javax.swing.JFrame {
 
         btnUpdateUser.setText("Update");
         btnUpdateUser.setEnabled(false);
+        btnUpdateUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateUserActionPerformed(evt);
+            }
+        });
 
         btnDeleteUser.setText("Delete");
         btnDeleteUser.setEnabled(false);
@@ -608,16 +695,18 @@ public class Administrator extends javax.swing.JFrame {
                         .addComponent(btnClearUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                        .addGap(0, 111, Short.MAX_VALUE)
                         .addComponent(jLabel18)
                         .addGap(18, 18, 18)
-                        .addComponent(txtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtSearchUser)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnDeleteUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnUpdateUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDeleteUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                             .addComponent(btnAddUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(6, 6, 6))))
+                        .addGap(6, 6, 6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                        .addComponent(btnUpdateUser, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -818,20 +907,19 @@ public class Administrator extends javax.swing.JFrame {
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDeleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnUpdateRoom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAddRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addComponent(btnClearRoom))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnDeleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnUpdateRoom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAddRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnClearRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 11, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -843,11 +931,12 @@ public class Administrator extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDeleteRoom)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClearRoom)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnClearRoom))
-                .addGap(0, 19, Short.MAX_VALUE))
+                    .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanel9.setPreferredSize(new java.awt.Dimension(170, 124));
@@ -910,7 +999,7 @@ public class Administrator extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -936,6 +1025,11 @@ public class Administrator extends javax.swing.JFrame {
 
             }
         ));
+        tblRoom.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRoomMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(tblRoom);
 
         jDesktopPane3.setLayer(jPanel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -946,14 +1040,14 @@ public class Administrator extends javax.swing.JFrame {
         jDesktopPane3Layout.setHorizontalGroup(
             jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jDesktopPane3Layout.setVerticalGroup(
             jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane3Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -974,8 +1068,10 @@ public class Administrator extends javax.swing.JFrame {
         jLabel22.setText("End");
 
         txtScheduleDay.setText(" ");
+        txtScheduleDay.setEnabled(false);
 
         jLabel15.setText("Day");
+        jLabel15.setEnabled(false);
 
         cmbScheduleStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
 
@@ -1053,6 +1149,12 @@ public class Administrator extends javax.swing.JFrame {
             }
         });
 
+        txtScheduleSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtScheduleSearchKeyTyped(evt);
+            }
+        });
+
         jLabel16.setText("Search");
 
         btnClearSchedule.setText("Clear");
@@ -1122,12 +1224,12 @@ public class Administrator extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         tblScheule.setModel(new javax.swing.table.DefaultTableModel(
@@ -1138,6 +1240,11 @@ public class Administrator extends javax.swing.JFrame {
 
             }
         ));
+        tblScheule.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblScheuleMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(tblScheule);
 
         jDesktopPane4.setLayer(jPanel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1155,12 +1262,237 @@ public class Administrator extends javax.swing.JFrame {
         jDesktopPane4Layout.setVerticalGroup(
             jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane4Layout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         tab.addTab("Schedules", jDesktopPane4);
+
+        btnAddBillboard.setText("Add");
+        btnAddBillboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddBillboardActionPerformed(evt);
+            }
+        });
+
+        btnDeleteBillboard.setText("Delete");
+        btnDeleteBillboard.setEnabled(false);
+        btnDeleteBillboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteBillboardActionPerformed(evt);
+            }
+        });
+
+        jLabel26.setText("Search");
+
+        btnClearBillboard.setText("Clear");
+        btnClearBillboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearBillboardActionPerformed(evt);
+            }
+        });
+
+        btnUpdateBillboard.setText("Update");
+        btnUpdateBillboard.setEnabled(false);
+        btnUpdateBillboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateBillboardActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel20Layout.createSequentialGroup()
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnDeleteBillboard, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnUpdateBillboard, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAddBillboard, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel26)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnClearBillboard, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                            .addComponent(txtBillboardSearch))))
+                .addGap(32, 32, 32))
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnAddBillboard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUpdateBillboard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDeleteBillboard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBillboardSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnClearBillboard)
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        txtBillboardId.setEnabled(false);
+
+        jLabel27.setText("Id");
+
+        cmbBillboardStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
+
+        jLabel31.setText("Status");
+
+        jLabel28.setText("Movie Id");
+
+        jLabel29.setText("Room Id");
+
+        txtBillboardMovie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBillboardMovieActionPerformed(evt);
+            }
+        });
+        txtBillboardMovie.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBillboardMovieKeyPressed(evt);
+            }
+        });
+
+        txtBillboardRoomId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBillboardRoomIdKeyPressed(evt);
+            }
+        });
+
+        jLabel30.setText("Schedule Id");
+
+        jLabel32.setText("State Id");
+
+        jLabel33.setText(" ");
+
+        jLabel34.setText(" ");
+
+        jLabel35.setText(" ");
+
+        jLabel36.setText(" ");
+
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel31)
+                    .addComponent(jLabel27)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel30)
+                    .addComponent(jLabel32)
+                    .addComponent(jLabel28))
+                .addGap(25, 25, 25)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbBillboardStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtBillboardStateId, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBillboardScheduleId, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBillboardMovie, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBillboardRoomId, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBillboardId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel33)
+                            .addComponent(jLabel34)
+                            .addComponent(jLabel35)
+                            .addComponent(jLabel36))))
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBillboardId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBillboardMovie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel33)
+                    .addComponent(jLabel28))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(txtBillboardRoomId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(txtBillboardScheduleId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel35))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(txtBillboardStateId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel36))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbBillboardStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
+        jPanel17.setLayout(jPanel17Layout);
+        jPanel17Layout.setHorizontalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(111, Short.MAX_VALUE))
+        );
+        jPanel17Layout.setVerticalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 15, Short.MAX_VALUE))
+        );
+
+        tblBillboard.setModel(new javax.swing.table.DefaultTableModel());
+        tblBillboard.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBillboardMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(tblBillboard);
+
+        jDesktopPane5.setLayer(jPanel17, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane5.setLayer(jScrollPane6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopPane5Layout = new javax.swing.GroupLayout(jDesktopPane5);
+        jDesktopPane5.setLayout(jDesktopPane5Layout);
+        jDesktopPane5Layout.setHorizontalGroup(
+            jDesktopPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane6)
+        );
+        jDesktopPane5Layout.setVerticalGroup(
+            jDesktopPane5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane5Layout.createSequentialGroup()
+                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        tab.addTab("Billboard", jDesktopPane5);
 
         btnBackMovie2.setText("< Back");
         btnBackMovie2.addActionListener(new java.awt.event.ActionListener() {
@@ -1201,75 +1533,10 @@ public class Administrator extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtScheduleStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtScheduleStartActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtScheduleStartActionPerformed
-
-    private void btnUpdateRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRoomActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnUpdateRoomActionPerformed
-
-    private void txtRoomSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRoomSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtRoomSearchActionPerformed
-
-    //Adds new movie
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        m.setMovieName(txtName.getText());
-        m.setMovieDirector(txtDirector.getText());
-        m.setMovieClassification((String) cmbClassification.getSelectedItem());
-        m.setMovieGenre((String) cmbGenre.getSelectedItem());
-        try{
-            m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
-        } catch(Exception ex){
-            System.out.println("ex = " + ex);
-        }
-        m.setMovieProducer(txtProducer.getText());
-        String cad = (String)cmbStatus.getSelectedItem();
-        if(cad.equals("Active")){
-            m.setMovieStatus(true);
-        } else { m.setMovieStatus(false); }
-
-        try {
-            mc.create(m);
-            clearMovieInfo();
-            loadMovieTable();
-        } catch (Exception ex) {
-            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnAddActionPerformed
-    //Updates movie
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        m.setMovieId(Integer.parseInt(txtId.getText()));
-        m.setMovieName(txtName.getText());
-        m.setMovieDirector(txtDirector.getText());
-        m.setMovieClassification((String) cmbClassification.getSelectedItem());
-        m.setMovieGenre((String) cmbGenre.getSelectedItem());
-        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
-        m.setMovieProducer(txtProducer.getText());
-        String tempMovieStatus = (String)cmbStatus.getSelectedItem();
-        if(tempMovieStatus.equals("Active")){
-            m.setMovieStatus(true);
-        } else { m.setMovieStatus(false); }        
-        try {
-            mc.edit(m);
-            clearMovieInfo();
-            loadMovieTable();
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnUpdateActionPerformed
-
-    //Invokes clear movie info method
-    private void btnClearMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearMovieActionPerformed
-       clearMovieInfo();
-    }//GEN-LAST:event_btnClearMovieActionPerformed
-    
+   
     //returns int from selected status accordingly
-    public int selectStatus(JTable tbl, int row){
-        String selected = tbl.getValueAt(row, 6).toString();
+    public int selectStatus(JTable tbl, int row, int statusPlace){
+        String selected = tbl.getValueAt(row, statusPlace).toString();
         int value = 0;
         
         switch(selected){
@@ -1333,36 +1600,237 @@ public class Administrator extends javax.swing.JFrame {
         return value;
     }
     
-    //Retrieves information to the slots at the selected row
-    private void tblMovieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMovieMouseClicked
-       int row = tblMovie.getSelectedRow();
-       
-       txtId.setText(tblMovie.getValueAt(row, 0).toString());
-       txtName.setText(tblMovie.getValueAt(row, 1).toString());
-       txtDirector.setText(tblMovie.getValueAt(row, 2).toString());
-       txtDuration.setText(tblMovie.getValueAt(row, 3).toString());
-       cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
-       cmbGenre.setSelectedIndex(selectMovieGenre(tblMovie, row));
-       txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
-       cmbStatus.setSelectedIndex(selectStatus(tblMovie, row));
-       btnAdd.setEnabled(false);
-       btnDeleteMovie.setEnabled(true);
-       btnUpdate.setEnabled(true);
-       loadMovieTable();
-    }//GEN-LAST:event_tblMovieMouseClicked
-
-    //Deletes movie
-    private void btnDeleteMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteMovieActionPerformed
-        m.setMovieName(txtName.getText());
-        m.setMovieDirector(txtDirector.getText());
-        m.setMovieClassification((String) cmbClassification.getSelectedItem());
-        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
-        m.setMovieProducer(txtProducer.getText());
-        m.setMovieStatus(Boolean.parseBoolean((String) cmbStatus.getSelectedItem()));
+    //Sets user info as default
+    public void clearUserInfo(){
+        txtIdUser.setText("");
+        txtPassUser.setText("");
+        txtNameUser.setText("");
+        cmbStatusUser.setSelectedIndex(0);
+        cmbUserType.setSelectedIndex(0);
+        txtSearchUser.setText("");
+    }
+    
+   //Sets all room UI values as default
+    public void clearRoomInfo(){
+        txtRoomId.setText("");
+        txtRoomNumber.setText("");
+        txtRoomSearch.setText("");
+        cmbRoomStatus.setSelectedIndex(0);
+        txtRoomSearch.setText("");
+    }
+    
+   //Sets all UI values set as default
+    public void clearScheduleInfo(){
+        txtScheduleId.setText("");
+        txtScheduleStart.setText("");
+        txtScheduleEnd.setText("");
+        txtScheduleDay.setText("");
+        txtScheduleSearch.setText("");
+        cmbScheduleStatus.setSelectedIndex(0);
+        txtScheduleSearch.setText("");
+    }
+    //Sets all UI values set as default
+    public void clearBillboardInfo(){
+        txtBillboardRoomId.setText("");
+        txtBillboardScheduleId.setText("");
+        txtBillboardId.setText("");
+        txtBillboardMovie.setText("");
+        txtBillboardStateId.setText("");
+        cmbBillboardStatus.setSelectedIndex(0);
+        txtBillboardSearch.setText("");
+    }
+    
+    //returns int from selected status accordingly
+    public int selectType(JTable tbl, int row, int typePlace){
+        String selected = tbl.getValueAt(row, typePlace).toString();
+        int value = 0;
         
+        switch(selected){
+            case "User":
+                value = 0;
+                break;
+            case "Administrator":
+                value = 1;
+                break;
+        }
+        return value;
+    }
+    
+   //Gets you back to Login
+    private void btnBackMovie2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMovie2ActionPerformed
+        hideCurrent();
+    }//GEN-LAST:event_btnBackMovie2ActionPerformed
+    //Exits Program
+    private void btnExitMovie1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitMovie1ActionPerformed
+       System.exit(0);
+    }//GEN-LAST:event_btnExitMovie1ActionPerformed
+
+    private void tblScheuleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblScheuleMouseClicked
+        int row = tblScheule.getSelectedRow();
+        
+        txtScheduleId.setText(tblScheule.getValueAt(row, 0).toString());
+        txtScheduleStart.setText(tblScheule.getValueAt(row, 1).toString());
+        txtScheduleEnd.setText(tblScheule.getValueAt(row, 2).toString());
+        cmbStatus.setSelectedIndex(selectStatus(tblScheule, row, 3));
+        btnAddSchedule.setEnabled(false);
+        btnDeleteSchedule.setEnabled(true);
+        btnUpdateSchedule.setEnabled(true);
+        loadScheduleTable();
+    }//GEN-LAST:event_tblScheuleMouseClicked
+
+    private void btnUpdateScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateScheduleActionPerformed
+        Date date = Calendar.getInstance().getTime();
+        s.setScheduleId(Integer.parseInt(txtScheduleId.getText()));
+        s.setScheduleStart(date);
+        s.setScheduleEnd(date); 
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            s.setScheduleStatus(true);
+        } else { s.setScheduleStatus(false); }
+        try {
+            sc.edit(s);
+            clearScheduleInfo();
+            loadScheduleTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateScheduleActionPerformed
+
+    private void btnClearScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearScheduleActionPerformed
+        clearScheduleInfo();
+    }//GEN-LAST:event_btnClearScheduleActionPerformed
+
+    //Deletes selected Schedule
+    private void btnDeleteScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteScheduleActionPerformed
         try{
             try {
-                mc.destroy(Integer.parseInt(txtIdUser.getText()));
+                sc.destroy(Integer.parseInt(txtScheduleId.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            clearScheduleInfo();
+            loadScheduleTable();
+        }catch(NonexistentEntityException ex){
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteScheduleActionPerformed
+
+   //Adds new Schedule to db
+    private void btnAddScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddScheduleActionPerformed
+        Date date = Calendar.getInstance().getTime();
+        s.setScheduleId(Integer.parseInt(txtScheduleId.getText()));
+        s.setScheduleEnd(date);
+        s.setScheduleEnd(date);
+        String tempStatus = (String)cmbScheduleStatus.getSelectedItem();
+        if(tempStatus.equals("Active")){
+                s.setScheduleStatus(true);
+            } else { s.setScheduleStatus(false); }
+        try {
+                sc.create(s);
+                clearScheduleInfo();
+                loadScheduleTable();
+            } catch (Exception ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_btnAddScheduleActionPerformed
+
+    private void txtScheduleStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtScheduleStartActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtScheduleStartActionPerformed
+
+    private void tblRoomMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRoomMouseClicked
+        int row = tblRoom.getSelectedRow();
+        
+        txtRoomId.setText(tblRoom.getValueAt(row, 0).toString());
+        txtRoomNumber.setText(tblRoom.getValueAt(row, 1).toString());
+        cmbRoomStatus.setSelectedIndex(selectStatus(tblRoom, row, 2));
+        btnAddRoom.setEnabled(false);
+        btnDeleteRoom.setEnabled(true);
+        btnUpdateRoom.setEnabled(true);
+        loadRoomTable();
+    }//GEN-LAST:event_tblRoomMouseClicked
+
+    private void btnClearRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearRoomActionPerformed
+        clearRoomInfo();
+    }//GEN-LAST:event_btnClearRoomActionPerformed
+
+    private void txtRoomSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRoomSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRoomSearchActionPerformed
+
+    //Deletes selected room
+    private void btnDeleteRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRoomActionPerformed
+        try{
+            try {
+                rc.destroy(Integer.parseInt(txtRoomId.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            clearRoomInfo();
+            loadRoomTable();
+        }catch(NonexistentEntityException ex){
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteRoomActionPerformed
+
+    private void btnUpdateRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRoomActionPerformed
+        r.setRoomId(Integer.parseInt(txtRoomId.getText()));
+        r.setRoomNumber(Integer.parseInt(txtRoomNumber.getText()));
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            u.setUserStatus(true);
+        } else { u.setUserStatus(false); }
+        try {
+            rc.edit(r);
+            clearRoomInfo();
+            loadRoomTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateRoomActionPerformed
+
+    private void btnAddRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoomActionPerformed
+        r.setRoomNumber(Integer.parseInt(txtRoomNumber.getText()));
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            r.setRoomStatus(true);
+        } else { r.setRoomStatus(false); }
+        try {
+            rc.create(r);
+            clearMovieInfo();
+            loadUserTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddRoomActionPerformed
+
+    private void tblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUserMouseClicked
+        int row = tblUser.getSelectedRow();
+
+        txtIdUser.setText(tblUser.getValueAt(row, 0).toString());
+        txtNameUser.setText(tblUser.getValueAt(row, 1).toString());
+        txtPassUser.setText(tblUser.getValueAt(row, 2).toString());
+        cmbUserType.setSelectedIndex(selectType(tblUser, row, 3));
+        cmbStatusUser.setSelectedIndex(selectStatus(tblUser, row, 4));
+        btnAddUser.setEnabled(false);
+        btnDeleteUser.setEnabled(true);
+        btnUpdateUser.setEnabled(true);
+        loadUserTable();
+    }//GEN-LAST:event_tblUserMouseClicked
+
+    //Invokes clearUserInfo method
+    private void btnClearUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearUserActionPerformed
+        clearUserInfo();
+    }//GEN-LAST:event_btnClearUserActionPerformed
+
+    private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
+        try{
+            try {
+                uc.destroy(Integer.parseInt(txtIdUser.getText()));
             } catch (IllegalOrphanException ex) {
                 Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1371,21 +1839,7 @@ public class Administrator extends javax.swing.JFrame {
         }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnDeleteMovieActionPerformed
-
-    //Sets user info as default
-    public void clearUserInfo(){
-        txtIdUser.setText("");
-        txtPassUser.setText("");
-        txtNameUser.setText("");
-        cmbStatusUser.setSelectedIndex(0);
-        cmbUserType.setSelectedIndex(0);
-    }
-    
-    //Invokes clearUserInfo method
-    private void btnClearUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearUserActionPerformed
-        clearUserInfo();
-    }//GEN-LAST:event_btnClearUserActionPerformed
+    }//GEN-LAST:event_btnDeleteUserActionPerformed
 
     //Adds user to db
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
@@ -1409,131 +1863,236 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddUserActionPerformed
 
     //Retrieves information to the slots at the selected row
-    private void tblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUserMouseClicked
-       int row = tblUser.getSelectedRow();
-       txtIdUser.setText(tblUser.getValueAt(row, 0).toString());
-       txtNameUser.setText(tblUser.getValueAt(row, 1).toString());
-       txtPassUser.setText(tblUser.getValueAt(row, 2).toString());
-       cmbUserType.setSelectedIndex(selectUserType(tblUser, row));
-       cmbStatusUser.setSelectedIndex(selectStatus(tblUser, row));
-       btnAddUser.setEnabled(false);
-       btnDeleteUser.setEnabled(true);
-       btnUpdateUser.setEnabled(true);
-       loadUserTable();
-    }//GEN-LAST:event_tblUserMouseClicked
-    //Updates schedule info to db
-    private void btnUpdateScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateScheduleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnUpdateScheduleActionPerformed
-    //Sets all room UI values as default
-    public void clearRoomInfo(){
-        txtRoomId.setText("");
-        txtRoomNumber.setText("");
-        txtRoomSearch.setText("");
-        cmbRoomStatus.setSelectedIndex(0);
-    }
-    
-    //Invokes ClearRoom Info method
-    private void btnClearRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearRoomActionPerformed
-        clearRoomInfo();
-    }//GEN-LAST:event_btnClearRoomActionPerformed
-    //Sets all UI values set as default
-    public void clearScheduleInfo(){
-        txtScheduleId.setText("");
-        txtScheduleStart.setText("");
-        txtScheduleEnd.setText("");
-        txtScheduleDay.setText("");
-        txtScheduleSearch.setText("");
-        cmbScheduleStatus.setSelectedIndex(0);
-    }
-    //Sets all Schedule UI values as default
-    private void btnClearScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearScheduleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnClearScheduleActionPerformed
+    private void tblMovieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMovieMouseClicked
+        int row = tblMovie.getSelectedRow();
+
+        txtId.setText(tblMovie.getValueAt(row, 0).toString());
+        txtMovieName.setText(tblMovie.getValueAt(row, 1).toString());
+        txtDirector.setText(tblMovie.getValueAt(row, 2).toString());
+        txtDuration.setText(tblMovie.getValueAt(row, 3).toString());
+        cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
+        cmbGenre.setSelectedIndex(selectMovieGenre(tblMovie, row));
+        txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
+        cmbStatus.setSelectedIndex(selectStatus(tblMovie, row, 6));
+        btnAddMovie.setEnabled(false);
+        btnDeleteMovie.setEnabled(true);
+        btnUpdateMovie.setEnabled(true);
+        loadMovieTable();
+    }//GEN-LAST:event_tblMovieMouseClicked
 
     private void txtProducerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProducerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtProducerActionPerformed
-    //Gets you back to Login
-    private void btnBackMovie2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMovie2ActionPerformed
-        hideCurrent();
-    }//GEN-LAST:event_btnBackMovie2ActionPerformed
-    //Exits Program
-    private void btnExitMovie1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitMovie1ActionPerformed
-       System.exit(0);
-    }//GEN-LAST:event_btnExitMovie1ActionPerformed
-    //Deletes selected Schedule
-    private void btnDeleteScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteScheduleActionPerformed
-        try{
-            try {
-                mc.destroy(Integer.parseInt(txtScheduleId.getText()));
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            clearScheduleInfo();
-            loadScheduleTable();
-        }catch(NonexistentEntityException ex){
-            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnDeleteScheduleActionPerformed
-    //Deletes selected room
-    private void btnDeleteRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRoomActionPerformed
-        try{
-            try {
-                mc.destroy(Integer.parseInt(txtRoomId.getText()));
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            clearRoomInfo();
-            loadRoomTable();
-        }catch(NonexistentEntityException ex){
-            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnDeleteRoomActionPerformed
-    //Updates selected user
-    private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
+
+    private void btnClearMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearMovieActionPerformed
+        clearMovieInfo();
+    }//GEN-LAST:event_btnClearMovieActionPerformed
+
+    //Deletes movie
+    private void btnDeleteMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteMovieActionPerformed
+        m.setMovieName(txtMovieName.getText());
+        m.setMovieDirector(txtDirector.getText());
+        m.setMovieClassification((String) cmbClassification.getSelectedItem());
+        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
+        m.setMovieProducer(txtProducer.getText());
+        m.setMovieStatus(Boolean.parseBoolean((String) cmbStatus.getSelectedItem()));
+
         try{
             try {
                 mc.destroy(Integer.parseInt(txtIdUser.getText()));
             } catch (IllegalOrphanException ex) {
                 Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
             }
-            clearRoomInfo();
-            loadRoomTable();
+            clearUserInfo();
+            loadUserTable();
         }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnDeleteUserActionPerformed
-    //Adds new room to DB
-    private void btnAddRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoomActionPerformed
-        r.setRoomNumber(Integer.parseInt(txtRoomId.getText()));
-        String tempStatus = (String)cmbRoomStatus.getSelectedItem();
-        if(tempStatus.equals("Active")){
-            r.setRoomStatus(true);
-        } else { r.setRoomStatus(false); }
+    }//GEN-LAST:event_btnDeleteMovieActionPerformed
+
+   //Updates movie
+    private void btnUpdateMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMovieActionPerformed
+        m.setMovieId(Integer.parseInt(txtId.getText()));
+        m.setMovieName(txtMovieName.getText());
+        m.setMovieDirector(txtDirector.getText());
+        m.setMovieClassification((String) cmbClassification.getSelectedItem());
+        m.setMovieGenre((String) cmbGenre.getSelectedItem());
+        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
+        m.setMovieProducer(txtProducer.getText());
+        String tempMovieStatus = (String)cmbStatus.getSelectedItem();
+        if(tempMovieStatus.equals("Active")){
+            m.setMovieStatus(true);
+        } else { m.setMovieStatus(false); }
         try {
-            sc.create(s);
-            clearRoomInfo();
-            loadRoomTable();
+            mc.edit(m);
+            clearMovieInfo();
+            loadMovieTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnAddRoomActionPerformed
-    //Adds new Schedule to db
-    private void btnAddScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddScheduleActionPerformed
-//        r.setRoomNumber(Integer.parseInt(txtRoomId.getText()));
-//        String tempUserStatus = (String)cmbRoomStatus.getSelectedItem();
-//        if(tempUserStatus.equals("Active")){
-//            u.setUserStatus(true);
-//        } else { u.setUserStatus(false); }
-//        try {
-//            sc.create(s);
-//            clearScheduleInfo();
-//            loadScheduleTable();
-//        } catch (Exception ex) {
-//            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-    }//GEN-LAST:event_btnAddScheduleActionPerformed
+    }//GEN-LAST:event_btnUpdateMovieActionPerformed
+
+    private void btnAddMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMovieActionPerformed
+        m.setMovieName(txtMovieName.getText());
+        m.setMovieDirector(txtDirector.getText());
+        m.setMovieClassification((String) cmbClassification.getSelectedItem());
+        m.setMovieGenre((String) cmbGenre.getSelectedItem());
+        
+        m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
+        m.setMovieProducer(txtProducer.getText());
+        String tempMovieStatus = (String)cmbStatus.getSelectedItem();
+        if(tempMovieStatus.equals("Active")){
+            m.setMovieStatus(true);
+        } else { m.setMovieStatus(false); }
+        try {
+            mc.create(m);
+            clearMovieInfo();
+            loadMovieTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddMovieActionPerformed
+
+    private void tblBillboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillboardMouseClicked
+        int row = tblBillboard.getSelectedRow();
+
+        txtBillboardId.setText(tblBillboard.getValueAt(row, 0).toString());
+        txtBillboardMovie.setText(tblBillboard.getValueAt(row, 1).toString());
+        txtBillboardRoomId.setText(tblBillboard.getValueAt(row, 2).toString());
+        txtBillboardScheduleId.setText(tblBillboard.getValueAt(row, 3).toString());
+        txtBillboardStateId.setText(tblBillboard.getValueAt(row, 3).toString());
+        cmbStatus.setSelectedIndex(selectStatus(tblBillboard, row, 6));
+        btnAddBillboard.setEnabled(false);
+        btnDeleteBillboard.setEnabled(true);
+        btnUpdateBillboard.setEnabled(true);;
+        loadBillboardTable();
+    }//GEN-LAST:event_tblBillboardMouseClicked
+
+    private void btnAddBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddBillboardActionPerformed
+        Date date = Calendar.getInstance().getTime();
+        int id = Integer.parseInt(txtBillboardId.getText());
+        int mo = Integer.parseInt(txtBillboardMovie.getText());;
+        int ro = Integer.parseInt(txtBillboardRoomId.getText());
+        int sche = Integer.parseInt(txtBillboardScheduleId.getText());
+        int sta = Integer.parseInt(txtBillboardStateId.getText());        
+        String tempStatus = (String)cmbBillboardStatus.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            b.setBillboardStatus(false);
+        } else { b.setBillboardStatus(false); }
+        Billboard bill = new Billboard(mo, ro, sche, sta, tempStatus);
+        try {
+            bc.create(b);
+            clearBillboardInfo();
+            loadBillboardTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddBillboardActionPerformed
+
+    private void btnDeleteBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteBillboardActionPerformed
+        try{
+            try {
+                bc.destroy(Integer.parseInt(txtBillboardId.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            clearBillboardInfo();
+            loadBillboardTable();
+        }catch(NonexistentEntityException ex){
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteBillboardActionPerformed
+
+    private void btnClearBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearBillboardActionPerformed
+       clearBillboardInfo();
+    }//GEN-LAST:event_btnClearBillboardActionPerformed
+
+    private void btnUpdateBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateBillboardActionPerformed
+        Date date = Calendar.getInstance().getTime();
+        int id = Integer.parseInt(txtBillboardId.getText());
+        int mo = Integer.parseInt(txtBillboardMovie.getText());;
+        int ro = Integer.parseInt(txtBillboardRoomId.getText());
+        int sche = Integer.parseInt(txtBillboardScheduleId.getText());
+        int sta = Integer.parseInt(txtBillboardStateId.getText());        
+        String tempStatus = (String)cmbBillboardStatus.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            b.setBillboardStatus(false);
+        } else { b.setBillboardStatus(false); }
+        Billboard bill = new Billboard(mo, ro, sche, sta, tempStatus);
+        try {
+            bc.edit(b);
+            clearBillboardInfo();
+            loadBillboardTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateBillboardActionPerformed
+
+    private void btnUpdateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateUserActionPerformed
+        u.setUserId(Integer.parseInt(txtIdUser.getText()));
+        u.setUserName(txtNameUser.getText());
+        u.setUserPassword(txtPassUser.getText());
+        String tempType = (String)cmbUserType.getSelectedItem();
+        if(tempType.equals("Administrator")){
+            u.setUserType(true);
+        } else {u.setUserType(false); }
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            u.setUserStatus(true);
+        } else { u.setUserStatus(false); }
+        try {
+            uc.edit(u);
+            clearUserInfo();
+            loadUserTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateUserActionPerformed
+
+    private void txtScheduleSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtScheduleSearchKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtScheduleSearchKeyTyped
+
+    private void txtDurationKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDurationKeyPressed
+        char c = evt.getKeyChar();
+        if(Character.isLetter(c)){
+            //Won't be able to enter in text field if enter char is not number
+            txtBillboardMovie.setEditable(false);
+            jLabel33.setText("Please enter numbers only");
+        } else {
+            txtBillboardMovie.setEditable(true);
+        }
+    }//GEN-LAST:event_txtDurationKeyPressed
+
+    private void txtBillboardMovieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBillboardMovieActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBillboardMovieActionPerformed
+
+    private void txtBillboardMovieKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBillboardMovieKeyPressed
+        char c = evt.getKeyChar();
+        if(Character.isLetter(c)){
+            //Won't be able to enter in text field if enter char is not number
+            txtBillboardRoomId.setEditable(false);
+            jLabel34.setText("Please enter numbers only");
+        } else {
+            txtBillboardRoomId.setEditable(true);
+        }
+    }//GEN-LAST:event_txtBillboardMovieKeyPressed
+
+    private void txtBillboardRoomIdKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBillboardRoomIdKeyPressed
+        char c = evt.getKeyChar();
+        if(Character.isLetter(c)){
+            //Won't be able to enter in text field if enter char is not number
+            txtDuration.setEditable(false);
+            lblDurationValidation.setText("Please enter numbers only");
+        } else {
+            txtDuration.setEditable(true);
+        }
+    }//GEN-LAST:event_txtBillboardRoomIdKeyPressed
 
     //return int value when user type is selected
     public int selectUserType(JTable tbl, int row){
@@ -1598,24 +2157,29 @@ public class Administrator extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAddBillboard;
+    private javax.swing.JButton btnAddMovie;
     private javax.swing.JButton btnAddRoom;
     private javax.swing.JButton btnAddSchedule;
     private javax.swing.JButton btnAddUser;
     private javax.swing.JButton btnBackMovie2;
+    private javax.swing.JButton btnClearBillboard;
     private javax.swing.JButton btnClearMovie;
     private javax.swing.JButton btnClearRoom;
     private javax.swing.JButton btnClearSchedule;
     private javax.swing.JButton btnClearUser;
+    private javax.swing.JButton btnDeleteBillboard;
     private javax.swing.JButton btnDeleteMovie;
     private javax.swing.JButton btnDeleteRoom;
     private javax.swing.JButton btnDeleteSchedule;
     private javax.swing.JButton btnDeleteUser;
     private javax.swing.JButton btnExitMovie1;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnUpdateBillboard;
+    private javax.swing.JButton btnUpdateMovie;
     private javax.swing.JButton btnUpdateRoom;
     private javax.swing.JButton btnUpdateSchedule;
     private javax.swing.JButton btnUpdateUser;
+    private javax.swing.JComboBox<String> cmbBillboardStatus;
     private javax.swing.JComboBox<String> cmbClassification;
     private javax.swing.JComboBox<String> cmbGenre;
     private javax.swing.JComboBox<String> cmbRoomStatus;
@@ -1627,6 +2191,7 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JDesktopPane jDesktopPane3;
     private javax.swing.JDesktopPane jDesktopPane4;
+    private javax.swing.JDesktopPane jDesktopPane5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1645,7 +2210,18 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1660,7 +2236,10 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1673,18 +2252,27 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTable jTable2;
+    private javax.swing.JLabel lblDurationValidation;
     private javax.swing.JTabbedPane tab;
+    private javax.swing.JTable tblBillboard;
     private javax.swing.JTable tblMovie;
     private javax.swing.JTable tblRoom;
     private javax.swing.JTable tblScheule;
     private javax.swing.JTable tblUser;
+    private javax.swing.JTextField txtBillboardId;
+    private javax.swing.JTextField txtBillboardMovie;
+    private javax.swing.JTextField txtBillboardRoomId;
+    private javax.swing.JTextField txtBillboardScheduleId;
+    private javax.swing.JTextField txtBillboardSearch;
+    private javax.swing.JTextField txtBillboardStateId;
     private javax.swing.JPanel txtClassification;
     private javax.swing.JTextField txtDirector;
     private javax.swing.JTextField txtDuration;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtIdUser;
-    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtMovieName;
     private javax.swing.JTextField txtNameUser;
     private javax.swing.JTextField txtPassUser;
     private javax.swing.JTextField txtProducer;

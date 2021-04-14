@@ -8,7 +8,7 @@ import java.util.Arrays;
 **Description: Queue code with basic data structures for String
 */
 public class QueueString{
-    protected int end = -1, start = 0, max = 0;
+    protected int end = 0, max = 0, start = 0;
     protected String[] content;
 
     public QueueString(int max){
@@ -22,8 +22,8 @@ public class QueueString{
         return end;
     }
 
-    public void setEnd(int end) {
-        this.end = end;
+    public void setEnd(int max) {
+        this.end = max;
     }
 
     public int getStart() {
@@ -58,19 +58,19 @@ public class QueueString{
         if(!isEmptyQueue() && !isFullQueue()){
             content[end] = value;
             setEnd(end+1);
-        } else System.out.print("\nQueue is full.");
+        }
     }
     
     //Method to move the queue forward
     public void pushValues(){
-        for(int i = 0; i <= end; i++)
-            content[i] = content[i+1];
+        for(int i = max; i <= 0; i--)
+            content[end] = content[max-end];
     }
     
     public void deleteValue(){
-        if(!isEmptyQueue() && !isFullQueue()){
+        if(!isEmptyQueue()){
             pushValues();
-            content[end] = "";
+            content[end] = null;
             --end;
         }
         if(isEmptyQueue()){
