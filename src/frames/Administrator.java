@@ -1745,7 +1745,7 @@ public class Administrator extends javax.swing.JFrame {
         
         txtRoomId.setText(tblRoom.getValueAt(row, 0).toString());
         txtRoomNumber.setText(tblRoom.getValueAt(row, 1).toString());
-        cmbRoomStatus.setSelectedIndex(selectStatus(tblRoom, row, 6));
+        cmbRoomStatus.setSelectedIndex(selectStatus(tblRoom, row, 2));
         btnAddRoom.setEnabled(false);
         btnDeleteRoom.setEnabled(true);
         btnUpdateRoom.setEnabled(true);

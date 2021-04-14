@@ -57,6 +57,7 @@ public final class BillboardView extends javax.swing.JFrame {
         sc = new ScheduleJpaController();
         rc = new RoomJpaController();
         stc = new StateJpaController();
+        loadBillboardViewTable();
         tblBillboard.setShowGrid(true); //Shows grid in table
     }
     
