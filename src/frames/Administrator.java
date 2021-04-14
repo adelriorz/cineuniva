@@ -1,19 +1,27 @@
 package frames;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import controllers.BillboardJpaController;
 import controllers.MovieJpaController;
 import controllers.RoomJpaController;
 import controllers.ScheduleJpaController;
 import controllers.UserJpaController;
 import controllers.exceptions.IllegalOrphanException;
 import controllers.exceptions.NonexistentEntityException;
+import entities.Billboard;
 import entities.Movie;
 import entities.Room;
 import entities.Schedule;
 import entities.User;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 /*
@@ -31,6 +39,8 @@ public class Administrator extends javax.swing.JFrame {
     private RoomJpaController rc;
     private Schedule s;
     private ScheduleJpaController sc;
+    private Billboard b;
+    private BillboardJpaController bc;
 
     //Administrator Constructor    
     public Administrator() {
@@ -44,14 +54,18 @@ public class Administrator extends javax.swing.JFrame {
         rc = new RoomJpaController();
         s = new Schedule();
         sc = new ScheduleJpaController();
+        b = new Billboard();
+        bc = new BillboardJpaController();
         loadMovieTable();
         loadUserTable();
         loadRoomTable();
         loadScheduleTable();
+        loadBillboardTable();
         tblMovie.setShowGrid(true); //Shows grid in table
         tblUser.setShowGrid(true);
         tblRoom.setShowGrid(true);
         tblScheule.setShowGrid(true);
+        tblBillboard.setShowGrid(true);
     }
     
     //Set Movie values as default
@@ -68,6 +82,7 @@ public class Administrator extends javax.swing.JFrame {
         btnUpdate.setEnabled(false);
         btnAdd.setEnabled(true);
         txtName.requestFocus();
+        txtSearchMovie.setText("");
     }
     
     //Loads movie table from DB
@@ -105,6 +120,7 @@ public class Administrator extends javax.swing.JFrame {
         dtm.addColumn("id");
         dtm.addColumn("Name");
         dtm.addColumn("Password");
+        dtm.addColumn("Type");
         dtm.addColumn("Status");
         
         List<User> userList = new ArrayList<>();
@@ -165,6 +181,38 @@ public class Administrator extends javax.swing.JFrame {
             dtm.addRow(row);
         }
         tblScheule.setModel(dtm);
+    }
+    
+    //Loads billboard table from DB filtering State option from user
+    public void loadBillboardTable(){
+        DefaultTableModel dtm = new DefaultTableModel();
+        List<Billboard> billboardList = new ArrayList<>();
+        billboardList = bc.findBillboardEntities();
+        dtm.addColumn("Movie");
+        dtm.addColumn("Duration");
+        dtm.addColumn("Classification");
+        dtm.addColumn("Gender");
+        dtm.addColumn("Room");
+        dtm.addColumn("Date/Time");    
+        for(Billboard b : billboardList){
+            Object row[] = new Object[6];
+            row[0] = b.getMovieId().getMovieName();
+            row[1] = b.getMovieId().getMovieDuration();
+            row[2] = b.getMovieId().getMovieClassification();
+            row[3] = b.getMovieId().getMovieGenre();
+            row[4] = b.getRoomId().getRoomNumber();
+            row[5] = b.getScheduleId().getScheduleStart();
+            if(b.getMovieId().getMovieStatus()==true 
+                    && b.getRoomId().getRoomStatus()==true
+                    && b.getScheduleId().getScheduleStatus()==true
+              ){ dtm.addRow(row); }
+        }
+        if(dtm.getRowCount()<=0) { 
+            JOptionPane.showMessageDialog(this,
+                "No movies available in your State");
+            hideCurrent();
+        }
+        tblBillboard.setModel(dtm);
     }
 
     @SuppressWarnings("unchecked")
@@ -279,10 +327,18 @@ public class Administrator extends javax.swing.JFrame {
         btnClearBillboard = new javax.swing.JButton();
         btnUpdateBillboard = new javax.swing.JButton();
         jPanel21 = new javax.swing.JPanel();
-        txtScheduleId1 = new javax.swing.JTextField();
+        txtBillboardId = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
         cmbBillboardStatus = new javax.swing.JComboBox<>();
         jLabel31 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        txtBillboardMovieId = new javax.swing.JTextField();
+        txtBillboardRoomId = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        txtBillboardScheduleId = new javax.swing.JTextField();
+        txtBillboardStateId = new javax.swing.JTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
         tblBillboard = new javax.swing.JTable();
         btnBackMovie2 = new javax.swing.JButton();
@@ -600,6 +656,11 @@ public class Administrator extends javax.swing.JFrame {
 
         btnUpdateUser.setText("Update");
         btnUpdateUser.setEnabled(false);
+        btnUpdateUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateUserActionPerformed(evt);
+            }
+        });
 
         btnDeleteUser.setText("Delete");
         btnDeleteUser.setEnabled(false);
@@ -629,14 +690,14 @@ public class Administrator extends javax.swing.JFrame {
                         .addComponent(btnClearUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                        .addGap(0, 111, Short.MAX_VALUE)
                         .addComponent(jLabel18)
                         .addGap(18, 18, 18)
-                        .addComponent(txtSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtSearchUser)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnDeleteUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnUpdateUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnUpdateUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                             .addComponent(btnAddUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(6, 6, 6))))
         );
@@ -839,20 +900,19 @@ public class Administrator extends javax.swing.JFrame {
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDeleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnUpdateRoom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAddRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addComponent(btnClearRoom))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnDeleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnUpdateRoom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAddRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnClearRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 11, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -864,11 +924,12 @@ public class Administrator extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDeleteRoom)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClearRoom)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnClearRoom))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtRoomSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanel9.setPreferredSize(new java.awt.Dimension(170, 124));
@@ -941,7 +1002,7 @@ public class Administrator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 25, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1000,8 +1061,10 @@ public class Administrator extends javax.swing.JFrame {
         jLabel22.setText("End");
 
         txtScheduleDay.setText(" ");
+        txtScheduleDay.setEnabled(false);
 
         jLabel15.setText("Day");
+        jLabel15.setEnabled(false);
 
         cmbScheduleStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
 
@@ -1264,13 +1327,21 @@ public class Administrator extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        txtScheduleId1.setEnabled(false);
+        txtBillboardId.setEnabled(false);
 
         jLabel27.setText("Id");
 
         cmbBillboardStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
 
         jLabel31.setText("Status");
+
+        jLabel28.setText("Movie Id");
+
+        jLabel29.setText("Room Id");
+
+        jLabel30.setText("Schedule Id");
+
+        jLabel32.setText("State Id");
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
@@ -1279,24 +1350,47 @@ public class Administrator extends javax.swing.JFrame {
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel21Layout.createSequentialGroup()
-                        .addComponent(jLabel27)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtScheduleId1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel21Layout.createSequentialGroup()
-                        .addComponent(jLabel31)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbBillboardStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                    .addComponent(jLabel31)
+                    .addComponent(jLabel27)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel30)
+                    .addComponent(jLabel32))
+                .addGap(25, 25, 25)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbBillboardStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtBillboardStateId, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtBillboardScheduleId, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtBillboardMovieId, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtBillboardRoomId, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtBillboardId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         jPanel21Layout.setVerticalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtScheduleId1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBillboardId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27))
-                .addGap(99, 99, 99)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel28)
+                    .addComponent(txtBillboardMovieId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(txtBillboardRoomId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(txtBillboardScheduleId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(txtBillboardStateId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbBillboardStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel31))
@@ -1312,13 +1406,13 @@ public class Administrator extends javax.swing.JFrame {
                 .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 15, Short.MAX_VALUE))
         );
@@ -1392,8 +1486,8 @@ public class Administrator extends javax.swing.JFrame {
 
    
     //returns int from selected status accordingly
-    public int selectStatus(JTable tbl, int row){
-        String selected = tbl.getValueAt(row, 6).toString();
+    public int selectStatus(JTable tbl, int row, int statusPlace){
+        String selected = tbl.getValueAt(row, statusPlace).toString();
         int value = 0;
         
         switch(selected){
@@ -1464,6 +1558,7 @@ public class Administrator extends javax.swing.JFrame {
         txtNameUser.setText("");
         cmbStatusUser.setSelectedIndex(0);
         cmbUserType.setSelectedIndex(0);
+        txtSearchUser.setText("");
     }
     
    //Sets all room UI values as default
@@ -1472,6 +1567,7 @@ public class Administrator extends javax.swing.JFrame {
         txtRoomNumber.setText("");
         txtRoomSearch.setText("");
         cmbRoomStatus.setSelectedIndex(0);
+        txtRoomSearch.setText("");
     }
     
    //Sets all UI values set as default
@@ -1482,7 +1578,35 @@ public class Administrator extends javax.swing.JFrame {
         txtScheduleDay.setText("");
         txtScheduleSearch.setText("");
         cmbScheduleStatus.setSelectedIndex(0);
+        txtScheduleSearch.setText("");
     }
+    //Sets all UI values set as default
+    public void clearBillboardInfo(){
+        txtBillboardRoomId.setText("");
+        txtBillboardScheduleId.setText("");
+        txtBillboardId.setText("");
+        txtBillboardMovieId.setText("");
+        txtBillboardStateId.setText("");
+        cmbBillboardStatus.setSelectedIndex(0);
+        txtBillboardSearch.setText("");
+    }
+    
+    //returns int from selected status accordingly
+    public int selectType(JTable tbl, int row, int typePlace){
+        String selected = tbl.getValueAt(row, typePlace).toString();
+        int value = 0;
+        
+        switch(selected){
+            case "User":
+                value = 0;
+                break;
+            case "Administrator":
+                value = 1;
+                break;
+        }
+        return value;
+    }
+    
    //Gets you back to Login
     private void btnBackMovie2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMovie2ActionPerformed
         hideCurrent();
@@ -1497,18 +1621,34 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_tblScheuleMouseClicked
 
     private void btnUpdateScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateScheduleActionPerformed
-
+        Date date = Calendar.getInstance().getTime();
+        s.setScheduleId(Integer.parseInt(txtScheduleId.getText()));
+        s.setScheduleStart(date);
+        s.setScheduleEnd(date); 
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            s.setScheduleStatus(true);
+        } else { s.setScheduleStatus(false); }
+        try {
+            sc.edit(s);
+            clearScheduleInfo();
+            loadScheduleTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnUpdateScheduleActionPerformed
 
     private void btnClearScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearScheduleActionPerformed
-
+        clearScheduleInfo();
     }//GEN-LAST:event_btnClearScheduleActionPerformed
 
     //Deletes selected Schedule
     private void btnDeleteScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteScheduleActionPerformed
         try{
             try {
-                mc.destroy(Integer.parseInt(txtScheduleId.getText()));
+                sc.destroy(Integer.parseInt(txtScheduleId.getText()));
             } catch (IllegalOrphanException ex) {
                 Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1521,18 +1661,21 @@ public class Administrator extends javax.swing.JFrame {
 
    //Adds new Schedule to db
     private void btnAddScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddScheduleActionPerformed
-        //        r.setRoomNumber(Integer.parseInt(txtRoomId.getText()));
-        //        String tempUserStatus = (String)cmbRoomStatus.getSelectedItem();
-        //        if(tempUserStatus.equals("Active")){
-            //            u.setUserStatus(true);
-            //        } else { u.setUserStatus(false); }
-        //        try {
-            //            sc.create(s);
-            //            clearScheduleInfo();
-            //            loadScheduleTable();
-            //        } catch (Exception ex) {
-            //            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
-            //        }
+        Date date = Calendar.getInstance().getTime();
+        s.setScheduleId(Integer.parseInt(txtScheduleId.getText()));
+        s.setScheduleEnd(date);
+        s.setScheduleEnd(date);
+        String tempStatus = (String)cmbScheduleStatus.getSelectedItem();
+        if(tempStatus.equals("Active")){
+                s.setScheduleStatus(true);
+            } else { s.setScheduleStatus(false); }
+        try {
+                sc.create(s);
+                clearScheduleInfo();
+                loadScheduleTable();
+            } catch (Exception ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_btnAddScheduleActionPerformed
 
     private void txtScheduleStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtScheduleStartActionPerformed
@@ -1544,7 +1687,7 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_tblRoomMouseClicked
 
     private void btnClearRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearRoomActionPerformed
-
+        clearRoomInfo();
     }//GEN-LAST:event_btnClearRoomActionPerformed
 
     private void txtRoomSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRoomSearchActionPerformed
@@ -1555,7 +1698,7 @@ public class Administrator extends javax.swing.JFrame {
     private void btnDeleteRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRoomActionPerformed
         try{
             try {
-                mc.destroy(Integer.parseInt(txtRoomId.getText()));
+                rc.destroy(Integer.parseInt(txtRoomId.getText()));
             } catch (IllegalOrphanException ex) {
                 Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1567,15 +1710,50 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteRoomActionPerformed
 
     private void btnUpdateRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRoomActionPerformed
-        // TODO add your handling code here:
+        r.setRoomId(Integer.parseInt(txtRoomId.getText()));
+        r.setRoomNumber(Integer.parseInt(txtRoomNumber.getText()));
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            u.setUserStatus(true);
+        } else { u.setUserStatus(false); }
+        try {
+            rc.edit(r);
+            clearRoomInfo();
+            loadRoomTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnUpdateRoomActionPerformed
 
     private void btnAddRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoomActionPerformed
-
+        r.setRoomNumber(Integer.parseInt(txtRoomNumber.getText()));
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            r.setRoomStatus(true);
+        } else { r.setRoomStatus(false); }
+        try {
+            rc.create(r);
+            clearMovieInfo();
+            loadUserTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAddRoomActionPerformed
 
     private void tblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUserMouseClicked
+        int row = tblUser.getSelectedRow();
 
+        txtIdUser.setText(tblUser.getValueAt(row, 0).toString());
+        txtNameUser.setText(tblMovie.getValueAt(row, 1).toString());
+        txtPassUser.setText(tblMovie.getValueAt(row, 2).toString());
+        cmbUserType.setSelectedIndex(selectType(tblUser, row, 3));
+        cmbStatusUser.setSelectedIndex(selectStatus(tblUser, row, 4));
+        btnAddUser.setEnabled(false);
+        btnDeleteUser.setEnabled(true);
+        btnUpdateUser.setEnabled(true);
+        loadUserTable();
     }//GEN-LAST:event_tblUserMouseClicked
 
     //Invokes clearUserInfo method
@@ -1584,7 +1762,17 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearUserActionPerformed
 
     private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
-
+        try{
+            try {
+                uc.destroy(Integer.parseInt(txtIdUser.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            clearUserInfo();
+            loadUserTable();
+        }catch(NonexistentEntityException ex){
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDeleteUserActionPerformed
 
     //Adds user to db
@@ -1619,7 +1807,7 @@ public class Administrator extends javax.swing.JFrame {
         cmbClassification.setSelectedIndex(selectMovieRank(tblMovie, row));
         cmbGenre.setSelectedIndex(selectMovieGenre(tblMovie, row));
         txtProducer.setText(tblMovie.getValueAt(row, 5).toString());
-        cmbStatus.setSelectedIndex(selectStatus(tblMovie, row));
+        cmbStatus.setSelectedIndex(selectStatus(tblMovie, row, 6));
         btnAdd.setEnabled(false);
         btnDeleteMovie.setEnabled(true);
         btnUpdate.setEnabled(true);
@@ -1685,7 +1873,7 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void tblBillboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillboardMouseClicked
-        // TODO add your handling code here:
+        loadBillboardTable();
     }//GEN-LAST:event_tblBillboardMouseClicked
 
     private void btnAddBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddBillboardActionPerformed
@@ -1693,16 +1881,49 @@ public class Administrator extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddBillboardActionPerformed
 
     private void btnDeleteBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteBillboardActionPerformed
-        // TODO add your handling code here:
+        try{
+            try {
+                bc.destroy(Integer.parseInt(txtBillboardId.getText()));
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            clearBillboardInfo();
+            loadBillboardTable();
+        }catch(NonexistentEntityException ex){
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnDeleteBillboardActionPerformed
 
     private void btnClearBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearBillboardActionPerformed
-        // TODO add your handling code here:
+       clearBillboardInfo();
     }//GEN-LAST:event_btnClearBillboardActionPerformed
 
     private void btnUpdateBillboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateBillboardActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnUpdateBillboardActionPerformed
+
+    private void btnUpdateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateUserActionPerformed
+        u.setUserId(Integer.parseInt(txtIdUser.getText()));
+        u.setUserName(txtNameUser.getText());
+        u.setUserPassword(txtPassUser.getText());
+        String tempType = (String)cmbUserType.getSelectedItem();
+        if(tempType.equals("Administrator")){
+            u.setUserType(true);
+        } else {u.setUserType(false); }
+        String tempStatus = (String)cmbStatusUser.getSelectedItem();
+        if(tempStatus.equals("Active")){
+            u.setUserStatus(true);
+        } else { u.setUserStatus(false); }
+        try {
+            uc.edit(u);
+            clearUserInfo();
+            loadUserTable();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateUserActionPerformed
 
     //return int value when user type is selected
     public int selectUserType(JTable tbl, int row){
@@ -1822,8 +2043,12 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1862,7 +2087,12 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JTable tblRoom;
     private javax.swing.JTable tblScheule;
     private javax.swing.JTable tblUser;
+    private javax.swing.JTextField txtBillboardId;
+    private javax.swing.JTextField txtBillboardMovieId;
+    private javax.swing.JTextField txtBillboardRoomId;
+    private javax.swing.JTextField txtBillboardScheduleId;
     private javax.swing.JTextField txtBillboardSearch;
+    private javax.swing.JTextField txtBillboardStateId;
     private javax.swing.JPanel txtClassification;
     private javax.swing.JTextField txtDirector;
     private javax.swing.JTextField txtDuration;
@@ -1878,7 +2108,6 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JTextField txtScheduleDay;
     private javax.swing.JTextField txtScheduleEnd;
     private javax.swing.JTextField txtScheduleId;
-    private javax.swing.JTextField txtScheduleId1;
     private javax.swing.JTextField txtScheduleSearch;
     private javax.swing.JTextField txtScheduleStart;
     private javax.swing.JTextField txtSearchMovie;
