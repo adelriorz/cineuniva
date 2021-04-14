@@ -92,6 +92,7 @@ public class Administrator extends javax.swing.JFrame {
         dtm.addColumn("Name");
         dtm.addColumn("Director");
         dtm.addColumn("Duration");
+        dtm.addColumn("Genre");
         dtm.addColumn("Classification");
         dtm.addColumn("Producer");
         dtm.addColumn("Status");
@@ -106,9 +107,10 @@ public class Administrator extends javax.swing.JFrame {
             row[1] = m.getMovieName();
             row[2] = m.getMovieDirector();
             row[3] = m.getMovieDuration();
-            row[4] = m.getMovieClassification();
-            row[5] = m.getMovieProducer();
-            row[6] = m.getMovieStatus();
+            row[4] = m.getMovieGenre();
+            row[5] = m.getMovieClassification();
+            row[6] = m.getMovieProducer();
+            row[7] = m.getMovieStatus();
             dtm.addRow(row);
         }
         tblMovie.setModel(dtm);
@@ -1939,7 +1941,6 @@ public class Administrator extends javax.swing.JFrame {
         m.setMovieDirector(txtDirector.getText());
         m.setMovieClassification((String) cmbClassification.getSelectedItem());
         m.setMovieGenre((String) cmbGenre.getSelectedItem());
-        
         m.setMovieDuration(Integer.parseInt(txtDuration.getText()));
         m.setMovieProducer(txtProducer.getText());
         String tempMovieStatus = (String)cmbStatus.getSelectedItem();
