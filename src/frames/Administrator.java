@@ -1286,6 +1286,12 @@ public class Administrator extends javax.swing.JFrame {
             }
         });
 
+        txtBillboardSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBillboardSearchKeyPressed(evt);
+            }
+        });
+
         jLabel26.setText("Search");
 
         btnClearBillboard.setText("Clear");
@@ -2094,6 +2100,10 @@ public class Administrator extends javax.swing.JFrame {
             txtDuration.setEditable(true);
         }
     }//GEN-LAST:event_txtBillboardRoomIdKeyPressed
+
+    private void txtBillboardSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBillboardSearchKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBillboardSearchKeyPressed
 
     //return int value when user type is selected
     public int selectUserType(JTable tbl, int row){

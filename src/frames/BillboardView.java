@@ -126,10 +126,10 @@ public final class BillboardView extends javax.swing.JFrame {
                 billboardDriverList.add(b.getMovieId().getMovieName());
                 String[] s = parseListToArr(billboardDriverList);
                 System.out.println(Arrays.toString(billboardDriverList.toArray()));
-                System.out.println(Arrays.toString(s));
                 qS.sort(s);//success
-                System.out.println("s.sorted = " + Arrays.toString(s));
-                
+                System.out.println("Movies sorted A-Z= " + Arrays.toString(s));
+                qS.sortZA(s);//success
+                System.out.println("Movies sorted Z-A= " + Arrays.toString(s));
                 row[0] = b.getMovieId().getMovieName();//String
                 row[1] = b.getMovieId().getMovieDuration();
                 row[2] = b.getMovieId().getMovieClassification();
