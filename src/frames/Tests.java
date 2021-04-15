@@ -21,21 +21,22 @@ import sun.rmi.runtime.Log;
 public class Tests {
     public static void main(String[] args) {
         Movie m = new Movie();
-        User u = new User();
-        m.setMovieName("Lilo");
+//        User u = new User();
+        m.setMovieId(4);
+        m.setMovieName("Mission Imposible");
         m.setMovieProducer("Leonardo Di Caprio");
         m.setMovieDirector("Leo Di Caprio");
         m.setMovieClassification("B15");
         m.setMovieDuration(125);
-        u.setUserName("julio");
-        u.setUserPassword("pass");
-        u.setUserType(true);
+//        u.setUserName("julio");
+//        u.setUserPassword("pass");
+//        u.setUserType(true);
   
-        MovieJpaController pjc = new MovieJpaController();
-        UserJpaController ujc = new UserJpaController();
+        MovieJpaController mc = new MovieJpaController();
+        UserJpaController uc = new UserJpaController();
         try {
 //          pjc.create(m);
-          ujc.create(u);
+          mc.edit(m);
         } catch (Exception ex) {
             Logger.getLogger(Tests.class.getName()).log(Level.SEVERE, null, ex);
         }

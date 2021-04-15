@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
@@ -15,19 +20,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/*
-**Written by: Armando Del Río Ramírez & Paola Escalera
-**Date: 01/05/ 2021 - 04/10/2021
-**Description: Code that allows CRUD operations for User Entity 
-*/
+/**
+ *
+ * @author Armando Del Rio
+ */
 public class UserJpaController implements Serializable {
 
     public UserJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     
+        
     public UserJpaController() {
-        this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
+            this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
     }
     
     private EntityManagerFactory emf = null;

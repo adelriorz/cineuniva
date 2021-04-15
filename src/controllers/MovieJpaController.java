@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package controllers;
 
 import controllers.exceptions.IllegalOrphanException;
@@ -14,19 +19,18 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-/*
-**Written by: Armando Del Río Ramírez & Paola Escalera
-**Date: 01/05/ 2021 - 04/10/2021
-**Description: Code that allows CRUD operations for Movie Entity 
-*/
 
+/**
+ *
+ * @author Armando Del Rio
+ */
 public class MovieJpaController implements Serializable {
 
     public MovieJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     
-    public MovieJpaController() {
+        public MovieJpaController() {
         this.emf = Persistence.createEntityManagerFactory("cineUNIVAPU");
     }
     
@@ -38,13 +42,13 @@ public class MovieJpaController implements Serializable {
 
     public void create(Movie movie) {
         if (movie.getBillboardList() == null) {
-            movie.setBillboardList(new ArrayList<Billboard>());
+            movie.setBillboardList(new ArrayList<>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Billboard> attachedBillboardList = new ArrayList<Billboard>();
+            List<Billboard> attachedBillboardList = new ArrayList<>();
             for (Billboard billboardListBillboardToAttach : movie.getBillboardList()) {
                 billboardListBillboardToAttach = em.getReference(billboardListBillboardToAttach.getClass(), billboardListBillboardToAttach.getBillboardId());
                 attachedBillboardList.add(billboardListBillboardToAttach);
@@ -80,7 +84,7 @@ public class MovieJpaController implements Serializable {
             for (Billboard billboardListOldBillboard : billboardListOld) {
                 if (!billboardListNew.contains(billboardListOldBillboard)) {
                     if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
+                        illegalOrphanMessages = new ArrayList<>();
                     }
                     illegalOrphanMessages.add("You must retain Billboard " + billboardListOldBillboard + " since its movieId field is not nullable.");
                 }
@@ -88,7 +92,7 @@ public class MovieJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Billboard> attachedBillboardListNew = new ArrayList<Billboard>();
+            List<Billboard> attachedBillboardListNew = new ArrayList<>();
             for (Billboard billboardListNewBillboardToAttach : billboardListNew) {
                 billboardListNewBillboardToAttach = em.getReference(billboardListNewBillboardToAttach.getClass(), billboardListNewBillboardToAttach.getBillboardId());
                 attachedBillboardListNew.add(billboardListNewBillboardToAttach);

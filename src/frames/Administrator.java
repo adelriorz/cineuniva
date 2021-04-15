@@ -102,7 +102,7 @@ public class Administrator extends javax.swing.JFrame {
         movieList = jm.findMovieEntities();
         
         for(Movie m : movieList){
-            Object row[] = new Object[7];
+            Object row[] = new Object[8];
             row[0] = m.getMovieId();
             row[1] = m.getMovieName();
             row[2] = m.getMovieDirector();
@@ -1907,12 +1907,12 @@ public class Administrator extends javax.swing.JFrame {
 
         try{
             try {
-                mc.destroy(Integer.parseInt(txtIdUser.getText()));
+                mc.destroy(Integer.parseInt(txtId.getText()));
             } catch (IllegalOrphanException ex) {
                 Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
             }
-            clearUserInfo();
-            loadUserTable();
+            clearMovieInfo();
+            loadMovieTable();
         }catch(NonexistentEntityException ex){
             Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
         }
